@@ -1,0 +1,151 @@
+sudo docker run -dit --rm -p 8047:8047 -p 31010:31010 --name drill -v /home/apc/Maastricht/data2services/data:/data:ro apache-drill
+
+
+sudo docker run -d --rm --name graphdb -p 7200:7200 -v /home/apc/Maastricht/data2services/data/graphdb:/opt/graphdb/home -v /home/apc/Maastricht/data2services/data/graphdb-import:/root/graphdb-import graphdb
+
+sudo docker run -it --rm --link drill:drill -v /home/apc/Maastricht/data2services/data:/data autor2rml -j "jdbc:drill:drillbit=drill:31010" -r -o "/data/output/mapping.trig" -d "/data/input/pharmagkb" -b "https://w3id.org/data2services/" -g "https://w3id.org/data2services/graph/autor2rml"
+
+sudo touch /home/apc/Maastricht/data2services/data/config.properties
+  sudo chmod a+w /home/apc/Maastricht/data2services/data/config.properties
+  echo "connectionURL = jdbc:drill:drillbit=drill:31010
+  mappingFile = /data/output/mapping.trig
+  outputFile = /data/output/rdf_output.nq
+  format = NQUADS" > /home/apc/Maastricht/data2services/data/config.properties
+
+sudo docker run -it --rm --link drill:drill -v /home/apc/Maastricht/data2services/data:/data r2rml /data/config.properties
+
+# access GraphDB web interface and create a new repo with name "test" and id "test"
+
+sudo docker run -it --rm --link graphdb:graphdb -v /home/apc/Maastricht/data2services/data:/data rdf-upload -m "HTTP" -if "/data/output" -url "http://graphdb:7200" -rep "test"
+
+
+#split drugs.tsv
+sudo docker run -it --rm --link graphdb:graphdb vemonet/data2services-sparql-operations -op split --split-property "https://w3id.org/data2services/model/GenericNames" --split-class "https://w3id.org/data2services/data/input/pharmagkb/drugs.tsv" --split-delimiter "," -ep "http://graphdb:7200" -uep "test" 
+
+sudo docker run -it --rm --link graphdb:graphdb vemonet/data2services-sparql-operations -op split --split-property "https://w3id.org/data2services/model/TradeNames" --split-class "https://w3id.org/data2services/data/input/pharmagkb/drugs.tsv" --split-delimiter "," -ep "http://graphdb:7200" -uep "test" --split-delete
+
+sudo time -v docker run -it --rm --link graphdb:graphdb vemonet/data2services-sparql-operations -op split --split-property "https://w3id.org/data2services/model/BrandMixtures" --split-class "https://w3id.org/data2services/data/input/pharmagkb/drugs.tsv" --split-delimiter "," -ep "http://graphdb:7200" -uep "test" --split-delete
+
+sudo time -v docker run -it --rm --link graphdb:graphdb vemonet/data2services-sparql-operations -op split --split-property "https://w3id.org/data2services/model/CrossReferences" --split-class "https://w3id.org/data2services/data/input/pharmagkb/drugs.tsv" --split-delimiter "," -ep "http://graphdb:7200" -uep "test" --split-delete
+
+sudo time -v docker run -it --rm --link graphdb:graphdb vemonet/data2services-sparql-operations -op split --split-property "https://w3id.org/data2services/model/ExternalVocabulary" --split-class "https://w3id.org/data2services/data/input/pharmagkb/drugs.tsv" --split-delimiter "," -ep "http://graphdb:7200" -uep "test" --split-delete
+
+# map to target pdf
+sudo docker run -it --link graphdb:graphdb -v /home/apc/Maastricht/data2services/data:/data vemonet/data2services-sparql-operations -f "/data/mapping/drugs.rq" -ep "http://graphdb:7200/repositories/test/statements" 
+
+
+# split variants.tsv
+
+sudo time -v docker run -it --rm --link graphdb:graphdb vemonet/data2services-sparql-operations -op split --split-property "https://w3id.org/data2services/model/GeneIds" --split-class "https://w3id.org/data2services/data/input/pharmagkb/variants.tsv" --split-delimiter "," -ep "http://graphdb:7200" -uep "test" 
+
+sudo time -v docker run -it --rm --link graphdb:graphdb vemonet/data2services-sparql-operations -op split --split-property "https://w3id.org/data2services/model/GeneSymbols" --split-class "https://w3id.org/data2services/data/input/pharmagkb/variants.tsv" --split-delimiter "," -ep "http://graphdb:7200" -uep "test" 
+
+
+# map to target pdf
+sudo docker run -it --link graphdb:graphdb -v /home/apc/Maastricht/data2services/data:/data vemonet/data2services-sparql-operations -f "/data/mapping/variants.rq" -ep "http://graphdb:7200/repositories/test/statements" 
+
+
+#split chemicals.tsv
+sudo time -v docker run -it --rm --link graphdb:graphdb vemonet/data2services-sparql-operations -op split --split-property "https://w3id.org/data2services/model/GenericNames" --split-class "https://w3id.org/data2services/data/input/pharmagkb/chemicals.tsv" --split-delimiter "," -ep "http://graphdb:7200" -uep "test" 
+
+sudo time -v docker run -it --rm --link graphdb:graphdb vemonet/data2services-sparql-operations -op split --split-property "https://w3id.org/data2services/model/TradeNames" --split-class "https://w3id.org/data2services/data/input/pharmagkb/chemicals.tsv" --split-delimiter "," -ep "http://graphdb:7200" -uep "test" --split-delete
+
+sudo time -v docker run -it --rm --link graphdb:graphdb vemonet/data2services-sparql-operations -op split --split-property "https://w3id.org/data2services/model/BrandMixtures" --split-class "https://w3id.org/data2services/data/input/pharmagkb/chemicals.tsv" --split-delimiter "," -ep "http://graphdb:7200" -uep "test" --split-delete
+
+sudo time -v docker run -it --rm --link graphdb:graphdb vemonet/data2services-sparql-operations -op split --split-property "https://w3id.org/data2services/model/CrossReferences" --split-class "https://w3id.org/data2services/data/input/pharmagkb/chemicals.tsv" --split-delimiter "," -ep "http://graphdb:7200" -uep "test" --split-delete
+
+sudo time -v docker run -it --rm --link graphdb:graphdb vemonet/data2services-sparql-operations -op split --split-property "https://w3id.org/data2services/model/ExternalVocabulary" --split-class "https://w3id.org/data2services/data/input/pharmagkb/chemicals.tsv" --split-delimiter "," -ep "http://graphdb:7200" -uep "test" --split-delete
+
+# map to target pdf
+sudo docker run -it --link graphdb:graphdb -v /home/apc/Maastricht/data2services/data:/data vemonet/data2services-sparql-operations -f "/data/mapping/chemical.rq" -ep "http://graphdb:7200/repositories/test/statements" 
+
+
+# map to target rdf clinical_ann.tsv
+sudo docker run -it --link graphdb:graphdb -v /home/apc/Maastricht/data2services/data:/data vemonet/data2services-sparql-operations -f "/data/mapping/GenotypePhenotypeMapping.rq" -ep "http://graphdb:7200/repositories/test/statements" 
+
+
+
+#split clinical_ann_metadata.tsv
+sudo time -v docker run -it --rm --link graphdb:graphdb vemonet/data2services-sparql-operations -op split --split-property "https://w3id.org/data2services/model/Location" --split-class "https://w3id.org/data2services/data/input/pharmagkb/clinical_ann_metadata.tsv" --split-delimiter "," -ep "http://graphdb:7200" -uep "test" --split-delete
+
+sudo time -v docker run -it --rm --link graphdb:graphdb vemonet/data2services-sparql-operations -op split --split-property "https://w3id.org/data2services/model/Gene" --split-class "https://w3id.org/data2services/data/input/pharmagkb/clinical_ann_metadata.tsv" --split-delimiter "," -ep "http://graphdb:7200" -uep "test" --split-delete
+
+sudo time -v docker run -it --rm --link graphdb:graphdb vemonet/data2services-sparql-operations -op split --split-property "https://w3id.org/data2services/model/ClinicalAnnotationTypes" --split-class "https://w3id.org/data2services/data/input/pharmagkb/clinical_ann_metadata.tsv" --split-delimiter "," -ep "http://graphdb:7200" -uep "test" --split-delete
+
+sudo time -v docker run -it --rm --link graphdb:graphdb vemonet/data2services-sparql-operations -op split --split-property "https://w3id.org/data2services/model/GenotypePhenotypeIds" --split-class "https://w3id.org/data2services/data/input/pharmagkb/clinical_ann_metadata.tsv" --split-delimiter "," -ep "http://graphdb:7200" -uep "test" --split-delete
+
+sudo time -v docker run -it --rm --link graphdb:graphdb vemonet/data2services-sparql-operations -op split --split-property "https://w3id.org/data2services/model/VariantAnnotationsIds" --split-class "https://w3id.org/data2services/data/input/pharmagkb/clinical_ann_metadata.tsv" --split-delimiter "," -ep "http://graphdb:7200" -uep "test" --split-delete
+
+sudo time -v docker run -it --rm --link graphdb:graphdb vemonet/data2services-sparql-operations -op split --split-property "https://w3id.org/data2services/model/Pmids" --split-class "https://w3id.org/data2services/data/input/pharmagkb/clinical_ann_metadata.tsv" --split-delimiter "," -ep "http://graphdb:7200" -uep "test" --split-delete
+
+sudo time -v docker run -it --rm --link graphdb:graphdb vemonet/data2services-sparql-operations -op split --split-property "https://w3id.org/data2services/model/RelatedChemicals" --split-class "https://w3id.org/data2services/data/input/pharmagkb/clinical_ann_metadata.tsv" --split-delimiter "," -ep "http://graphdb:7200" -uep "test" --split-delete
+
+#error here check
+sudo time -v docker run -it --rm --link graphdb:graphdb vemonet/data2services-sparql-operations -op split --split-property "https://w3id.org/data2services/model/RelatedDiseases" --split-class "https://w3id.org/data2services/data/input/pharmagkb/clinical_ann_metadata.tsv" --split-delimiter "," -ep "http://graphdb:7200" -uep "test" --split-delete
+
+
+# map to target rdf clinical_ann_metadata.tsv
+sudo docker run -it --link graphdb:graphdb -v /home/apc/Maastricht/data2services/data:/data vemonet/data2services-sparql-operations -f "/data/mapping/ClinicalAnnotation.rq" -ep "http://graphdb:7200/repositories/test/statements" 
+
+
+#split phenotypes.tsv
+
+#error
+sudo time -v docker run -it --rm --link graphdb:graphdb vemonet/data2services-sparql-operations -op split --split-property "https://w3id.org/data2services/model/CrossReferences" --split-class "https://w3id.org/data2services/data/input/pharmagkb/phenotypes.tsv" --split-delimiter "," -ep "http://graphdb:7200" -uep "test" --split-delete
+
+#error
+sudo time -v docker run -it --rm --link graphdb:graphdb vemonet/data2services-sparql-operations -op split --split-property "https://w3id.org/data2services/model/ExternalVocabulary" --split-class "https://w3id.org/data2services/data/input/pharmagkb/phenotypes.tsv" --split-delimiter "," -ep "http://graphdb:7200" -uep "test" --split-delete
+
+
+# map to target rdf phenotypes.tsv
+sudo docker run -it --link graphdb:graphdb -v /home/apc/Maastricht/data2services/data:/data vemonet/data2services-sparql-operations -f "/data/mapping/phenotype.rq" -ep "http://graphdb:7200/repositories/test/statements" 
+
+
+
+#split var_drug_ann.tsv
+sudo time -v docker run -it --rm --link graphdb:graphdb vemonet/data2services-sparql-operations -op split --split-property "https://w3id.org/data2services/model/Variant" --split-class "https://w3id.org/data2services/data/input/pharmagkb/var_drug_ann.tsv" --split-delimiter "," -ep "http://graphdb:7200" -uep "test" 
+
+sudo time -v docker run -it --rm --link graphdb:graphdb vemonet/data2services-sparql-operations -op split --split-property "https://w3id.org/data2services/model/Gene" --split-class "https://w3id.org/data2services/data/input/pharmagkb/var_drug_ann.tsv" --split-delimiter "," -ep "http://graphdb:7200" -uep "test" --split-delete
+
+sudo time -v docker run -it --rm --link graphdb:graphdb vemonet/data2services-sparql-operations -op split --split-property "https://w3id.org/data2services/model/Chemical" --split-class "https://w3id.org/data2services/data/input/pharmagkb/var_drug_ann.tsv" --split-delimiter "," -ep "http://graphdb:7200" -uep "test" --split-delete
+
+sudo time -v docker run -it --rm --link graphdb:graphdb vemonet/data2services-sparql-operations -op split --split-property "https://w3id.org/data2services/model/PhenotypeCategory" --split-class "https://w3id.org/data2services/data/input/pharmagkb/var_drug_ann.tsv" --split-delimiter "," -ep "http://graphdb:7200" -uep "test" --split-delete
+
+
+#split var_fa_ann.tsv
+sudo time -v docker run -it --rm --link graphdb:graphdb vemonet/data2services-sparql-operations -op split --split-property "https://w3id.org/data2services/model/Variant" --split-class "https://w3id.org/data2services/data/input/pharmagkb/var_fa_ann.tsv" --split-delimiter "," -ep "http://graphdb:7200" -uep "test" 
+
+sudo time -v docker run -it --rm --link graphdb:graphdb vemonet/data2services-sparql-operations -op split --split-property "https://w3id.org/data2services/model/Gene" --split-class "https://w3id.org/data2services/data/input/pharmagkb/var_fa_ann.tsv" --split-delimiter "," -ep "http://graphdb:7200" -uep "test" --split-delete
+
+sudo time -v docker run -it --rm --link graphdb:graphdb vemonet/data2services-sparql-operations -op split --split-property "https://w3id.org/data2services/model/Chemical" --split-class "https://w3id.org/data2services/data/input/pharmagkb/var_fa_ann.tsv" --split-delimiter "," -ep "http://graphdb:7200" -uep "test" --split-delete
+
+sudo time -v docker run -it --rm --link graphdb:graphdb vemonet/data2services-sparql-operations -op split --split-property "https://w3id.org/data2services/model/PhenotypeCategory" --split-class "https://w3id.org/data2services/data/input/pharmagkb/var_fa_ann.tsv" --split-delimiter "," -ep "http://graphdb:7200" -uep "test" --split-delete
+
+
+#split var_pheno_ann.tsv
+sudo time -v docker run -it --rm --link graphdb:graphdb vemonet/data2services-sparql-operations -op split --split-property "https://w3id.org/data2services/model/Variant" --split-class "https://w3id.org/data2services/data/input/pharmagkb/var_pheno_ann.tsv" --split-delimiter "," -ep "http://graphdb:7200" -uep "test" 
+
+sudo time -v docker run -it --rm --link graphdb:graphdb vemonet/data2services-sparql-operations -op split --split-property "https://w3id.org/data2services/model/Gene" --split-class "https://w3id.org/data2services/data/input/pharmagkb/var_pheno_ann.tsv" --split-delimiter "," -ep "http://graphdb:7200" -uep "test" --split-delete
+
+sudo time -v docker run -it --rm --link graphdb:graphdb vemonet/data2services-sparql-operations -op split --split-property "https://w3id.org/data2services/model/Chemical" --split-class "https://w3id.org/data2services/data/input/pharmagkb/var_pheno_ann.tsv" --split-delimiter "," -ep "http://graphdb:7200" -uep "test" --split-delete
+
+sudo time -v docker run -it --rm --link graphdb:graphdb vemonet/data2services-sparql-operations -op split --split-property "https://w3id.org/data2services/model/PhenotypeCategory" --split-class "https://w3id.org/data2services/data/input/pharmagkb/var_pheno_ann.tsv" --split-delimiter "," -ep "http://graphdb:7200" -uep "test" --split-delete
+
+
+
+# map to target rdf var_drug_ann.tsv
+sudo docker run -it --link graphdb:graphdb -v /home/apc/Maastricht/data2services/data:/data vemonet/data2services-sparql-operations -f "/data/mapping/VariantDrugAnnotation.rq" -ep "http://graphdb:7200/repositories/test/statements" 
+
+
+
+#split genes.csv
+sudo time -v docker run -it --rm --link graphdb:graphdb vemonet/data2services-sparql-operations -op split --split-property "https://w3id.org/data2services/model/Alternate.names" --split-class "https://w3id.org/data2services/data/input/pharmagkb/genes.csv" --split-delimiter "," -ep "http://graphdb:7200" -uep "test" --split-delete
+
+sudo time -v docker run -it --rm --link graphdb:graphdb vemonet/data2services-sparql-operations -op split --split-property "https://w3id.org/data2services/model/Alternate.symbols" --split-class "https://w3id.org/data2services/data/input/pharmagkb/genes.csv" --split-delimiter "," -ep "http://graphdb:7200" -uep "test" --split-delete
+
+sudo time -v docker run -it --rm --link graphdb:graphdb vemonet/data2services-sparql-operations -op split --split-property "https://w3id.org/data2services/model/Cross.references" --split-class "https://w3id.org/data2services/data/input/pharmagkb/genes.csv" --split-delimiter "," -ep "http://graphdb:7200" -uep "test" --split-delete
+
+
+# map to target rdf genes.csv
+sudo docker run -it --link graphdb:graphdb -v /home/apc/Maastricht/data2services/data:/data vemonet/data2services-sparql-operations -f "/data/mapping/genes.rq" -ep "http://graphdb:7200/repositories/test/statements" 
+
