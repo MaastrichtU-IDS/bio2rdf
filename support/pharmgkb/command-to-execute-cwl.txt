@@ -1,0 +1,16 @@
+
+##################################################
+# First you have to install the "cwltool" library
+##################################################
+
+
+# Please define the absolute path of the folder that contains the structure (input, output, support, mapping)
+export ABS_PATH=/home/apc/Maastricht/bio2rdf-github
+
+# Please define the dataset folder name
+export DATASET=pharmgkb
+
+
+# navigate to the folder support/pharmgkb then run the following command
+
+sudo cwl-runner --outdir ${ABS_PATH}/output/${DATASET} workflow.cwl workflow-job.yml
