@@ -11,6 +11,13 @@ export ABS_PATH=/home/apc/Maastricht/bio2rdf-github
 export DATASET=pharmgkb
 
 
+# start apache drill
+sudo docker run -dit --rm -p 8047:8047 -p 31010:31010 --name drill -v ${ABS_PATH}:/data:ro apache-drill
+
+# start graphdb
+sudo docker run -d --rm --name graphdb -p 7200:7200 -v ${ABS_PATH}/graphdb:/opt/graphdb/home -v ${ABS_PATH}/graphdb-import:/root/graphdb-import graphdb
+
+
 # navigate to the folder support/pharmgkb then run the following command
 
 sudo cwl-runner --outdir ${ABS_PATH}/output/${DATASET} workflow.cwl workflow-job.yml

@@ -31,7 +31,7 @@ INSERT
 			pharmgkb_vocabulary:variantlocation ?location;
 			pharmgkb_vocabulary:gene ?geneId;
 			pharmgkb_vocabulary:genesymbol ?geneSym;
-					
+			pharmgkb_vocabulary:synonym ?synonyms;		
 					
 	}
 }
@@ -54,6 +54,8 @@ WHERE {
 		 
 		} OPTIONAL {
          	 ?s d2sgeneric:GeneSymbols ?geneSym .
+		} OPTIONAL {
+         	 ?s d2sgeneric:Synonyms ?synonyms .
 		}
 			
 		BIND ( iri(concat("http://bio2rdf.org/pharmgkb:", ?VariantId)) AS ?uri )

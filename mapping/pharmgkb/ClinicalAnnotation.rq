@@ -62,13 +62,13 @@ WHERE {
 		} OPTIONAL {
          	 ?s d2sgeneric:ClinicalAnnotationTypes ?clinical_annotation_type .
 		} OPTIONAL {
-         	 ?s d2sgeneric:GenotypePhenotypeMapping ?geno_pheno_mapping .
+         	 ?s d2sgeneric:GenotypePhenotypeIds ?geno_pheno_mapping .
 		} OPTIONAL {
          	 ?s d2sgeneric:AnnotationText  ?annotation_text .
 		} OPTIONAL {
          	 ?s d2sgeneric:VariantAnnotations ?variant_annotation .
 		} OPTIONAL {
-         	 ?s d2sgeneric:VarianAnnotationsIds ?variant_annotation_id .
+         	 ?s d2sgeneric:VariantAnnotationsIds ?variant_annotation_id .
 		} OPTIONAL {
          	 ?s d2sgeneric:Pmids ?pmids .
 		} OPTIONAL {

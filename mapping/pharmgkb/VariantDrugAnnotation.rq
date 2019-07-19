@@ -20,8 +20,8 @@ INSERT
 {
 	GRAPH <https://w3id.org/data2services/graph/pharmgkb>{
 		
-		?s	a pharmgkb_vocabulary:Resource;
-			rdf:type pharmgkb_vocabulary:VariantDrugAnnotation;
+		?uri	a pharmgkb_vocabulary:Resource;
+			rdf:type pharmgkb_vocabulary:VariantAnnotation;
 			dc:identifier ?annotationId;
 			#rdfs:label ?label;
 			#dc:title ?name;

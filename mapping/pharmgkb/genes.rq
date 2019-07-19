@@ -57,9 +57,11 @@ WHERE {
 		 BIND ( concat(?name, " [pharmgkb:", ?accessionID, "] ") AS ?label )
 			
 		} OPTIONAL {
-         	 ?s d2sgeneric:Ncbi.gene.id ?ncbi .
+         	 ?s d2sgeneric:Ncbi.gene.id ?ncbigene .
+		 BIND ( iri(concat("http://bio2rdf.org/ncbigene:",?ncbigene)) AS ?ncbi )
 		} OPTIONAL {
-         	 ?s d2sgeneric:Hgnc.id ?hgnc .
+         	 ?s d2sgeneric:Hgnc.id ?hgncsym .
+		 BIND ( iri(concat("http://bio2rdf.org/hgnc:",?hgncsym)) AS ?hgnc )
 		} OPTIONAL {
          	 ?s d2sgeneric:Ensembl.id ?ensembl .
 		} OPTIONAL {
