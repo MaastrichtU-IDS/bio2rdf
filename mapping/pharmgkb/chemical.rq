@@ -37,6 +37,9 @@ INSERT
 			pharmgkb_vocabulary:trade_name ?trade_name;
 			pharmgkb_vocabulary:brand_mixture ?brand_mixture; 
 			pharmgkb_vocabulary:x-rxnorm ?rxnorm;
+			pharmgkb_vocabulary:x-ref ?cross_references;
+			pharmgkb_vocabulary:x-ref ?external_vocab;
+			pharmgkb_vocabulary:cpic-dosing-guideline ?dosing;
 	}
 }
 WHERE {
@@ -52,6 +55,15 @@ WHERE {
 			
 		} OPTIONAL {
          	 ?s d2sgeneric:Type ?class .
+		
+		} OPTIONAL {
+		 ?s d2sgeneric:DosingGuideline ?dosing .
+
+		} OPTIONAL {
+		 ?s d2sgeneric:CrossReferences ?cross_references .
+
+		} OPTIONAL {
+		 ?s d2sgeneric:ExternalVocabulary ?external_vocab .
 		
 		} OPTIONAL {
 		 ?s d2sgeneric:Inchi ?inchi .

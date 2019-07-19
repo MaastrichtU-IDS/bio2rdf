@@ -5,7 +5,7 @@ export ABS_PATH=/home/apc/Maastricht/bio2rdf-github
 # Please define the dataset folder name
 export DATASET=pharmgkb
 
-# add the input files you want to convert to the corresponding folder of the dataset
+# add the input files you want to convert to the corresponding folder of the dataset (in this case it is "pharmgkb" folder)
 
 
 # start apache drill
@@ -14,7 +14,12 @@ sudo docker run -dit --rm -p 8047:8047 -p 31010:31010 --name drill -v ${ABS_PATH
 # start graphdb
 sudo docker run -d --rm --name graphdb -p 7200:7200 -v ${ABS_PATH}/graphdb:/opt/graphdb/home -v ${ABS_PATH}/graphdb-import:/root/graphdb-import graphdb
 
+
+# create the mapping rules to generate the generic RDF
 sudo docker run -it --rm --link drill:drill -v ${ABS_PATH}:/data autor2rml -j "jdbc:drill:drillbit=drill:31010" -r -o "/data/output/${DATASET}/mapping.trig" -d "/data/input/${DATASET}" -b "https://w3id.org/data2services/" -g "https://w3id.org/data2services/graph/autor2rml"
+
+
+# Create the config file for generating the generic RDF
 
 sudo touch ${ABS_PATH}/output/${DATASET}/config.properties
   sudo chmod a+w ${ABS_PATH}/output/${DATASET}/config.properties
@@ -23,140 +28,149 @@ sudo touch ${ABS_PATH}/output/${DATASET}/config.properties
   outputFile = /data/output/${DATASET}/rdf_output.nq
   format = NQUADS" > ${ABS_PATH}/output/${DATASET}/config.properties
 
+
+# generate the generic RDF
 sudo docker run -it --rm --link drill:drill -v ${ABS_PATH}:/data r2rml /data/output/${DATASET}/config.properties
 
 # access GraphDB web interface and create a new repo with name "test" and id "test"
 
+
+# Upload the generic RDF to GraphDB to the created repository in the previous comment
 sudo docker run -it --rm --link graphdb:graphdb -v ${ABS_PATH}:/data rdf-upload -m "HTTP" -if "/data/output/${DATASET}" -url "http://graphdb:7200" -rep "test"
 
 
-#split drugs.tsv
-sudo docker run -it --rm --link graphdb:graphdb vemonet/data2services-sparql-operations -op split --split-property "https://w3id.org/data2services/model/GenericNames" --split-class "https://w3id.org/data2services/data/input/pharmagkb/drugs.tsv" --split-delimiter "," -ep "http://graphdb:7200" -uep "test" 
 
-sudo docker run -it --rm --link graphdb:graphdb vemonet/data2services-sparql-operations -op split --split-property "https://w3id.org/data2services/model/TradeNames" --split-class "https://w3id.org/data2services/data/input/pharmagkb/drugs.tsv" --split-delimiter "," -ep "http://graphdb:7200" -uep "test" --split-delete
-
-sudo time -v docker run -it --rm --link graphdb:graphdb vemonet/data2services-sparql-operations -op split --split-property "https://w3id.org/data2services/model/BrandMixtures" --split-class "https://w3id.org/data2services/data/input/pharmagkb/drugs.tsv" --split-delimiter "," -ep "http://graphdb:7200" -uep "test" --split-delete
-
-sudo time -v docker run -it --rm --link graphdb:graphdb vemonet/data2services-sparql-operations -op split --split-property "https://w3id.org/data2services/model/CrossReferences" --split-class "https://w3id.org/data2services/data/input/pharmagkb/drugs.tsv" --split-delimiter "," -ep "http://graphdb:7200" -uep "test" --split-delete
-
-sudo time -v docker run -it --rm --link graphdb:graphdb vemonet/data2services-sparql-operations -op split --split-property "https://w3id.org/data2services/model/ExternalVocabulary" --split-class "https://w3id.org/data2services/data/input/pharmagkb/drugs.tsv" --split-delimiter "," -ep "http://graphdb:7200" -uep "test" --split-delete
-
-# map to target pdf drugs.tsv
+# map to target RDF drugs.tsv
 sudo docker run -it --link graphdb:graphdb -v ${ABS_PATH}:/data vemonet/data2services-sparql-operations -f "/data/mapping/${DATASET}/drugs.rq" -ep "http://graphdb:7200/repositories/test/statements" 
+
+
+# map to target RDF  variants.tsv
+sudo docker run -it --link graphdb:graphdb -v ${ABS_PATH}:/data vemonet/data2services-sparql-operations -f "/data/mapping/${DATASET}/variants.rq" -ep "http://graphdb:7200/repositories/test/statements" 
+
+
+# map to target RDF chemicals.tsv
+sudo docker run -it --link graphdb:graphdb -v ${ABS_PATH}:/data vemonet/data2services-sparql-operations -f "/data/mapping/${DATASET}/chemical.rq" -ep "http://graphdb:7200/repositories/test/statements" 
+
+
+# map to target RDF clinical_ann.tsv
+sudo docker run -it --link graphdb:graphdb -v ${ABS_PATH}:/data vemonet/data2services-sparql-operations -f "/data/mapping/${DATASET}/GenotypePhenotypeMapping.rq" -ep "http://graphdb:7200/repositories/test/statements" 
+
+# map to target RDF clinical_ann_metadata.tsv
+sudo docker run -it --link graphdb:graphdb -v ${ABS_PATH}:/data vemonet/data2services-sparql-operations -f "/data/mapping/${DATASET}/ClinicalAnnotation.rq" -ep "http://graphdb:7200/repositories/test/statements" 
+
+# map to target RDF phenotypes.tsv
+sudo docker run -it --link graphdb:graphdb -v ${ABS_PATH}:/data vemonet/data2services-sparql-operations -f "/data/mapping/${DATASET}/phenotype.rq" -ep "http://graphdb:7200/repositories/test/statements" 
+
+# map to target RDF var_drug_ann.tsv
+sudo docker run -it --link graphdb:graphdb -v ${ABS_PATH}:/data vemonet/data2services-sparql-operations -f "/data/mapping/${DATASET}/VariantDrugAnnotation.rq" -ep "http://graphdb:7200/repositories/test/statements" 
+
+# map to target RDF genes.csv
+sudo docker run -it --link graphdb:graphdb -v ${ABS_PATH}:/data vemonet/data2services-sparql-operations -f "/data/mapping/${DATASET}/genes.rq" -ep "http://graphdb:7200/repositories/test/statements" 
+
+
+
+
+# navigate to the path of the jar before executing the splitting commands
+
+# use "infer" value for the --uri-expansion parameter if you want smart expansion depending on the splitted prefix:id pairs (like columns CrossReferences & ExternalVocabulary)
+
+
+#split chemicals.tsv
+
+sudo time -v java -jar data2services-sparql-operations-0.0.1-SNAPSHOT-jar-with-dependencies.jar -op split --split-property "http://bio2rdf.org/pharmgkb_vocabulary:generic_name" --split-class "http://bio2rdf.org/pharmgkb_vocabulary:Chemical" --split-delimiter ",\"" -ep "http://localhost:7200" -uep "test" --trim-delimiter "\"" --split-delete
+
+sudo time -v java -jar data2services-sparql-operations-0.0.1-SNAPSHOT-jar-with-dependencies.jar -op split --split-property "http://bio2rdf.org/pharmgkb_vocabulary:trade_name" --split-class "http://bio2rdf.org/pharmgkb_vocabulary:Chemical" --split-delimiter ",\"" -ep "http://localhost:7200" -uep "test" --trim-delimiter "\"" --split-delete
+
+sudo time -v java -jar data2services-sparql-operations-0.0.1-SNAPSHOT-jar-with-dependencies.jar -op split --split-property "http://bio2rdf.org/pharmgkb_vocabulary:brand_mixture" --split-class "http://bio2rdf.org/pharmgkb_vocabulary:Chemical" --split-delimiter ",\"" -ep "http://localhost:7200" -uep "test" --trim-delimiter "\"" --split-delete
+
+sudo time -v java -jar data2services-sparql-operations-0.0.1-SNAPSHOT-jar-with-dependencies.jar -op split --split-property "http://bio2rdf.org/pharmgkb_vocabulary:x-atc" --split-class "http://bio2rdf.org/pharmgkb_vocabulary:Chemical" --split-delimiter ",\"" -ep "http://localhost:7200" -uep "test" --trim-delimiter "\"" --split-delete
+
+sudo time -v java -jar data2services-sparql-operations-0.0.1-SNAPSHOT-jar-with-dependencies.jar -op split --split-property "http://bio2rdf.org/pharmgkb_vocabulary:x-pubchemcompound" --split-class "http://bio2rdf.org/pharmgkb_vocabulary:Chemical" --split-delimiter ",\"" -ep "http://localhost:7200" -uep "test" --trim-delimiter "\"" --split-delete --uri-expansion "http://bio2rdf.org/pubchem.compound:"
+
+sudo time -v java -jar data2services-sparql-operations-0.0.1-SNAPSHOT-jar-with-dependencies.jar -op split --split-property "http://bio2rdf.org/pharmgkb_vocabulary:x-ref" --split-class "http://bio2rdf.org/pharmgkb_vocabulary:Chemical" --split-delimiter ",\"" -ep "http://localhost:7200" -uep "test" --trim-delimiter "\"" --split-delete --uri-expansion "infer"
+
+
+
+#split drugs.tsv
+
+sudo time -v java -jar data2services-sparql-operations-0.0.1-SNAPSHOT-jar-with-dependencies.jar -op split --split-property "http://bio2rdf.org/pharmgkb_vocabulary:generic_name" --split-class "http://bio2rdf.org/pharmgkb_vocabulary:Drug" --split-delimiter ",\"" -ep "http://localhost:7200" -uep "test" --trim-delimiter "\"" --split-delete
+
+sudo time -v java -jar data2services-sparql-operations-0.0.1-SNAPSHOT-jar-with-dependencies.jar -op split --split-property "http://bio2rdf.org/pharmgkb_vocabulary:trade_name" --split-class "http://bio2rdf.org/pharmgkb_vocabulary:Drug" --split-delimiter ",\"" -ep "http://localhost:7200" -uep "test" --trim-delimiter "\"" --split-delete
+
+sudo time -v java -jar data2services-sparql-operations-0.0.1-SNAPSHOT-jar-with-dependencies.jar -op split --split-property "http://bio2rdf.org/pharmgkb_vocabulary:brand_mixture" --split-class "http://bio2rdf.org/pharmgkb_vocabulary:Drug" --split-delimiter ",\"" -ep "http://localhost:7200" -uep "test" --trim-delimiter "\"" --split-delete
+
+sudo time -v java -jar data2services-sparql-operations-0.0.1-SNAPSHOT-jar-with-dependencies.jar -op split --split-property "http://bio2rdf.org/pharmgkb_vocabulary:x-atc" --split-class "http://bio2rdf.org/pharmgkb_vocabulary:Drug" --split-delimiter ",\"" -ep "http://localhost:7200" -uep "test" --trim-delimiter "\"" --split-delete
+
+sudo time -v java -jar data2services-sparql-operations-0.0.1-SNAPSHOT-jar-with-dependencies.jar -op split --split-property "http://bio2rdf.org/pharmgkb_vocabulary:x-pubchemcompound" --split-class "http://bio2rdf.org/pharmgkb_vocabulary:Drug" --split-delimiter ",\"" -ep "http://localhost:7200" -uep "test" --trim-delimiter "\"" --split-delete --uri-expansion "http://bio2rdf.org/pubchem.compound:"
+
+sudo time -v java -jar data2services-sparql-operations-0.0.1-SNAPSHOT-jar-with-dependencies.jar -op split --split-property "http://bio2rdf.org/pharmgkb_vocabulary:x-ref" --split-class "http://bio2rdf.org/pharmgkb_vocabulary:Drug" --split-delimiter ",\"" -ep "http://localhost:7200" -uep "test" --trim-delimiter "\"" --split-delete --uri-expansion "infer"
 
 
 # split variants.tsv
 
-sudo time -v docker run -it --rm --link graphdb:graphdb vemonet/data2services-sparql-operations -op split --split-property "https://w3id.org/data2services/model/GeneIds" --split-class "https://w3id.org/data2services/data/input/pharmagkb/variants.tsv" --split-delimiter "," -ep "http://graphdb:7200" -uep "test" 
-
-sudo time -v docker run -it --rm --link graphdb:graphdb vemonet/data2services-sparql-operations -op split --split-property "https://w3id.org/data2services/model/GeneSymbols" --split-class "https://w3id.org/data2services/data/input/pharmagkb/variants.tsv" --split-delimiter "," -ep "http://graphdb:7200" -uep "test" 
+sudo time -v java -jar data2services-sparql-operations-0.0.1-SNAPSHOT-jar-with-dependencies.jar -op split --split-property "http://bio2rdf.org/pharmgkb_vocabulary:gene" --split-class "http://bio2rdf.org/pharmgkb_vocabulary:Variation" --split-delimiter "," -ep "http://localhost:7200" -uep "test" --split-delete --uri-expansion "http://bio2rdf.org/pharmgkb:"
 
 
-# map to target pdf  variants.tsv
-sudo docker run -it --link graphdb:graphdb -v ${ABS_PATH}:/data vemonet/data2services-sparql-operations -f "/data/mapping/${DATASET}/variants.rq" -ep "http://graphdb:7200/repositories/test/statements" 
+sudo time -v java -jar data2services-sparql-operations-0.0.1-SNAPSHOT-jar-with-dependencies.jar -op split --split-property "http://bio2rdf.org/pharmgkb_vocabulary:genesymbol" --split-class "http://bio2rdf.org/pharmgkb_vocabulary:Variation" --split-delimiter "," -ep "http://localhost:7200" -uep "test" --split-delete
 
 
-#split chemicals.tsv
-sudo time -v docker run -it --rm --link graphdb:graphdb vemonet/data2services-sparql-operations -op split --split-property "https://w3id.org/data2services/model/GenericNames" --split-class "https://w3id.org/data2services/data/input/pharmagkb/chemicals.tsv" --split-delimiter "," -ep "http://graphdb:7200" -uep "test" 
+sudo time -v java -jar data2services-sparql-operations-0.0.1-SNAPSHOT-jar-with-dependencies.jar -op split --split-property "http://bio2rdf.org/pharmgkb_vocabulary:synonym" --split-class "http://bio2rdf.org/pharmgkb_vocabulary:Variation" --split-delimiter "," -ep "http://localhost:7200" -uep "test" --split-delete
 
-sudo time -v docker run -it --rm --link graphdb:graphdb vemonet/data2services-sparql-operations -op split --split-property "https://w3id.org/data2services/model/TradeNames" --split-class "https://w3id.org/data2services/data/input/pharmagkb/chemicals.tsv" --split-delimiter "," -ep "http://graphdb:7200" -uep "test" --split-delete
-
-sudo time -v docker run -it --rm --link graphdb:graphdb vemonet/data2services-sparql-operations -op split --split-property "https://w3id.org/data2services/model/BrandMixtures" --split-class "https://w3id.org/data2services/data/input/pharmagkb/chemicals.tsv" --split-delimiter "," -ep "http://graphdb:7200" -uep "test" --split-delete
-
-sudo time -v docker run -it --rm --link graphdb:graphdb vemonet/data2services-sparql-operations -op split --split-property "https://w3id.org/data2services/model/CrossReferences" --split-class "https://w3id.org/data2services/data/input/pharmagkb/chemicals.tsv" --split-delimiter "," -ep "http://graphdb:7200" -uep "test" --split-delete
-
-sudo time -v docker run -it --rm --link graphdb:graphdb vemonet/data2services-sparql-operations -op split --split-property "https://w3id.org/data2services/model/ExternalVocabulary" --split-class "https://w3id.org/data2services/data/input/pharmagkb/chemicals.tsv" --split-delimiter "," -ep "http://graphdb:7200" -uep "test" --split-delete
-
-# map to target pdf chemicals.tsv
-sudo docker run -it --link graphdb:graphdb -v ${ABS_PATH}:/data vemonet/data2services-sparql-operations -f "/data/mapping/${DATASET}/chemical.rq" -ep "http://graphdb:7200/repositories/test/statements" 
-
-
-# map to target rdf clinical_ann.tsv
-sudo docker run -it --link graphdb:graphdb -v ${ABS_PATH}:/data vemonet/data2services-sparql-operations -f "/data/mapping/${DATASET}/GenotypePhenotypeMapping.rq" -ep "http://graphdb:7200/repositories/test/statements" 
-
-
-
-#split clinical_ann_metadata.tsv
-sudo time -v docker run -it --rm --link graphdb:graphdb vemonet/data2services-sparql-operations -op split --split-property "https://w3id.org/data2services/model/Location" --split-class "https://w3id.org/data2services/data/input/pharmagkb/clinical_ann_metadata.tsv" --split-delimiter "," -ep "http://graphdb:7200" -uep "test" --split-delete
-
-sudo time -v docker run -it --rm --link graphdb:graphdb vemonet/data2services-sparql-operations -op split --split-property "https://w3id.org/data2services/model/Gene" --split-class "https://w3id.org/data2services/data/input/pharmagkb/clinical_ann_metadata.tsv" --split-delimiter "," -ep "http://graphdb:7200" -uep "test" --split-delete
-
-sudo time -v docker run -it --rm --link graphdb:graphdb vemonet/data2services-sparql-operations -op split --split-property "https://w3id.org/data2services/model/ClinicalAnnotationTypes" --split-class "https://w3id.org/data2services/data/input/pharmagkb/clinical_ann_metadata.tsv" --split-delimiter "," -ep "http://graphdb:7200" -uep "test" --split-delete
-
-sudo time -v docker run -it --rm --link graphdb:graphdb vemonet/data2services-sparql-operations -op split --split-property "https://w3id.org/data2services/model/GenotypePhenotypeIds" --split-class "https://w3id.org/data2services/data/input/pharmagkb/clinical_ann_metadata.tsv" --split-delimiter "," -ep "http://graphdb:7200" -uep "test" --split-delete
-
-sudo time -v docker run -it --rm --link graphdb:graphdb vemonet/data2services-sparql-operations -op split --split-property "https://w3id.org/data2services/model/VariantAnnotationsIds" --split-class "https://w3id.org/data2services/data/input/pharmagkb/clinical_ann_metadata.tsv" --split-delimiter "," -ep "http://graphdb:7200" -uep "test" --split-delete
-
-sudo time -v docker run -it --rm --link graphdb:graphdb vemonet/data2services-sparql-operations -op split --split-property "https://w3id.org/data2services/model/Pmids" --split-class "https://w3id.org/data2services/data/input/pharmagkb/clinical_ann_metadata.tsv" --split-delimiter "," -ep "http://graphdb:7200" -uep "test" --split-delete
-
-sudo time -v docker run -it --rm --link graphdb:graphdb vemonet/data2services-sparql-operations -op split --split-property "https://w3id.org/data2services/model/RelatedChemicals" --split-class "https://w3id.org/data2services/data/input/pharmagkb/clinical_ann_metadata.tsv" --split-delimiter "," -ep "http://graphdb:7200" -uep "test" --split-delete
-
-#error here check
-sudo time -v docker run -it --rm --link graphdb:graphdb vemonet/data2services-sparql-operations -op split --split-property "https://w3id.org/data2services/model/RelatedDiseases" --split-class "https://w3id.org/data2services/data/input/pharmagkb/clinical_ann_metadata.tsv" --split-delimiter "," -ep "http://graphdb:7200" -uep "test" --split-delete
-
-
-# map to target rdf clinical_ann_metadata.tsv
-sudo docker run -it --link graphdb:graphdb -v ${ABS_PATH}:/data vemonet/data2services-sparql-operations -f "/data/mapping/${DATASET}/ClinicalAnnotation.rq" -ep "http://graphdb:7200/repositories/test/statements" 
 
 
 #split phenotypes.tsv
 
-#error
-sudo time -v docker run -it --rm --link graphdb:graphdb vemonet/data2services-sparql-operations -op split --split-property "https://w3id.org/data2services/model/CrossReferences" --split-class "https://w3id.org/data2services/data/input/pharmagkb/phenotypes.tsv" --split-delimiter "," -ep "http://graphdb:7200" -uep "test" --split-delete
+sudo time -v java -jar data2services-sparql-operations-0.0.1-SNAPSHOT-jar-with-dependencies.jar -op split --split-property "http://bio2rdf.org/pharmgkb_vocabulary:alternative-name" --split-class "http://bio2rdf.org/pharmgkb_vocabulary:Phenotype" --split-delimiter ",\"" -ep "http://localhost:7200" -uep "test" --trim-delimiter "\"" --split-delete
 
-#error
-sudo time -v docker run -it --rm --link graphdb:graphdb vemonet/data2services-sparql-operations -op split --split-property "https://w3id.org/data2services/model/ExternalVocabulary" --split-class "https://w3id.org/data2services/data/input/pharmagkb/phenotypes.tsv" --split-delimiter "," -ep "http://graphdb:7200" -uep "test" --split-delete
+sudo time -v java -jar data2services-sparql-operations-0.0.1-SNAPSHOT-jar-with-dependencies.jar -op split --split-property "http://bio2rdf.org/pharmgkb_vocabulary:x-ref" --split-class "http://bio2rdf.org/pharmgkb_vocabulary:Phenotype" --split-delimiter ",\"" -ep "http://localhost:7200" -uep "test" --trim-delimiter "\"" --split-delete --uri-expansion "infer"
 
-
-# map to target rdf phenotypes.tsv
-sudo docker run -it --link graphdb:graphdb -v ${ABS_PATH}:/data vemonet/data2services-sparql-operations -f "/data/mapping/${DATASET}/phenotype.rq" -ep "http://graphdb:7200/repositories/test/statements" 
-
-
-
-#split var_drug_ann.tsv
-sudo time -v docker run -it --rm --link graphdb:graphdb vemonet/data2services-sparql-operations -op split --split-property "https://w3id.org/data2services/model/Variant" --split-class "https://w3id.org/data2services/data/input/pharmagkb/var_drug_ann.tsv" --split-delimiter "," -ep "http://graphdb:7200" -uep "test" 
-
-sudo time -v docker run -it --rm --link graphdb:graphdb vemonet/data2services-sparql-operations -op split --split-property "https://w3id.org/data2services/model/Gene" --split-class "https://w3id.org/data2services/data/input/pharmagkb/var_drug_ann.tsv" --split-delimiter "," -ep "http://graphdb:7200" -uep "test" --split-delete
-
-sudo time -v docker run -it --rm --link graphdb:graphdb vemonet/data2services-sparql-operations -op split --split-property "https://w3id.org/data2services/model/Chemical" --split-class "https://w3id.org/data2services/data/input/pharmagkb/var_drug_ann.tsv" --split-delimiter "," -ep "http://graphdb:7200" -uep "test" --split-delete
-
-sudo time -v docker run -it --rm --link graphdb:graphdb vemonet/data2services-sparql-operations -op split --split-property "https://w3id.org/data2services/model/PhenotypeCategory" --split-class "https://w3id.org/data2services/data/input/pharmagkb/var_drug_ann.tsv" --split-delimiter "," -ep "http://graphdb:7200" -uep "test" --split-delete
-
-
-#split var_fa_ann.tsv
-sudo time -v docker run -it --rm --link graphdb:graphdb vemonet/data2services-sparql-operations -op split --split-property "https://w3id.org/data2services/model/Variant" --split-class "https://w3id.org/data2services/data/input/pharmagkb/var_fa_ann.tsv" --split-delimiter "," -ep "http://graphdb:7200" -uep "test" 
-
-sudo time -v docker run -it --rm --link graphdb:graphdb vemonet/data2services-sparql-operations -op split --split-property "https://w3id.org/data2services/model/Gene" --split-class "https://w3id.org/data2services/data/input/pharmagkb/var_fa_ann.tsv" --split-delimiter "," -ep "http://graphdb:7200" -uep "test" --split-delete
-
-sudo time -v docker run -it --rm --link graphdb:graphdb vemonet/data2services-sparql-operations -op split --split-property "https://w3id.org/data2services/model/Chemical" --split-class "https://w3id.org/data2services/data/input/pharmagkb/var_fa_ann.tsv" --split-delimiter "," -ep "http://graphdb:7200" -uep "test" --split-delete
-
-sudo time -v docker run -it --rm --link graphdb:graphdb vemonet/data2services-sparql-operations -op split --split-property "https://w3id.org/data2services/model/PhenotypeCategory" --split-class "https://w3id.org/data2services/data/input/pharmagkb/var_fa_ann.tsv" --split-delimiter "," -ep "http://graphdb:7200" -uep "test" --split-delete
-
-
-#split var_pheno_ann.tsv
-sudo time -v docker run -it --rm --link graphdb:graphdb vemonet/data2services-sparql-operations -op split --split-property "https://w3id.org/data2services/model/Variant" --split-class "https://w3id.org/data2services/data/input/pharmagkb/var_pheno_ann.tsv" --split-delimiter "," -ep "http://graphdb:7200" -uep "test" 
-
-sudo time -v docker run -it --rm --link graphdb:graphdb vemonet/data2services-sparql-operations -op split --split-property "https://w3id.org/data2services/model/Gene" --split-class "https://w3id.org/data2services/data/input/pharmagkb/var_pheno_ann.tsv" --split-delimiter "," -ep "http://graphdb:7200" -uep "test" --split-delete
-
-sudo time -v docker run -it --rm --link graphdb:graphdb vemonet/data2services-sparql-operations -op split --split-property "https://w3id.org/data2services/model/Chemical" --split-class "https://w3id.org/data2services/data/input/pharmagkb/var_pheno_ann.tsv" --split-delimiter "," -ep "http://graphdb:7200" -uep "test" --split-delete
-
-sudo time -v docker run -it --rm --link graphdb:graphdb vemonet/data2services-sparql-operations -op split --split-property "https://w3id.org/data2services/model/PhenotypeCategory" --split-class "https://w3id.org/data2services/data/input/pharmagkb/var_pheno_ann.tsv" --split-delimiter "," -ep "http://graphdb:7200" -uep "test" --split-delete
-
-
-
-# map to target rdf var_drug_ann.tsv
-sudo docker run -it --link graphdb:graphdb -v ${ABS_PATH}:/data vemonet/data2services-sparql-operations -f "/data/mapping/${DATASET}/VariantDrugAnnotation.rq" -ep "http://graphdb:7200/repositories/test/statements" 
 
 
 
 #split genes.csv
-sudo time -v docker run -it --rm --link graphdb:graphdb vemonet/data2services-sparql-operations -op split --split-property "https://w3id.org/data2services/model/Alternate.names" --split-class "https://w3id.org/data2services/data/input/pharmagkb/genes.csv" --split-delimiter "," -ep "http://graphdb:7200" -uep "test" --split-delete
 
-sudo time -v docker run -it --rm --link graphdb:graphdb vemonet/data2services-sparql-operations -op split --split-property "https://w3id.org/data2services/model/Alternate.symbols" --split-class "https://w3id.org/data2services/data/input/pharmagkb/genes.csv" --split-delimiter "," -ep "http://graphdb:7200" -uep "test" --split-delete
+sudo time -v java -jar data2services-sparql-operations-0.0.1-SNAPSHOT-jar-with-dependencies.jar -op split --split-property "http://bio2rdf.org/pharmgkb_vocabulary:x-ensembl" --split-class "http://bio2rdf.org/pharmgkb_vocabulary:Gene" --split-delimiter "," -ep "http://localhost:7200" -uep "test" --split-delete --uri-expansion "http://bio2rdf.org/ensembl:"
 
-sudo time -v docker run -it --rm --link graphdb:graphdb vemonet/data2services-sparql-operations -op split --split-property "https://w3id.org/data2services/model/Cross.references" --split-class "https://w3id.org/data2services/data/input/pharmagkb/genes.csv" --split-delimiter "," -ep "http://graphdb:7200" -uep "test" --split-delete
+sudo time -v java -jar data2services-sparql-operations-0.0.1-SNAPSHOT-jar-with-dependencies.jar -op split --split-property "http://bio2rdf.org/pharmgkb_vocabulary:alternate-name" --split-class "http://bio2rdf.org/pharmgkb_vocabulary:Gene" --split-delimiter "," -ep "http://localhost:7200" -uep "test" --split-delete
+
+sudo time -v java -jar data2services-sparql-operations-0.0.1-SNAPSHOT-jar-with-dependencies.jar -op split --split-property "http://bio2rdf.org/pharmgkb_vocabulary:alternate-symbol" --split-class "http://bio2rdf.org/pharmgkb_vocabulary:Gene" --split-delimiter "," -ep "http://localhost:7200" -uep "test" --split-delete
+
+sudo time -v java -jar data2services-sparql-operations-0.0.1-SNAPSHOT-jar-with-dependencies.jar -op split --split-property "http://bio2rdf.org/pharmgkb_vocabulary:x-ref" --split-class "http://bio2rdf.org/pharmgkb_vocabulary:Gene" --split-delimiter ",\"" -ep "http://localhost:7200" -uep "test" --trim-delimiter "\"" --split-delete --uri-expansion "infer"
 
 
-# map to target rdf genes.csv
-sudo docker run -it --link graphdb:graphdb -v ${ABS_PATH}:/data vemonet/data2services-sparql-operations -f "/data/mapping/${DATASET}/genes.rq" -ep "http://graphdb:7200/repositories/test/statements" 
+
+
+#split clinical_ann_metadata.tsv
+
+sudo time -v java -jar data2services-sparql-operations-0.0.1-SNAPSHOT-jar-with-dependencies.jar -op split --split-property "http://bio2rdf.org/pharmgkb_vocabulary:location" --split-class "http://bio2rdf.org/pharmgkb_vocabulary:ClinicalAnnotation" --split-delimiter "," -ep "http://localhost:7200" -uep "test" --split-delete
+
+sudo time -v java -jar data2services-sparql-operations-0.0.1-SNAPSHOT-jar-with-dependencies.jar -op split --split-property "http://bio2rdf.org/pharmgkb_vocabulary:gene" --split-class "http://bio2rdf.org/pharmgkb_vocabulary:ClinicalAnnotation" --split-delimiter ",\"" -ep "http://localhost:7200" -uep "test" --trim-delimiter "\"" --split-delete
+
+sudo time -v java -jar data2services-sparql-operations-0.0.1-SNAPSHOT-jar-with-dependencies.jar -op split --split-property "http://bio2rdf.org/pharmgkb_vocabulary:annotation-type" --split-class "http://bio2rdf.org/pharmgkb_vocabulary:ClinicalAnnotation" --split-delimiter ",\"" -ep "http://localhost:7200" -uep "test" --trim-delimiter "\"" --split-delete
+
+sudo time -v java -jar data2services-sparql-operations-0.0.1-SNAPSHOT-jar-with-dependencies.jar -op split --split-property "http://bio2rdf.org/pharmgkb_vocabulary:genotypephenotypemapping" --split-class "http://bio2rdf.org/pharmgkb_vocabulary:ClinicalAnnotation" --split-delimiter ",\"" -ep "http://localhost:7200" -uep "test" --trim-delimiter "\"" --split-delete --uri-expansion "http://bio2rdf.org/pharmgkb:"
+
+sudo time -v java -jar data2services-sparql-operations-0.0.1-SNAPSHOT-jar-with-dependencies.jar -op split --split-property "http://bio2rdf.org/pharmgkb_vocabulary:variant-annotation-id" --split-class "http://bio2rdf.org/pharmgkb_vocabulary:ClinicalAnnotation" --split-delimiter ",\"" -ep "http://localhost:7200" -uep "test" --trim-delimiter "\"" --split-delete --uri-expansion "http://bio2rdf.org/pharmgkb:"
+
+sudo time -v java -jar data2services-sparql-operations-0.0.1-SNAPSHOT-jar-with-dependencies.jar -op split --split-property "http://bio2rdf.org/pharmgkb_vocabulary:annotation-type" --split-class "http://bio2rdf.org/pharmgkb_vocabulary:ClinicalAnnotation" --split-delimiter ",\"" -ep "http://localhost:7200" -uep "test" --trim-delimiter "\""  --split-delete
+
+sudo time -v java -jar data2services-sparql-operations-0.0.1-SNAPSHOT-jar-with-dependencies.jar -op split --split-property "http://bio2rdf.org/pharmgkb_vocabulary:x-pubmed" --split-class "http://bio2rdf.org/pharmgkb_vocabulary:ClinicalAnnotation" --split-delimiter "," -ep "http://localhost:7200" -uep "test" --split-delete --uri-expansion "http://bio2rdf.org/pubmed:"
+
+
+sudo time -v java -jar data2services-sparql-operations-0.0.1-SNAPSHOT-jar-with-dependencies.jar -op split --split-property "http://bio2rdf.org/pharmgkb_vocabulary:chemical" --split-class "http://bio2rdf.org/pharmgkb_vocabulary:ClinicalAnnotation" --split-delimiter ",\"" -ep "http://localhost:7200" -uep "test" --trim-delimiter "\"" --split-delete
+
+sudo time -v java -jar data2services-sparql-operations-0.0.1-SNAPSHOT-jar-with-dependencies.jar -op split --split-property "http://bio2rdf.org/pharmgkb_vocabulary:disease" --split-class "http://bio2rdf.org/pharmgkb_vocabulary:ClinicalAnnotation" --split-delimiter ",\"" -ep "http://localhost:7200" -uep "test" --trim-delimiter "\"" --split-delete
+
+
+
+#split var_drug_ann.tsv, var_fa_ann.tsv, var_pheno_ann.tsv
+
+sudo time -v java -jar data2services-sparql-operations-0.0.1-SNAPSHOT-jar-with-dependencies.jar -op split --split-property "http://bio2rdf.org/pharmgkb_vocabulary:variant" --split-class "http://bio2rdf.org/pharmgkb_vocabulary:VariantAnnotation" --split-delimiter "," -ep "http://localhost:7200" -uep "test" --split-delete
+
+sudo time -v java -jar data2services-sparql-operations-0.0.1-SNAPSHOT-jar-with-dependencies.jar -op split --split-property "http://bio2rdf.org/pharmgkb_vocabulary:gene" --split-class "http://bio2rdf.org/pharmgkb_vocabulary:VariantAnnotation" --split-delimiter ",\"" -ep "http://localhost:7200" -uep "test" --trim-delimiter "\"" --split-delete
+
+sudo time -v java -jar data2services-sparql-operations-0.0.1-SNAPSHOT-jar-with-dependencies.jar -op split --split-property "http://bio2rdf.org/pharmgkb_vocabulary:chemical" --split-class "http://bio2rdf.org/pharmgkb_vocabulary:VariantAnnotation" --split-delimiter ",\"" -ep "http://localhost:7200" -uep "test" --trim-delimiter "\"" --split-delete
+
+sudo time -v java -jar data2services-sparql-operations-0.0.1-SNAPSHOT-jar-with-dependencies.jar -op split --split-property "http://bio2rdf.org/pharmgkb_vocabulary:phenotype-category" --split-class "http://bio2rdf.org/pharmgkb_vocabulary:VariantAnnotation" --split-delimiter ",\"" -ep "http://localhost:7200" -uep "test" --trim-delimiter "\"" --split-delete
+
 
