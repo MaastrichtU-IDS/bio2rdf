@@ -35,6 +35,8 @@ INSERT
 WHERE {
     GRAPH <https://w3id.org/data2services/graph/autor2rml> {
 		
+		?s rdf:type <https://w3id.org/data2services/data/input/pharmgkb/clinical_ann.tsv>.
+
 		?s d2sgeneric:GenotypePhenotypeId ?accessionID .
 		
 		BIND ( iri(concat("pharmagkb:", ?accessionID) ) AS ?gpId )

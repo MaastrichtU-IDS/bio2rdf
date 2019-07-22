@@ -46,6 +46,8 @@ INSERT
 }
 WHERE {
     GRAPH <https://w3id.org/data2services/graph/autor2rml> {
+
+		?s rdf:type <https://w3id.org/data2services/data/input/pharmgkb/clinical_ann_metadata.tsv>.
 		
 		?s d2sgeneric:ClinicalAnnotationId ?accessionID .
 		

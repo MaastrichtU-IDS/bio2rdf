@@ -45,6 +45,9 @@ INSERT
 WHERE {
     GRAPH <https://w3id.org/data2services/graph/autor2rml> {
 		
+
+		?s rdf:type ?entity_type.		
+		
 		?s d2sgeneric:AnnotationId ?accessionID .
 		
 		BIND ( iri(concat("pharmagkb:", ?accessionID) ) AS ?annotationId )
@@ -69,7 +72,11 @@ WHERE {
          	 ?s d2sgeneric:Chromosome ?chr .
 		}
 			
-		BIND ( iri(concat("http://bio2rdf.org/pharmgkb:", ?accessionID)) AS ?uri )
+		BIND ( iri(concat("http://bio2rdf.org/pharmgkb:", ?accessionID)) AS ?uri ).
+
+		FILTER ( ?entity_type IN (<https://w3id.org/data2services/data/input/pharmgkb/var_drug_ann.tsv>, 
+					<https://w3id.org/data2services/data/input/pharmgkb/var_fa_ann.tsv>,
+					<https://w3id.org/data2services/data/input/pharmgkb/var_pheno_ann.tsv>) ).
 		
 	}
 }	
