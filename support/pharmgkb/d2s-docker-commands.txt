@@ -39,6 +39,10 @@ sudo docker run -it --rm --link drill:drill -v ${ABS_PATH}:/data r2rml /data/out
 sudo docker run -it --rm --link graphdb:graphdb -v ${ABS_PATH}:/data rdf-upload -m "HTTP" -if "/data/output/${DATASET}" -url "http://graphdb:7200" -rep "test"
 
 
+#split relationships.tsv
+
+sudo time -v java -jar data2services-sparql-operations-0.0.1-SNAPSHOT-jar-with-dependencies.jar -op split --split-property "https://w3id.org/data2services/model/Pmids" --split-class "https://w3id.org/data2services/data/input/pharmgkb/relationships.tsv" --split-delimiter ";" -ep "http://localhost:7200" -uep "test" --split-delete
+
 
 # map to target RDF drugs.tsv
 sudo docker run -it --link graphdb:graphdb -v ${ABS_PATH}:/data vemonet/data2services-sparql-operations -f "/data/mapping/${DATASET}/drugs.rq" -ep "http://graphdb:7200/repositories/test/statements" 
@@ -67,6 +71,8 @@ sudo docker run -it --link graphdb:graphdb -v ${ABS_PATH}:/data vemonet/data2ser
 # map to target RDF genes.csv
 sudo docker run -it --link graphdb:graphdb -v ${ABS_PATH}:/data vemonet/data2services-sparql-operations -f "/data/mapping/${DATASET}/genes.rq" -ep "http://graphdb:7200/repositories/test/statements" 
 
+# map to target RDF relationships.csv
+sudo docker run -it --link graphdb:graphdb -v ${ABS_PATH}:/data vemonet/data2services-sparql-operations -f "/data/mapping/${DATASET}/relationships.rq" -ep "http://graphdb:7200/repositories/test/statements" 
 
 
 
@@ -172,5 +178,6 @@ sudo time -v java -jar data2services-sparql-operations-0.0.1-SNAPSHOT-jar-with-d
 sudo time -v java -jar data2services-sparql-operations-0.0.1-SNAPSHOT-jar-with-dependencies.jar -op split --split-property "http://bio2rdf.org/pharmgkb_vocabulary:chemical" --split-class "http://bio2rdf.org/pharmgkb_vocabulary:VariantAnnotation" --split-delimiter ",\"" -ep "http://localhost:7200" -uep "test" --trim-delimiter "\"" --split-delete
 
 sudo time -v java -jar data2services-sparql-operations-0.0.1-SNAPSHOT-jar-with-dependencies.jar -op split --split-property "http://bio2rdf.org/pharmgkb_vocabulary:phenotype-category" --split-class "http://bio2rdf.org/pharmgkb_vocabulary:VariantAnnotation" --split-delimiter ",\"" -ep "http://localhost:7200" -uep "test" --trim-delimiter "\"" --split-delete
+
 
 
