@@ -85,7 +85,7 @@ WHERE {
 		} OPTIONAL {
          	 ?s d2sgeneric:Chromosomal.start...grch37.p13 ?chr_start_37 .
 		} OPTIONAL {
-         	 ?s d2sgeneric:Chromosomal.stop...grch37.p13 ?chr_end_37 .
+         	 ?s d2sgeneric:Chromosomal.stop...grch37.p13 ?chr_end_37 . 
 		} OPTIONAL {
          	 ?s d2sgeneric:Chromosomal.start...grch38.p7 ?chr_start_38 .
 		} OPTIONAL {
