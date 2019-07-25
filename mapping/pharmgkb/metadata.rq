@@ -89,14 +89,14 @@ INSERT  {
             pav:version "5"^^xsd:string ; 
             dct:title "Bio2RDF version of Pharmgkb, Version: 5" ;
             dct:description "This is the PharmGKB" ; 
-            dct:license <http://creativecommons.org/licenses/by/3.0/> ; 
+            dct:license <http://creativecommons.org/licenses/by/4.0/> ; 
             dct:conformsTo <http://www.w3.org/2001/sw/hcls/notes/hcls-dataset/> ;
 
             dct:language <http://lexvo.org/id/iso639-3/eng> ; 
             void:vocabulary <http://bio2rdf.org/pharmgkb_vocabulary:> ; 
 
             dct:publisher <http://bio2rdf.org/> ; 
-            dct:issued '''NOW()''' ; 
+            dct:issued ?now; 
             dct:creator <https://github.com/MaastrichtU-IDS/data2services-pipeline> ; 
 
             idot:preferredPrefix "pharmgkb" ;
