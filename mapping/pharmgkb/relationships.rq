@@ -72,7 +72,7 @@ WHERE {
 	}
 		
 	BIND ( iri(concat("http://bio2rdf.org/pharmgkb:", ?accessionID)) AS ?uri )
-	BIND ( iri(concat("http://bio2rdf.org/pharmgkb_vocabulary:", ?e1_type, "-", ?e2_type, "-", "Association")) AS ?type)
+	BIND ( iri(concat("http://bio2rdf.org/pharmgkb_resource:", ?e1_type, "-", ?e2_type, "-", "Association")) AS ?type)
 		
 	
 }	
