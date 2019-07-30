@@ -39,10 +39,8 @@ sudo docker run -it --rm --link drill:drill -v ${ABS_PATH}:/data r2rml /data/out
 sudo docker run -it --rm --link graphdb:graphdb -v ${ABS_PATH}:/data rdf-upload -m "HTTP" -if "/data/output/${DATASET}" -url "http://graphdb:7200" -rep "test"
 
 
-
-
 # map to target RDF hgnc tsv
-sudo docker run -it --link graphdb:graphdb -v ${ABS_PATH}:/data vemonet/data2services-sparql-operations -f "/data/mapping/${DATASET}/drugs.rq" -ep "http://graphdb:7200/repositories/test/statements" 
+sudo docker run -it --link graphdb:graphdb -v ${ABS_PATH}:/data vemonet/data2services-sparql-operations -f "/data/mapping/${DATASET}/hgnc.rq" -ep "http://graphdb:7200/repositories/test/statements" 
 
 
 
@@ -52,103 +50,35 @@ sudo docker run -it --link graphdb:graphdb -v ${ABS_PATH}:/data vemonet/data2ser
 # use "infer" value for the --uri-expansion parameter if you want smart expansion depending on the splitted prefix:id pairs (like columns CrossReferences & ExternalVocabulary)
 
 
-#split chemicals.tsv
+#split commands
 
-sudo time -v java -jar data2services-sparql-operations-0.0.1-SNAPSHOT-jar-with-dependencies.jar -op split --split-property "http://bio2rdf.org/pharmgkb_vocabulary:generic_name" --split-class "http://bio2rdf.org/pharmgkb_vocabulary:Chemical" --split-delimiter ",\"" -ep "http://localhost:7200" -uep "test" --trim-delimiter "\"" --split-delete
+sudo time -v java -jar data2services-sparql-operations-0.0.1-SNAPSHOT-jar-with-dependencies.jar -op split --split-property "http://bio2rdf.org/hgnc_vocabulary:previous-symbol" --split-class "http://bio2rdf.org/hgnc_vocabulary:Gene-Symbol" --split-delimiter "," -ep "http://localhost:7200" -uep "test" --split-delete
 
-sudo time -v java -jar data2services-sparql-operations-0.0.1-SNAPSHOT-jar-with-dependencies.jar -op split --split-property "http://bio2rdf.org/pharmgkb_vocabulary:trade_name" --split-class "http://bio2rdf.org/pharmgkb_vocabulary:Chemical" --split-delimiter ",\"" -ep "http://localhost:7200" -uep "test" --trim-delimiter "\"" --split-delete
+sudo time -v java -jar data2services-sparql-operations-0.0.1-SNAPSHOT-jar-with-dependencies.jar -op split --split-property "http://bio2rdf.org/hgnc_vocabulary:previous-name" --split-class "http://bio2rdf.org/hgnc_vocabulary:Gene-Symbol" --split-delimiter ", \"" -ep "http://localhost:7200" -uep "test" --trim-delimiter "\"" --split-delete
 
-sudo time -v java -jar data2services-sparql-operations-0.0.1-SNAPSHOT-jar-with-dependencies.jar -op split --split-property "http://bio2rdf.org/pharmgkb_vocabulary:brand_mixture" --split-class "http://bio2rdf.org/pharmgkb_vocabulary:Chemical" --split-delimiter ",\"" -ep "http://localhost:7200" -uep "test" --trim-delimiter "\"" --split-delete
+sudo time -v java -jar data2services-sparql-operations-0.0.1-SNAPSHOT-jar-with-dependencies.jar -op split --split-property "http://bio2rdf.org/hgnc_vocabulary:synonym" --split-class "http://bio2rdf.org/hgnc_vocabulary:Gene-Symbol" --split-delimiter "," -ep "http://localhost:7200" -uep "test" --split-delete
 
-sudo time -v java -jar data2services-sparql-operations-0.0.1-SNAPSHOT-jar-with-dependencies.jar -op split --split-property "http://bio2rdf.org/pharmgkb_vocabulary:x-atc" --split-class "http://bio2rdf.org/pharmgkb_vocabulary:Chemical" --split-delimiter ",\"" -ep "http://localhost:7200" -uep "test" --trim-delimiter "\"" --split-delete
+sudo time -v java -jar data2services-sparql-operations-0.0.1-SNAPSHOT-jar-with-dependencies.jar -op split --split-property "http://bio2rdf.org/hgnc_vocabulary:name-synonym" --split-class "http://bio2rdf.org/hgnc_vocabulary:Gene-Symbol" --split-delimiter ", \"" -ep "http://localhost:7200" -uep "test" --trim-delimiter "\"" --split-delete
 
-sudo time -v java -jar data2services-sparql-operations-0.0.1-SNAPSHOT-jar-with-dependencies.jar -op split --split-property "http://bio2rdf.org/pharmgkb_vocabulary:x-pubchemcompound" --split-class "http://bio2rdf.org/pharmgkb_vocabulary:Chemical" --split-delimiter ",\"" -ep "http://localhost:7200" -uep "test" --trim-delimiter "\"" --split-delete --uri-expansion "http://bio2rdf.org/pubchem.compound:"
+sudo time -v java -jar data2services-sparql-operations-0.0.1-SNAPSHOT-jar-with-dependencies.jar -op split --split-property "http://bio2rdf.org/hgnc_vocabulary:accession" --split-class "http://bio2rdf.org/hgnc_vocabulary:Gene-Symbol" --split-delimiter "," -ep "http://localhost:7200" -uep "test" --split-delete
 
-sudo time -v java -jar data2services-sparql-operations-0.0.1-SNAPSHOT-jar-with-dependencies.jar -op split --split-property "http://bio2rdf.org/pharmgkb_vocabulary:x-ref" --split-class "http://bio2rdf.org/pharmgkb_vocabulary:Chemical" --split-delimiter ",\"" -ep "http://localhost:7200" -uep "test" --trim-delimiter "\"" --split-delete --uri-expansion "infer"
+sudo time -v java -jar data2services-sparql-operations-0.0.1-SNAPSHOT-jar-with-dependencies.jar -op split --split-property "http://bio2rdf.org/hgnc_vocabulary:x-ec" --split-class "http://bio2rdf.org/hgnc_vocabulary:Gene-Symbol" --split-delimiter "," -ep "http://localhost:7200" -uep "test" --split-delete
 
+sudo time -v java -jar data2services-sparql-operations-0.0.1-SNAPSHOT-jar-with-dependencies.jar -op split --split-property "http://bio2rdf.org/hgnc_vocabulary:x-pubmed" --split-class "http://bio2rdf.org/hgnc_vocabulary:Gene-Symbol" --split-delimiter ", " -ep "http://localhost:7200" -uep "test" --split-delete --uri-expansion "http://bio2rdf.org/pubmed:"
 
+sudo time -v java -jar data2services-sparql-operations-0.0.1-SNAPSHOT-jar-with-dependencies.jar -op split --split-property "http://bio2rdf.org/hgnc_vocabulary:x-refseq" --split-class "http://bio2rdf.org/hgnc_vocabulary:Gene-Symbol" --split-delimiter ", " -ep "http://localhost:7200" -uep "test" --split-delete --uri-expansion "http://bio2rdf.org/refseq:"
 
-#split drugs.tsv
+sudo time -v java -jar data2services-sparql-operations-0.0.1-SNAPSHOT-jar-with-dependencies.jar -op split --split-property "http://bio2rdf.org/hgnc_vocabulary:gene-family-tag" --split-class "http://bio2rdf.org/hgnc_vocabulary:Gene-Symbol" --split-delimiter ", " -ep "http://localhost:7200" -uep "test" --split-delete
 
-sudo time -v java -jar data2services-sparql-operations-0.0.1-SNAPSHOT-jar-with-dependencies.jar -op split --split-property "http://bio2rdf.org/pharmgkb_vocabulary:generic_name" --split-class "http://bio2rdf.org/pharmgkb_vocabulary:Drug" --split-delimiter ",\"" -ep "http://localhost:7200" -uep "test" --trim-delimiter "\"" --split-delete
+sudo time -v java -jar data2services-sparql-operations-0.0.1-SNAPSHOT-jar-with-dependencies.jar -op split --split-property "http://bio2rdf.org/hgnc_vocabulary:gene-family-description" --split-class "http://bio2rdf.org/hgnc_vocabulary:Gene-Symbol" --split-delimiter ", \"" -ep "http://localhost:7200" -uep "test" --trim-delimiter "\"" --split-delete
 
-sudo time -v java -jar data2services-sparql-operations-0.0.1-SNAPSHOT-jar-with-dependencies.jar -op split --split-property "http://bio2rdf.org/pharmgkb_vocabulary:trade_name" --split-class "http://bio2rdf.org/pharmgkb_vocabulary:Drug" --split-delimiter ",\"" -ep "http://localhost:7200" -uep "test" --trim-delimiter "\"" --split-delete
+sudo time -v java -jar data2services-sparql-operations-0.0.1-SNAPSHOT-jar-with-dependencies.jar -op split --split-property "http://bio2rdf.org/hgnc_vocabulary:x-ccds" --split-class "http://bio2rdf.org/hgnc_vocabulary:Gene-Symbol" --split-delimiter ", " -ep "http://localhost:7200" -uep "test" --split-delete --uri-expansion "http://bio2rdf.org/ccds:"
 
-sudo time -v java -jar data2services-sparql-operations-0.0.1-SNAPSHOT-jar-with-dependencies.jar -op split --split-property "http://bio2rdf.org/pharmgkb_vocabulary:brand_mixture" --split-class "http://bio2rdf.org/pharmgkb_vocabulary:Drug" --split-delimiter ",\"" -ep "http://localhost:7200" -uep "test" --trim-delimiter "\"" --split-delete
+sudo time -v java -jar data2services-sparql-operations-0.0.1-SNAPSHOT-jar-with-dependencies.jar -op split --split-property "http://bio2rdf.org/hgnc_vocabulary:x-uniprot" --split-class "http://bio2rdf.org/hgnc_vocabulary:Gene-Symbol" --split-delimiter ", " -ep "http://localhost:7200" -uep "test" --split-delete --uri-expansion "http://bio2rdf.org/uniprot:"
 
-sudo time -v java -jar data2services-sparql-operations-0.0.1-SNAPSHOT-jar-with-dependencies.jar -op split --split-property "http://bio2rdf.org/pharmgkb_vocabulary:x-atc" --split-class "http://bio2rdf.org/pharmgkb_vocabulary:Drug" --split-delimiter ",\"" -ep "http://localhost:7200" -uep "test" --trim-delimiter "\"" --split-delete
+sudo time -v java -jar data2services-sparql-operations-0.0.1-SNAPSHOT-jar-with-dependencies.jar -op split --split-property "http://bio2rdf.org/hgnc_vocabulary:x-mgi" --split-class "http://bio2rdf.org/hgnc_vocabulary:Gene-Symbol" --split-delimiter ", " -ep "http://localhost:7200" -uep "test" --split-delete --uri-expansion "http://bio2rdf.org/mgi:"
 
-sudo time -v java -jar data2services-sparql-operations-0.0.1-SNAPSHOT-jar-with-dependencies.jar -op split --split-property "http://bio2rdf.org/pharmgkb_vocabulary:x-pubchemcompound" --split-class "http://bio2rdf.org/pharmgkb_vocabulary:Drug" --split-delimiter ",\"" -ep "http://localhost:7200" -uep "test" --trim-delimiter "\"" --split-delete --uri-expansion "http://bio2rdf.org/pubchem.compound:"
-
-sudo time -v java -jar data2services-sparql-operations-0.0.1-SNAPSHOT-jar-with-dependencies.jar -op split --split-property "http://bio2rdf.org/pharmgkb_vocabulary:x-ref" --split-class "http://bio2rdf.org/pharmgkb_vocabulary:Drug" --split-delimiter ",\"" -ep "http://localhost:7200" -uep "test" --trim-delimiter "\"" --split-delete --uri-expansion "infer"
-
-
-# split variants.tsv
-
-sudo time -v java -jar data2services-sparql-operations-0.0.1-SNAPSHOT-jar-with-dependencies.jar -op split --split-property "http://bio2rdf.org/pharmgkb_vocabulary:gene" --split-class "http://bio2rdf.org/pharmgkb_vocabulary:Variation" --split-delimiter "," -ep "http://localhost:7200" -uep "test" --split-delete --uri-expansion "http://bio2rdf.org/pharmgkb:"
-
-
-sudo time -v java -jar data2services-sparql-operations-0.0.1-SNAPSHOT-jar-with-dependencies.jar -op split --split-property "http://bio2rdf.org/pharmgkb_vocabulary:genesymbol" --split-class "http://bio2rdf.org/pharmgkb_vocabulary:Variation" --split-delimiter "," -ep "http://localhost:7200" -uep "test" --split-delete
-
-
-sudo time -v java -jar data2services-sparql-operations-0.0.1-SNAPSHOT-jar-with-dependencies.jar -op split --split-property "http://bio2rdf.org/pharmgkb_vocabulary:synonym" --split-class "http://bio2rdf.org/pharmgkb_vocabulary:Variation" --split-delimiter "," -ep "http://localhost:7200" -uep "test" --split-delete
-
-
-
-#split phenotypes.tsv
-
-sudo time -v java -jar data2services-sparql-operations-0.0.1-SNAPSHOT-jar-with-dependencies.jar -op split --split-property "http://bio2rdf.org/pharmgkb_vocabulary:alternative-name" --split-class "http://bio2rdf.org/pharmgkb_vocabulary:Phenotype" --split-delimiter ",\"" -ep "http://localhost:7200" -uep "test" --trim-delimiter "\"" --split-delete
-
-sudo time -v java -jar data2services-sparql-operations-0.0.1-SNAPSHOT-jar-with-dependencies.jar -op split --split-property "http://bio2rdf.org/pharmgkb_vocabulary:x-ref" --split-class "http://bio2rdf.org/pharmgkb_vocabulary:Phenotype" --split-delimiter ",\"" -ep "http://localhost:7200" -uep "test" --trim-delimiter "\"" --split-delete --uri-expansion "infer"
-
-
-
-
-#split genes.csv
-
-sudo time -v java -jar data2services-sparql-operations-0.0.1-SNAPSHOT-jar-with-dependencies.jar -op split --split-property "http://bio2rdf.org/pharmgkb_vocabulary:x-ensembl" --split-class "http://bio2rdf.org/pharmgkb_vocabulary:Gene" --split-delimiter "," -ep "http://localhost:7200" -uep "test" --split-delete --uri-expansion "http://bio2rdf.org/ensembl:"
-
-sudo time -v java -jar data2services-sparql-operations-0.0.1-SNAPSHOT-jar-with-dependencies.jar -op split --split-property "http://bio2rdf.org/pharmgkb_vocabulary:alternate-name" --split-class "http://bio2rdf.org/pharmgkb_vocabulary:Gene" --split-delimiter "," -ep "http://localhost:7200" -uep "test" --split-delete
-
-sudo time -v java -jar data2services-sparql-operations-0.0.1-SNAPSHOT-jar-with-dependencies.jar -op split --split-property "http://bio2rdf.org/pharmgkb_vocabulary:alternate-symbol" --split-class "http://bio2rdf.org/pharmgkb_vocabulary:Gene" --split-delimiter "," -ep "http://localhost:7200" -uep "test" --split-delete
-
-sudo time -v java -jar data2services-sparql-operations-0.0.1-SNAPSHOT-jar-with-dependencies.jar -op split --split-property "http://bio2rdf.org/pharmgkb_vocabulary:x-ref" --split-class "http://bio2rdf.org/pharmgkb_vocabulary:Gene" --split-delimiter ",\"" -ep "http://localhost:7200" -uep "test" --trim-delimiter "\"" --split-delete --uri-expansion "infer"
-
-
-
-
-#split clinical_ann_metadata.tsv
-
-sudo time -v java -jar data2services-sparql-operations-0.0.1-SNAPSHOT-jar-with-dependencies.jar -op split --split-property "http://bio2rdf.org/pharmgkb_vocabulary:location" --split-class "http://bio2rdf.org/pharmgkb_vocabulary:ClinicalAnnotation" --split-delimiter "," -ep "http://localhost:7200" -uep "test" --split-delete
-
-sudo time -v java -jar data2services-sparql-operations-0.0.1-SNAPSHOT-jar-with-dependencies.jar -op split --split-property "http://bio2rdf.org/pharmgkb_vocabulary:gene" --split-class "http://bio2rdf.org/pharmgkb_vocabulary:ClinicalAnnotation" --split-delimiter ",\"" -ep "http://localhost:7200" -uep "test" --trim-delimiter "\"" --split-delete
-
-sudo time -v java -jar data2services-sparql-operations-0.0.1-SNAPSHOT-jar-with-dependencies.jar -op split --split-property "http://bio2rdf.org/pharmgkb_vocabulary:annotation-type" --split-class "http://bio2rdf.org/pharmgkb_vocabulary:ClinicalAnnotation" --split-delimiter ",\"" -ep "http://localhost:7200" -uep "test" --trim-delimiter "\"" --split-delete
-
-sudo time -v java -jar data2services-sparql-operations-0.0.1-SNAPSHOT-jar-with-dependencies.jar -op split --split-property "http://bio2rdf.org/pharmgkb_vocabulary:genotypephenotypemapping" --split-class "http://bio2rdf.org/pharmgkb_vocabulary:ClinicalAnnotation" --split-delimiter ",\"" -ep "http://localhost:7200" -uep "test" --trim-delimiter "\"" --split-delete --uri-expansion "http://bio2rdf.org/pharmgkb:"
-
-sudo time -v java -jar data2services-sparql-operations-0.0.1-SNAPSHOT-jar-with-dependencies.jar -op split --split-property "http://bio2rdf.org/pharmgkb_vocabulary:variant-annotation-id" --split-class "http://bio2rdf.org/pharmgkb_vocabulary:ClinicalAnnotation" --split-delimiter ",\"" -ep "http://localhost:7200" -uep "test" --trim-delimiter "\"" --split-delete --uri-expansion "http://bio2rdf.org/pharmgkb:"
-
-sudo time -v java -jar data2services-sparql-operations-0.0.1-SNAPSHOT-jar-with-dependencies.jar -op split --split-property "http://bio2rdf.org/pharmgkb_vocabulary:annotation-type" --split-class "http://bio2rdf.org/pharmgkb_vocabulary:ClinicalAnnotation" --split-delimiter ",\"" -ep "http://localhost:7200" -uep "test" --trim-delimiter "\""  --split-delete
-
-sudo time -v java -jar data2services-sparql-operations-0.0.1-SNAPSHOT-jar-with-dependencies.jar -op split --split-property "http://bio2rdf.org/pharmgkb_vocabulary:x-pubmed" --split-class "http://bio2rdf.org/pharmgkb_vocabulary:ClinicalAnnotation" --split-delimiter "," -ep "http://localhost:7200" -uep "test" --split-delete --uri-expansion "http://bio2rdf.org/pubmed:"
-
-
-sudo time -v java -jar data2services-sparql-operations-0.0.1-SNAPSHOT-jar-with-dependencies.jar -op split --split-property "http://bio2rdf.org/pharmgkb_vocabulary:chemical" --split-class "http://bio2rdf.org/pharmgkb_vocabulary:ClinicalAnnotation" --split-delimiter ",\"" -ep "http://localhost:7200" -uep "test" --trim-delimiter "\"" --split-delete
-
-sudo time -v java -jar data2services-sparql-operations-0.0.1-SNAPSHOT-jar-with-dependencies.jar -op split --split-property "http://bio2rdf.org/pharmgkb_vocabulary:disease" --split-class "http://bio2rdf.org/pharmgkb_vocabulary:ClinicalAnnotation" --split-delimiter ",\"" -ep "http://localhost:7200" -uep "test" --trim-delimiter "\"" --split-delete
-
-
-
-#split var_drug_ann.tsv, var_fa_ann.tsv, var_pheno_ann.tsv
-
-sudo time -v java -jar data2services-sparql-operations-0.0.1-SNAPSHOT-jar-with-dependencies.jar -op split --split-property "http://bio2rdf.org/pharmgkb_vocabulary:variant" --split-class "http://bio2rdf.org/pharmgkb_vocabulary:VariantAnnotation" --split-delimiter "," -ep "http://localhost:7200" -uep "test" --split-delete
-
-sudo time -v java -jar data2services-sparql-operations-0.0.1-SNAPSHOT-jar-with-dependencies.jar -op split --split-property "http://bio2rdf.org/pharmgkb_vocabulary:gene" --split-class "http://bio2rdf.org/pharmgkb_vocabulary:VariantAnnotation" --split-delimiter ",\"" -ep "http://localhost:7200" -uep "test" --trim-delimiter "\"" --split-delete
-
-sudo time -v java -jar data2services-sparql-operations-0.0.1-SNAPSHOT-jar-with-dependencies.jar -op split --split-property "http://bio2rdf.org/pharmgkb_vocabulary:chemical" --split-class "http://bio2rdf.org/pharmgkb_vocabulary:VariantAnnotation" --split-delimiter ",\"" -ep "http://localhost:7200" -uep "test" --trim-delimiter "\"" --split-delete
-
-sudo time -v java -jar data2services-sparql-operations-0.0.1-SNAPSHOT-jar-with-dependencies.jar -op split --split-property "http://bio2rdf.org/pharmgkb_vocabulary:phenotype-category" --split-class "http://bio2rdf.org/pharmgkb_vocabulary:VariantAnnotation" --split-delimiter ",\"" -ep "http://localhost:7200" -uep "test" --trim-delimiter "\"" --split-delete
+sudo time -v java -jar data2services-sparql-operations-0.0.1-SNAPSHOT-jar-with-dependencies.jar -op split --split-property "http://bio2rdf.org/hgnc_vocabulary:x-rgd" --split-class "http://bio2rdf.org/hgnc_vocabulary:Gene-Symbol" --split-delimiter ", " -ep "http://localhost:7200" -uep "test" --split-delete --uri-expansion "http://bio2rdf.org/rgd:"
 
 
 
