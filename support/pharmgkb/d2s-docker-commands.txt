@@ -181,3 +181,9 @@ sudo time -v java -jar data2services-sparql-operations-0.0.1-SNAPSHOT-jar-with-d
 
 
 
+
+# Test the download command
+
+java -jar data2services-download-java-0.0.1-SNAPSHOT-jar-with-dependencies.jar -ds pharmgkb -dp "/home/apc/Maastricht/bio2rdf-github/input/pharmgkb/" -dcsv ../datasets.csv
+
+
