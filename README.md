@@ -20,8 +20,8 @@ GraphDB needs to be built locally, for this:
 
 ```shell
 # Start Apache Drill sharing volume with this repository.
-# Here shared locally at /data/data2services-transform-biolink
-docker run -dit --rm -v /data/data2services-transform-biolink:/data:ro -p 8047:8047 -p 31010:31010 --name drill vemonet/apache-drill
+# Here shared locally at /data/bio2rdf
+docker run -dit --rm -v /data/bio2rdf:/data:ro -p 8047:8047 -p 31010:31010 --name drill vemonet/apache-drill
 
 # GraphDB needs to be downloaded manually and built. 
 # Here shared locally at /data/graphdb and /data/graphdb-import
