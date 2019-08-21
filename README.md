@@ -40,9 +40,9 @@ docker run -d --rm --name graphdb -p 7200:7200 -v /data/graphdb:/opt/graphdb/hom
   * `--outdir`: the [output directory](https://github.com/MaastrichtU-IDS/bio2rdf/tree/master/output/pharmgkb) for files outputted by the workflow (except for the downloaded source files that goes automatically to `/input`). 
     * e.g. `output/$dataset_name`.
   * The `.cwl` [workflow file](https://github.com/MaastrichtU-IDS/bio2rdf/blob/master/support/pharmgkb/workflow.cwl)
-    * e.g. `support/cwl/workflow-xml.cwl`
+    * e.g. `support/pharmgkb/workflow.cwl`
   * The `.yml` [configuration file](https://github.com/MaastrichtU-IDS/bio2rdf/blob/master/support/pharmgkb/workflow-job.yml) with all parameters required to run the workflow
-    * e.g. `support/cwl/config/config-transform-xml-drugbank.yml`
+    * e.g. `support/pharmgkb/workflow-job.yml`
 
 * 3 types of workflows can be run depending on the input data:
   * [Convert XML to RDF](https://github.com/MaastrichtU-IDS/bio2rdfk#convert-xml-with-xml2rdf) (Will be available shortly)
