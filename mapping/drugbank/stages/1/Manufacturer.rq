@@ -1,0 +1,54 @@
+PREFIX x2rm: <http://ids.unimaas.nl/xml2rdf/model#>
+PREFIX x2rd: <http://ids.unimaas.nl/xml2rdf/data/>
+PREFIX d2s: <https://w3id.org/data2services/vocab/>
+PREFIX ido: <http://identifiers.org/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX owl: <http://www.w3.org/2002/07/owl#>
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+PREFIX obo: <http://purl.obolibrary.org/obo/>
+PREFIX dc: <http://purl.org/dc/elements/1.1/>
+PREFIX dcterms: <http://purl.org/dc/terms/>
+PREFIX bl: <https://w3id.org/biolink/vocab/>
+PREFIX drugbank_vocabulary: <http://bio2rdf.org/drugbank_vocabulary:>
+PREFIX bio2rdf_vocabulary: <http://bio2rdf.org/bio2rdf_vocabulary:> 
+
+INSERT 
+{ 
+    GRAPH <https://w3id.org/data2services/graph/drugbank> {  
+
+	?uri	a drugbank_vocabulary:Resource;
+		rdf:type drugbank_vocabulary:Manufacturer;
+		dc:identifier ?dcId;
+		rdfs:label ?label;
+		dc:title ?manufacturerText;
+		bio2rdf_vocabulary:namespace "drugbank_resource";
+		bio2rdf_vocabulary:identifier ?itemId;
+		bio2rdf_vocabulary:uri ?uri;
+
+		drugbank_vocabulary:generic ?manufacturerGeneric;
+		drugbank_vocabulary:x-url ?manufacturerUrl;
+    }
+}
+WHERE {
+  
+  GRAPH <https://w3id.org/data2services/graph/xml2rdf> {
+
+	?manufacturer a x2rm:drugbank.drug.manufacturers.manufacturer.
+	
+	?manufacturer x2rm:hasValue ?manufacturerText.
+	?manufacturer  x2rm:hasAttribute ?manufacturerGenericAttr.
+	?manufacturerGenericAttr a x2rm:drugbank.drug.manufacturers.manufacturer.-generic.
+	?manufacturerGenericAttr x2rm:hasValue ?manufacturerGeneric.
+	OPTIONAL{
+		?manufacturer  x2rm:hasAttribute ?manufacturerUrlAttr.
+		?manufacturerUrlAttr a x2rm:drugbank.drug.manufacturers.manufacturer.-url.
+		?manufacturerUrlAttr x2rm:hasValue ?manufacturerUrl.
+	}
+
+	BIND ( SHA1(STR(?manufacturerText)) AS ?itemId)
+	BIND ( concat("drugbank_resource:", ?itemId) AS ?dcId )
+	BIND ( concat(?manufacturerText, " [drugbank_resource:", ?itemId, "] ") AS ?label )
+	BIND ( iri(concat("http://bio2rdf.org/drugbank_resource:", ?itemId)) AS ?uri )
+  } # graph
+  
+} # where

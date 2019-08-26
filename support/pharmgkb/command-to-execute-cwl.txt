@@ -5,7 +5,7 @@
 
 
 # Please define the absolute path of the folder that contains the structure (input, output, support, mapping)
-export ABS_PATH=/home/apc/Maastricht/bio2rdf-github
+export ABS_PATH=/media/apc/DATA/Maastricht/bio2rdf-github
 
 # Please define the dataset folder name
 export DATASET=pharmgkb

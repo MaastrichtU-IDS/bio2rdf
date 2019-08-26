@@ -1,0 +1,122 @@
+PREFIX x2rm: <http://ids.unimaas.nl/xml2rdf/model#>
+PREFIX x2rd: <http://ids.unimaas.nl/xml2rdf/data/>
+PREFIX d2s: <https://w3id.org/data2services/vocab/>
+PREFIX ido: <http://identifiers.org/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX owl: <http://www.w3.org/2002/07/owl#>
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+PREFIX obo: <http://purl.obolibrary.org/obo/>
+PREFIX dc: <http://purl.org/dc/elements/1.1/>
+PREFIX dcterms: <http://purl.org/dc/terms/>
+PREFIX bl: <https://w3id.org/biolink/vocab/>
+PREFIX drugbank_vocabulary: <http://bio2rdf.org/drugbank_vocabulary:>
+PREFIX bio2rdf_vocabulary: <http://bio2rdf.org/bio2rdf_vocabulary:> 
+
+INSERT 
+{ 
+    GRAPH <https://w3id.org/data2services/graph/drugbank> {  
+
+	?uri	a drugbank_vocabulary:Resource;
+		rdf:type drugbank_vocabulary:Drug;
+
+		drugbank_vocabulary:x-pdb ?pdbEntryValue;
+		drugbank_vocabulary:fda-label ?fdaLabelValue;
+		drugbank_vocabulary:x-msds ?msdsValue;
+		drugbank_vocabulary:patent ?patentUri;
+		drugbank_vocabulary:food-interaction ?foodInteractionUri;
+		drugbank_vocabulary:ddi-interactor-in ?ddiUri;
+		
+    }
+}
+WHERE {
+  
+  GRAPH <https://w3id.org/data2services/graph/xml2rdf> {
+
+    # Get drug primary ID
+    ?drugObj a x2rm:drugbank.drug .
+
+
+        # Get drug primary ID        
+	?drugObj x2rm:hasChild [
+            a x2rm:drugbank.drug.drugbank-id ;
+            x2rm:hasAttribute [ a x2rm:drugbank.drug.drugbank-id.-primary ] ;
+            x2rm:hasValue ?drugId
+        ];
+
+	BIND ( iri(concat("http://bio2rdf.org/drugbank:", ?drugId)) AS ?uri )
+
+	OPTIONAL{
+		?drugObj x2rm:hasChild ?pdbEntries.
+
+		?pdbEntries a x2rm:drugbank.drug.pdb-entries.
+
+		    OPTIONAL{
+		    	?pdbEntries x2rm:hasChild ?pdbEntry.
+			?pdbEntry a x2rm:drugbank.drug.pdb-entries.pdb-entry.
+			?pdbEntry x2rm:hasValue ?pdbEntryValue
+		    } # PDB entry
+	} OPTIONAL{
+		?drugObj x2rm:hasChild ?fdaLabel.
+
+		?fdaLabel a x2rm:drugbank.drug.fda-label.
+   
+		?fdaLabel x2rm:hasValue ?fdaLabelValue.
+	} OPTIONAL{
+		?drugObj x2rm:hasChild ?msds.
+
+		?msds a x2rm:drugbank.drug.msds.
+   
+		?msds x2rm:hasValue ?msdsValue.
+	} OPTIONAL{
+		?drugObj x2rm:hasChild ?patents.
+
+		?patents a x2rm:drugbank.drug.patents; 
+
+		    OPTIONAL{
+		    	?patents x2rm:hasChild ?patent.
+			?patent a x2rm:drugbank.drug.patents.patent; 
+
+			OPTIONAL{
+				?patent x2rm:hasChild [
+				    a x2rm:drugbank.drug.patents.patent.number; 
+				    x2rm:hasValue ?patentNumber
+			    	];
+			} # patents features
+			BIND ( iri(concat("http://bio2rdf.org/uspto:", ?patentNumber)) AS ?patentUri )
+		    } # patents
+	} OPTIONAL{
+		?drugObj x2rm:hasChild ?foodInteractions.
+
+		?foodInteractions a x2rm:drugbank.drug.food-interactions.
+
+		    OPTIONAL{
+		    	?foodInteractions x2rm:hasChild ?foodInteraction.
+			?foodInteraction a x2rm:drugbank.drug.food-interactions.food-interaction.
+			?foodInteraction x2rm:hasValue ?foodInteractionValue.
+
+			BIND ( SHA1(STR(?foodInteractionValue)) AS ?foodInteractionId)
+			BIND ( iri(concat("http://bio2rdf.org/drugbank_resource:", ?foodInteractionId)) AS ?foodInteractionUri )
+		    } # food interaction
+	} OPTIONAL{
+		?drugObj x2rm:hasChild ?drugInteractions.
+
+		?drugInteractions a x2rm:drugbank.drug.drug-interactions. 
+
+		    OPTIONAL{
+		    	?drugInteractions x2rm:hasChild ?drugInteraction.
+			?drugInteraction a x2rm:drugbank.drug.drug-interactions.drug-interaction; 
+
+			OPTIONAL{
+				?drugInteraction x2rm:hasChild [
+				    a x2rm:drugbank.drug.drug-interactions.drug-interaction.drugbank-id; 
+				    x2rm:hasValue ?drugInteractionDBid
+			    	];
+			} # drug interaction features
+
+			BIND ( concat(?drugId, "_", ?drugInteractionDBid) AS ?ddiID )
+			BIND ( iri(concat("http://bio2rdf.org/drugbank_resource:", ?ddiId)) AS ?ddiUri )
+		    } # drug interaction
+	}
+  } # graph
+  
+} # where

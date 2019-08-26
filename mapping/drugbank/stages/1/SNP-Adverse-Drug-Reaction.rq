@@ -1,0 +1,99 @@
+PREFIX x2rm: <http://ids.unimaas.nl/xml2rdf/model#>
+PREFIX x2rd: <http://ids.unimaas.nl/xml2rdf/data/>
+PREFIX d2s: <https://w3id.org/data2services/vocab/>
+PREFIX ido: <http://identifiers.org/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX owl: <http://www.w3.org/2002/07/owl#>
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+PREFIX obo: <http://purl.obolibrary.org/obo/>
+PREFIX dc: <http://purl.org/dc/elements/1.1/>
+PREFIX dcterms: <http://purl.org/dc/terms/>
+PREFIX bl: <https://w3id.org/biolink/vocab/>
+PREFIX drugbank_vocabulary: <http://bio2rdf.org/drugbank_vocabulary:>
+PREFIX bio2rdf_vocabulary: <http://bio2rdf.org/bio2rdf_vocabulary:> 
+
+INSERT 
+{ 
+    GRAPH <https://w3id.org/data2services/graph/drugbank> {  
+
+	?uri	a drugbank_vocabulary:Resource;
+		rdf:type drugbank_vocabulary:SNP-Adverse-Drug-Reaction;
+		dc:identifier ?dcId;
+		rdfs:label ?label;
+		dc:title ?title;
+		bio2rdf_vocabulary:namespace "drugbank_resource";
+		bio2rdf_vocabulary:identifier ?itemId;
+		bio2rdf_vocabulary:uri ?uri;
+
+		drugbank_vocabulary:protein-name ?snpAdvDrugReactionProteinName;
+		drugbank_vocabulary:gene-symbol ?snpAdvDrugReactionGeneSymbolUri;
+		drugbank_vocabulary:uniprot-id ?snpAdvDrugReactionUniprotIdUri;
+		drugbank_vocabulary:rs-id ?snpAdvDrugReactionRsIdUri;
+		drugbank_vocabulary:allele ?snpAdvDrugReactionAllele;
+		drugbank_vocabulary:defining-change ?snpAdvDrugReactionDefiningChange;
+		drugbank_vocabulary:description ?snpAdvDrugReactionDesc;
+		drugbank_vocabulary:x-pubmed ?snpAdvDrugReactionPubmedIdUri;
+    }
+}
+WHERE {
+  
+  GRAPH <https://w3id.org/data2services/graph/xml2rdf> {
+
+	?snpAdvDrugReaction a x2rm:drugbank.drug.snp-adverse-drug-reactions.reaction; 
+
+	OPTIONAL{
+		?snpAdvDrugReaction x2rm:hasChild [
+		    a x2rm:drugbank.drug.snp-adverse-drug-reactions.reaction.protein-name; 
+		    x2rm:hasValue ?snpAdvDrugReactionProteinName
+	    	];
+	} OPTIONAL{
+		?snpAdvDrugReaction x2rm:hasChild [
+		    a x2rm:drugbank.drug.snp-adverse-drug-reactions.reaction.gene-symbol; 
+		    x2rm:hasValue ?snpAdvDrugReactionGeneSymbol
+	    	];
+	} OPTIONAL{
+		?snpAdvDrugReaction x2rm:hasChild [
+		    a x2rm:drugbank.drug.snp-adverse-drug-reactions.reaction.uniprot-id; 
+		    x2rm:hasValue ?snpAdvDrugReactionUniprotId
+	    	];
+	} OPTIONAL{
+		?snpAdvDrugReaction x2rm:hasChild [
+		    a x2rm:drugbank.drug.snp-adverse-drug-reactions.reaction.rs-id; 
+		    x2rm:hasValue ?snpAdvDrugReactionRsId	
+	    	];
+	} OPTIONAL{
+		?snpAdvDrugReaction x2rm:hasChild [
+		    a x2rm:drugbank.drug.snp-adverse-drug-reactions.reaction.allele; 
+		    x2rm:hasValue ?snpAdvDrugReactionAllele
+	    	];
+	} OPTIONAL{
+		?snpAdvDrugReaction x2rm:hasChild [
+		    a x2rm:drugbank.drug.snp-adverse-drug-reactions.reaction.defining-change; 
+		    x2rm:hasValue ?snpAdvDrugReactionDefiningChange
+	    	];
+	} OPTIONAL{
+		?snpAdvDrugReaction x2rm:hasChild [
+		    a x2rm:drugbank.drug.snp-adverse-drug-reactions.reaction.description; 
+		    x2rm:hasValue ?snpAdvDrugReactionDesc
+	    	];
+	} OPTIONAL{
+		?snpAdvDrugReaction x2rm:hasChild [
+		    a x2rm:drugbank.drug.snp-adverse-drug-reactions.reaction.pubmed-id; 
+		    x2rm:hasValue ?snpAdvDrugReactionPubmedId
+	    	];
+	} # SNP drug reaction features
+
+
+	BIND ( iri(concat("http://bio2rdf.org/dbsnp:", ?snpAdvDrugReactionRsId)) AS ?snpAdvDrugReactionRsIdUri )
+	BIND ( iri(concat("http://bio2rdf.org/uniprot:", ?snpAdvDrugReactionUniprotId)) AS ?snpAdvDrugReactionUniprotIdUri )
+	BIND ( iri(concat("http://bio2rdf.org/hgnc:", ?snpAdvDrugReactionGeneSymbol)) AS ?snpAdvDrugReactionGeneSymbolUri )
+	BIND ( iri(concat("http://bio2rdf.org/pubmed:", ?snpAdvDrugReactionPubmedId)) AS ?snpAdvDrugReactionPubmedIdUri )
+
+	BIND ( SHA1(?snpAdvDrugReactionDesc) AS ?itemId)
+	BIND ( CONCAT("Adverse Drug Reaction Effect of SNP ",?snpAdvDrugReactionRsId) AS ?title)
+	BIND ( concat("drugbank_resource:", ?itemId) AS ?dcId )
+	BIND ( concat(?title, " [drugbank_resource:", ?itemId, "] ") AS ?label )
+	BIND ( iri(concat("http://bio2rdf.org/drugbank_resource:", ?itemId)) AS ?uri )
+  } # graph
+  
+} # where

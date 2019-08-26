@@ -1,0 +1,23 @@
+working_directory: /media/apc/DATA/Maastricht/bio2rdf-github
+
+dataset: pharmgkb
+
+# R2RML params
+input_data_jdbc: "jdbc:drill:drillbit=drill:31010"
+sparql_tmp_graph_uri: "https://w3id.org/data2services/graph/autor2rml/pharmgkb"
+sparql_base_uri: "https://w3id.org/data2services/"
+#autor2rml_column_header: "test1,test2,test3,test5"
+
+# RdfUpload params
+sparql_triplestore_url: http://localhost:7200
+sparql_triplestore_repository: pharmgkb
+
+# Split params
+split_property: https://w3id.org/data2services/model/Pmids
+split_class: https://w3id.org/data2services/data/input/pharmgkb/relationships.tsv
+split_delimiter: ";"
+split_quote: '"'
+
+
+sparql_transform_queries_path: /data/mapping/pharmgkb/transform
+sparql_insert_metadata_path: /data/mapping/pharmgkb/metadata

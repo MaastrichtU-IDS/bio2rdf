@@ -1,0 +1,170 @@
+PREFIX x2rm: <http://ids.unimaas.nl/xml2rdf/model#>
+PREFIX x2rd: <http://ids.unimaas.nl/xml2rdf/data/>
+PREFIX d2s: <https://w3id.org/data2services/vocab/>
+PREFIX ido: <http://identifiers.org/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX owl: <http://www.w3.org/2002/07/owl#>
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+PREFIX obo: <http://purl.obolibrary.org/obo/>
+PREFIX dc: <http://purl.org/dc/elements/1.1/>
+PREFIX dcterms: <http://purl.org/dc/terms/>
+PREFIX bl: <https://w3id.org/biolink/vocab/>
+PREFIX drugbank_vocabulary: <http://bio2rdf.org/drugbank_vocabulary:>
+PREFIX bio2rdf_vocabulary: <http://bio2rdf.org/bio2rdf_vocabulary:> 
+
+INSERT 
+{ 
+    GRAPH <https://w3id.org/data2services/graph/drugbank> {  
+
+	?uri	a drugbank_vocabulary:Resource;
+		rdf:type drugbank_vocabulary:Target;
+		dc:identifier ?dcId;
+		rdfs:label ?label;
+		dc:title ?targetName;
+		bio2rdf_vocabulary:namespace "drugbank";
+		bio2rdf_vocabulary:identifier ?targetId;
+		bio2rdf_vocabulary:uri ?uri;
+
+		drugbank_vocabulary:organism ?targetOrganism;
+		drugbank_vocabulary:x-ref ?targetRefArticleRefIdUri;
+		drugbank_vocabulary:x-ref ?targetRefTextbookRefIdUri;
+		drugbank_vocabulary:x-ref ?targetRefLinkRefIdUri;
+		drugbank_vocabulary:x-ref ?targetRefAttachmentRefIdUri;
+
+		drugbank_vocabulary:action ?targetActionUri;
+		drugbank_vocabulary:known-action ?targetKnownActionUri;
+		drugbank_vocabulary:polypeptide ?targetPolypeptideUri;
+
+    }
+}
+WHERE {
+  
+  GRAPH <https://w3id.org/data2services/graph/xml2rdf> {
+
+	?target a x2rm:drugbank.drug.targets.target.
+
+	?target x2rm:hasChild [
+	    a x2rm:drugbank.drug.targets.target.id; 
+	    x2rm:hasValue ?targetId
+    	].
+
+	?target x2rm:hasChild [
+	    a x2rm:drugbank.drug.targets.target.name; 
+	    x2rm:hasValue ?targetName
+    	].
+
+	OPTIONAL{
+
+		?target x2rm:hasChild [
+		    a x2rm:drugbank.drug.targets.target.organism; 
+		    x2rm:hasValue ?targetOrganism
+	    	];
+	} OPTIONAL{
+		?target x2rm:hasChild ?targetActions.
+		?targetActions a x2rm:drugbank.drug.targets.target.actions.
+
+			OPTIONAL{
+
+				?targetActions x2rm:hasChild ?targetAction.
+				?targetAction a x2rm:drugbank.drug.targets.target.actions.action.
+				?targetAction x2rm:hasValue ?targetActionValue.
+
+				BIND ( REPLACE(UCASE(STR(?targetActionValue)), " ", "-") AS ?targetActionId)
+				BIND ( iri(concat("http://bio2rdf.org/drugbank_resource:", ?targetActionId)) AS ?targetActionUri )
+			} # Target action
+	} OPTIONAL{
+		?target x2rm:hasChild ?targetReferences.
+		?targetReferences a x2rm:drugbank.drug.targets.target.references.
+			
+			OPTIONAL{
+				?targetReferences x2rm:hasChild ?targetRefArticles.
+				?targetRefArticles a x2rm:drugbank.drug.targets.target.references.articles.
+
+				OPTIONAL{
+
+					?targetRefArticles x2rm:hasChild ?targetRefArticle.
+					?targetRefArticle a x2rm:drugbank.drug.targets.target.references.articles.article.
+
+					OPTIONAL{
+						?targetRefArticle x2rm:hasChild ?targetRefArticleRefId.
+						?targetRefArticleRefId a x2rm:drugbank.drug.targets.target.references.articles.article.ref-id.
+						?targetRefArticleRefId x2rm:hasValue ?targetRefArticleRefIdValue.
+					} # Target Ref Articles features
+
+					BIND ( iri(concat("http://bio2rdf.org/drugbank:", ?targetRefArticleRefIdValue)) AS ?targetRefArticleRefIdUri )
+				} # Target Ref Articles
+			} OPTIONAL{
+				?targetReferences x2rm:hasChild ?targetRefTextbooks.
+				?targetRefTextbooks a x2rm:drugbank.drug.targets.target.references.textbooks.
+
+				OPTIONAL{
+
+					?targetRefTextbooks x2rm:hasChild ?targetRefTextbook.
+					?targetRefTextbook a x2rm:drugbank.drug.targets.target.references.textbooks.textbook.
+
+					OPTIONAL{
+						?targetRefTextbook x2rm:hasChild ?targetRefTextbookRefId.
+						?targetRefTextbookRefId a x2rm:drugbank.drug.targets.target.references.textbooks.textbook.ref-id.
+						?targetRefTextbookRefId x2rm:hasValue ?targetRefTextbookRefIdValue.
+					} # Target Ref Textbooks features
+					BIND ( iri(concat("http://bio2rdf.org/drugbank:", ?targetRefTextbookRefIdValue)) AS ?targetRefTextbookRefIdUri )
+				} # Target Ref Textbooks
+			} OPTIONAL{
+				?targetReferences x2rm:hasChild ?targetRefLinks.
+				?targetRefLinks a x2rm:drugbank.drug.targets.target.references.links.
+
+				OPTIONAL{
+
+					?targetRefLinks x2rm:hasChild ?targetRefLink.
+					?targetRefLink a x2rm:drugbank.drug.targets.target.references.links.link.
+
+					OPTIONAL{
+						?targetRefLink x2rm:hasChild ?targetRefLinkRefId.
+						?targetRefLinkRefId a x2rm:drugbank.drug.targets.target.references.links.link.ref-id.
+						?targetRefLinkRefId x2rm:hasValue ?targetRefLinkRefIdValue.
+					} # Target Ref Links features
+					BIND ( iri(concat("http://bio2rdf.org/drugbank:", ?targetRefLinkRefIdValue)) AS ?targetRefLinkRefIdUri )
+				} # Target Ref Links
+			} OPTIONAL{
+				?targetReferences x2rm:hasChild ?targetRefAttachments.
+				?targetRefAttachments a x2rm:drugbank.drug.targets.target.references.attachments.
+
+				OPTIONAL{
+
+					?targetRefAttachments x2rm:hasChild ?targetRefAttachment.
+					?targetRefAttachment a x2rm:drugbank.drug.targets.target.references.attachments.attachment.
+
+					OPTIONAL{
+						?targetRefAttachment x2rm:hasChild ?targetRefAttachmentRefId.
+						?targetRefAttachmentRefId a x2rm:drugbank.drug.targets.target.references.attachments.attachment.ref-id.
+						?targetRefAttachmentRefId x2rm:hasValue ?targetRefAttachmentRefIdValue.
+					}# Target Ref Attachments features
+					BIND ( iri(concat("http://bio2rdf.org/drugbank:", ?targetRefAttachmentRefIdValue)) AS ?targetRefAttachmentRefIdUri )
+				} # Target Ref Attachments
+			} # Target Reference
+	} OPTIONAL{
+		?target x2rm:hasChild ?targetKnownAction.
+		?targetKnownAction a x2rm:drugbank.drug.targets.target.known-action.
+		?targetKnownAction x2rm:hasValue ?targetKnownActionValue.
+
+		BIND ( REPLACE(UCASE(STR(?targetKnownActionValue)), " ", "-") AS ?targetKnownActionId)
+		BIND ( iri(concat("http://bio2rdf.org/drugbank_resource:", ?targetKnownActionId)) AS ?targetKnownActionUri )
+	} OPTIONAL{
+		?target x2rm:hasChild ?targetPolypeptide.
+		?targetPolypeptide a x2rm:drugbank.drug.targets.target.polypeptide.
+
+		?targetPolypeptide  x2rm:hasAttribute ?targetPolypeptideIdAttr.
+		?targetPolypeptideIdAttr a x2rm:drugbank.drug.targets.target.polypeptide.-id.
+		?targetPolypeptideIdAttr x2rm:hasValue ?targetPolypeptideId.
+
+		BIND ( iri(concat("drugbank:", ?targetPolypeptideId) ) AS ?targetPPId )
+		BIND ( iri(concat("http://bio2rdf.org/drugbank:", ?targetPolypeptideId)) AS ?targetPolypeptideUri )
+	} # Target features
+
+
+	BIND ( concat("drugbank:", ?targetId) AS ?dcId )
+	BIND ( concat(?targetName, " [drugbank:", ?targetId, "] ") AS ?label )
+	BIND ( iri(concat("http://bio2rdf.org/drugbank:", ?targetId)) AS ?uri )	
+  } # graph
+  
+} # where

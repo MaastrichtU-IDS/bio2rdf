@@ -1,0 +1,83 @@
+PREFIX x2rm: <http://ids.unimaas.nl/xml2rdf/model#>
+PREFIX x2rd: <http://ids.unimaas.nl/xml2rdf/data/>
+PREFIX d2s: <https://w3id.org/data2services/vocab/>
+PREFIX ido: <http://identifiers.org/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX owl: <http://www.w3.org/2002/07/owl#>
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+PREFIX obo: <http://purl.obolibrary.org/obo/>
+PREFIX dc: <http://purl.org/dc/elements/1.1/>
+PREFIX dcterms: <http://purl.org/dc/terms/>
+PREFIX bl: <https://w3id.org/biolink/vocab/>
+PREFIX drugbank_vocabulary: <http://bio2rdf.org/drugbank_vocabulary:>
+PREFIX bio2rdf_vocabulary: <http://bio2rdf.org/bio2rdf_vocabulary:> 
+
+INSERT 
+{ 
+    GRAPH <https://w3id.org/data2services/graph/drugbank> {  
+
+	?uri	a drugbank_vocabulary:Resource;
+		rdf:type drugbank_vocabulary:Drug;
+
+		drugbank_vocabulary:mixture ?mixtureUri;
+		drugbank_vocabulary:packager ?packagerUri;
+		
+    }
+}
+WHERE {
+  
+  GRAPH <https://w3id.org/data2services/graph/xml2rdf> {
+
+    # Get drug primary ID
+    ?drugObj a x2rm:drugbank.drug .
+
+        # Get drug primary ID        
+	?drugObj x2rm:hasChild [
+            a x2rm:drugbank.drug.drugbank-id ;
+            x2rm:hasAttribute [ a x2rm:drugbank.drug.drugbank-id.-primary ] ;
+            x2rm:hasValue ?drugId
+        ];
+	
+	BIND ( iri(concat("http://bio2rdf.org/drugbank:", ?drugId)) AS ?uri )
+
+	OPTIONAL{
+		?drugObj x2rm:hasChild ?mixtures.
+
+		?mixtures a x2rm:drugbank.drug.mixtures; 
+
+		    OPTIONAL{
+		    	?mixtures x2rm:hasChild ?mixture.
+			?mixture a x2rm:drugbank.drug.mixtures.mixture.
+			
+			OPTIONAL{
+				?mixture x2rm:hasChild [
+				    a x2rm:drugbank.drug.mixtures.mixture.name; 
+				    x2rm:hasValue ?mixtureName
+			    	];
+			} # mixtures features
+			
+			BIND ( REPLACE(UCASE(STR(?mixtureName)), " ", "-") AS ?mixtureId)
+			BIND ( iri(concat("http://bio2rdf.org/drugbank_resource:", ?mixtureId)) AS ?mixtureUri )
+		    } # mixture
+	} OPTIONAL{
+		?drugObj x2rm:hasChild ?packagers.
+
+		?packagers a x2rm:drugbank.drug.packagers; 
+
+		    OPTIONAL{
+		    	?packagers x2rm:hasChild ?packager.
+			?packager a x2rm:drugbank.drug.packagers.packager.
+			
+			OPTIONAL{
+				?packager x2rm:hasChild [
+				    a x2rm:drugbank.drug.packagers.packager.name; 
+				    x2rm:hasValue ?packagerName
+			    	];
+			} # packagers features
+			BIND ( SHA1(STR(?packagerName)) AS ?packagerId)
+			BIND ( iri(concat("http://bio2rdf.org/drugbank_resource:", ?packagerId)) AS ?packagerUri )
+		    } # packager
+	}
+  } # graph
+  
+} # where

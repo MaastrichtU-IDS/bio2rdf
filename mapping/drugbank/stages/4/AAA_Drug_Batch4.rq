@@ -1,0 +1,123 @@
+PREFIX x2rm: <http://ids.unimaas.nl/xml2rdf/model#>
+PREFIX x2rd: <http://ids.unimaas.nl/xml2rdf/data/>
+PREFIX d2s: <https://w3id.org/data2services/vocab/>
+PREFIX ido: <http://identifiers.org/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX owl: <http://www.w3.org/2002/07/owl#>
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+PREFIX obo: <http://purl.obolibrary.org/obo/>
+PREFIX dc: <http://purl.org/dc/elements/1.1/>
+PREFIX dcterms: <http://purl.org/dc/terms/>
+PREFIX bl: <https://w3id.org/biolink/vocab/>
+PREFIX drugbank_vocabulary: <http://bio2rdf.org/drugbank_vocabulary:>
+PREFIX bio2rdf_vocabulary: <http://bio2rdf.org/bio2rdf_vocabulary:> 
+
+INSERT 
+{ 
+    GRAPH <https://w3id.org/data2services/graph/drugbank> {  
+
+	?uri	a drugbank_vocabulary:Resource;
+		rdf:type drugbank_vocabulary:Drug;
+
+		drugbank_vocabulary:category ?categoryUri;
+		drugbank_vocabulary:affected-organism ?affectedOrganismUri;
+		drugbank_vocabulary:dosage-form ?dosageFormUri;
+		drugbank_vocabulary:x-atc ?atcCodeUri;
+		drugbank_vocabulary:x-ahfs ?ahfsCodeValue;
+		
+    }
+}
+WHERE {
+  
+  GRAPH <https://w3id.org/data2services/graph/xml2rdf> {
+
+    # Get drug primary ID
+    ?drugObj a x2rm:drugbank.drug .
+
+
+        # Get drug primary ID        
+	?drugObj x2rm:hasChild [
+            a x2rm:drugbank.drug.drugbank-id ;
+            x2rm:hasAttribute [ a x2rm:drugbank.drug.drugbank-id.-primary ] ;
+            x2rm:hasValue ?drugId
+        ];
+
+	BIND ( iri(concat("http://bio2rdf.org/drugbank:", ?drugId)) AS ?uri )
+
+	OPTIONAL{
+		?drugObj x2rm:hasChild ?categories.
+
+		?categories a x2rm:drugbank.drug.categories; 
+
+		    OPTIONAL{
+		    	?categories x2rm:hasChild ?category.
+			?category a x2rm:drugbank.drug.categories.category.
+			
+			OPTIONAL{
+				?category x2rm:hasChild [
+				    a x2rm:drugbank.drug.categories.category.category; 
+				    x2rm:hasValue ?categoryName
+			    	];
+			} # category features
+			BIND ( REPLACE(UCASE(STR(?categoryName)), " ", "-") AS ?categoryNameId)
+			BIND ( iri(concat("http://bio2rdf.org/drugbank_resource:", ?categoryNameId)) AS ?categoryUri )
+		    } # category
+	} OPTIONAL{
+		?drugObj x2rm:hasChild ?affectedOrganisms.
+
+		?affectedOrganisms a x2rm:drugbank.drug.affected-organisms; 
+
+		    OPTIONAL{
+		    	?affectedOrganisms x2rm:hasChild ?affectedOrganism.
+			?affectedOrganism a x2rm:drugbank.drug.affected-organisms.affected-organism.
+			?affectedOrganism x2rm:hasValue ?affectedOrganismText.
+
+			BIND ( SHA1(STR(?affectedOrganismText)) AS ?affectedOrganismId)
+			BIND ( iri(concat("http://bio2rdf.org/drugbank_resource:", ?affectedOrganismId)) AS ?affectedOrganismUri )
+		    } # affected organism
+	} OPTIONAL{
+		?drugObj x2rm:hasChild ?dosages.
+
+		?dosages a x2rm:drugbank.drug.dosages; 
+
+		    OPTIONAL{
+		    	?dosages x2rm:hasChild ?dosage.
+			?dosage a x2rm:drugbank.drug.dosages.dosage.
+			
+			OPTIONAL{
+				?dosage x2rm:hasChild [
+				    a x2rm:drugbank.drug.dosages.dosage.form; 
+				    x2rm:hasValue ?dosageForm
+			    	];
+			} # dosage features
+			BIND ( REPLACE(UCASE(STR(?dosageForm)), " ", "-") AS ?dosageFormId)
+			BIND ( iri(concat("http://bio2rdf.org/drugbank_resource:", ?dosageFormId)) AS ?dosageFormUri )
+		    } # dosage
+	} OPTIONAL{
+		?drugObj x2rm:hasChild ?atcCodes.
+
+		?atcCodes a x2rm:drugbank.drug.atc-codes; 
+
+		    OPTIONAL{
+		    	?atcCodes x2rm:hasChild ?atcCode.
+			?atcCode a x2rm:drugbank.drug.atc-codes.atc-code.
+			?atcCode  x2rm:hasAttribute ?atcCodeAttr.
+			?atcCodeAttr x2rm:hasValue ?atcCodeValue.
+			
+			BIND ( REPLACE(UCASE(STR(?atcCodeValue)), " ", "-") AS ?atcCodeValueId)
+			BIND ( iri(concat("http://bio2rdf.org/drugbank_vocabulary:", ?atcCodeValueId)) AS ?atcCodeUri )
+		    } # ATC code
+	} OPTIONAL{
+		?drugObj x2rm:hasChild ?ahfsCodes.
+
+		?ahfsCodes a x2rm:drugbank.drug.ahfs-codes.
+
+		    OPTIONAL{
+		    	?ahfsCodes x2rm:hasChild ?ahfsCode.
+			?ahfsCode a x2rm:drugbank.drug.ahfs-codes.ahf-code.
+			?ahfsCode x2rm:hasValue ?ahfsCodeValue
+		    } # AFHS code
+	}
+  } # graph
+  
+} # where

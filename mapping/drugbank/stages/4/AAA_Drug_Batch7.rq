@@ -1,0 +1,114 @@
+PREFIX x2rm: <http://ids.unimaas.nl/xml2rdf/model#>
+PREFIX x2rd: <http://ids.unimaas.nl/xml2rdf/data/>
+PREFIX d2s: <https://w3id.org/data2services/vocab/>
+PREFIX ido: <http://identifiers.org/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX owl: <http://www.w3.org/2002/07/owl#>
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+PREFIX obo: <http://purl.obolibrary.org/obo/>
+PREFIX dc: <http://purl.org/dc/elements/1.1/>
+PREFIX dcterms: <http://purl.org/dc/terms/>
+PREFIX bl: <https://w3id.org/biolink/vocab/>
+PREFIX drugbank_vocabulary: <http://bio2rdf.org/drugbank_vocabulary:>
+PREFIX bio2rdf_vocabulary: <http://bio2rdf.org/bio2rdf_vocabulary:> 
+
+INSERT 
+{ 
+    GRAPH <https://w3id.org/data2services/graph/drugbank> {  
+
+	?uri	a drugbank_vocabulary:Resource;
+		rdf:type drugbank_vocabulary:Drug;
+
+		drugbank_vocabulary:target ?targetUri;
+		drugbank_vocabulary:enzyme ?enzymeUri;
+		drugbank_vocabulary:carrier ?carrierUri;
+		drugbank_vocabulary:transporter ?transporterUri;
+
+    }
+}
+WHERE {
+  
+  GRAPH <https://w3id.org/data2services/graph/xml2rdf> {
+
+    # Get drug primary ID
+    ?drugObj a x2rm:drugbank.drug .
+
+        # Get drug primary ID        
+	?drugObj x2rm:hasChild [
+            a x2rm:drugbank.drug.drugbank-id ;
+            x2rm:hasAttribute [ a x2rm:drugbank.drug.drugbank-id.-primary ] ;
+            x2rm:hasValue ?drugId
+        ];
+
+	BIND ( iri(concat("http://bio2rdf.org/drugbank:", ?drugId)) AS ?uri )
+
+	OPTIONAL{
+		?drugObj x2rm:hasChild ?targets.
+
+		?targets a x2rm:drugbank.drug.targets. 
+
+		    OPTIONAL{
+		    	?targets x2rm:hasChild ?target.
+			?target a x2rm:drugbank.drug.targets.target.
+
+			?target x2rm:hasChild [
+			    a x2rm:drugbank.drug.targets.target.id; 
+			    x2rm:hasValue ?targetId
+		    	].
+
+			BIND ( iri(concat("http://bio2rdf.org/drugbank:", ?targetId)) AS ?targetUri )
+		    } # Target	
+	} OPTIONAL{
+		?drugObj x2rm:hasChild ?enzymes.
+
+		?enzymes a x2rm:drugbank.drug.enzymes. 
+
+		    OPTIONAL{
+		    	?enzymes x2rm:hasChild ?enzyme.
+			?enzyme a x2rm:drugbank.drug.enzymes.enzyme.
+
+			?enzyme x2rm:hasChild [
+			    a x2rm:drugbank.drug.enzymes.enzyme.id; 
+			    x2rm:hasValue ?enzymeId
+		    	].
+
+			BIND ( iri(concat("http://bio2rdf.org/drugbank:", ?enzymeId)) AS ?enzymeUri )
+		    } # Enzyme	
+	} OPTIONAL{
+		?drugObj x2rm:hasChild ?carriers.
+
+		?carriers a x2rm:drugbank.drug.carriers. 
+
+		    OPTIONAL{
+		    	?carriers x2rm:hasChild ?carrier.
+			?carrier a x2rm:drugbank.drug.carriers.carrier.
+
+			?carrier x2rm:hasChild [
+			    a x2rm:drugbank.drug.carriers.carrier.id; 
+			    x2rm:hasValue ?carrierId
+		    	].
+
+			BIND ( iri(concat("http://bio2rdf.org/drugbank:", ?carrierId)) AS ?carrierUri )			
+		    } # Carrier	
+	} OPTIONAL{
+		?drugObj x2rm:hasChild ?transporters.
+
+		?transporters a x2rm:drugbank.drug.transporters. 
+
+		    OPTIONAL{
+		    	?transporters x2rm:hasChild ?transporter.
+			?transporter a x2rm:drugbank.drug.transporters.transporter.
+
+			?transporter x2rm:hasChild [
+			    a x2rm:drugbank.drug.transporters.transporter.id; 
+			    x2rm:hasValue ?transporterId
+		    	].
+			
+			BIND ( iri(concat("http://bio2rdf.org/drugbank:", ?transporterId)) AS ?transporterUri )			
+		    } # Transporter	
+	
+	}. # Drug features
+
+  } # graph
+  
+} # where

@@ -1,0 +1,141 @@
+PREFIX x2rm: <http://ids.unimaas.nl/xml2rdf/model#>
+PREFIX x2rd: <http://ids.unimaas.nl/xml2rdf/data/>
+PREFIX d2s: <https://w3id.org/data2services/vocab/>
+PREFIX ido: <http://identifiers.org/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX owl: <http://www.w3.org/2002/07/owl#>
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+PREFIX obo: <http://purl.obolibrary.org/obo/>
+PREFIX dc: <http://purl.org/dc/elements/1.1/>
+PREFIX dcterms: <http://purl.org/dc/terms/>
+PREFIX bl: <https://w3id.org/biolink/vocab/>
+PREFIX drugbank_vocabulary: <http://bio2rdf.org/drugbank_vocabulary:>
+PREFIX bio2rdf_vocabulary: <http://bio2rdf.org/bio2rdf_vocabulary:> 
+
+INSERT 
+{ 
+    GRAPH <https://w3id.org/data2services/graph/drugbank> {  
+
+	?uri	a drugbank_vocabulary:Resource;
+		rdf:type drugbank_vocabulary:Drug;
+
+		drugbank_vocabulary:state ?drugStateUri;
+		drugbank_vocabulary:group ?drugGroupUri;
+		drugbank_vocabulary:general-reference ?generalRefArticleRefIdUri;
+		drugbank_vocabulary:general-reference ?generalRefTextbookRefIdUri;
+		drugbank_vocabulary:general-reference ?generalRefLinkRefIdUri;
+		drugbank_vocabulary:general-reference ?generalRefAttachmentRefIdUri;
+		
+
+    }
+}
+WHERE {
+  
+  GRAPH <https://w3id.org/data2services/graph/xml2rdf> {
+
+    # Get drug primary ID
+    ?drugObj a x2rm:drugbank.drug .
+
+        # Get drug primary ID        
+	?drugObj x2rm:hasChild [
+            a x2rm:drugbank.drug.drugbank-id ;
+            x2rm:hasAttribute [ a x2rm:drugbank.drug.drugbank-id.-primary ] ;
+            x2rm:hasValue ?drugId
+        ];
+	
+	BIND ( iri(concat("http://bio2rdf.org/drugbank:", ?drugId)) AS ?uri )
+
+	OPTIONAL{
+		?drugObj x2rm:hasChild [ 
+		    a x2rm:drugbank.drug.state; 
+		    x2rm:hasValue ?drugState 
+		] ;
+		BIND ( REPLACE(UCASE(STR(?drugState)), " ", "-") AS ?drugStateId)
+        	BIND ( iri(concat("http://bio2rdf.org/drugbank_vocabulary:", ?drugStateId)) AS ?drugStateUri )
+	} # drug features
+
+        ?drugObj x2rm:hasChild [ 
+            a x2rm:drugbank.drug.groups; 
+            x2rm:hasChild [
+                a x2rm:drugbank.drug.groups.group; 
+                x2rm:hasValue ?drugGroup
+            ]
+        ]; 
+
+
+	OPTIONAL{
+		?drugObj x2rm:hasChild ?generalReferences.
+		?generalReferences a x2rm:drugbank.drug.general-references.
+					
+		OPTIONAL{
+			?generalReferences x2rm:hasChild ?generalRefArticles.
+			?generalRefArticles a x2rm:drugbank.drug.general-references.articles.
+
+			OPTIONAL{
+
+				?generalRefArticles x2rm:hasChild ?generalRefArticle.
+				?generalRefArticle a x2rm:drugbank.drug.general-references.articles.article.
+
+				OPTIONAL{
+					?generalRefArticle x2rm:hasChild ?generalRefArticleRefId.
+					?generalRefArticleRefId a x2rm:drugbank.drug.general-references.articles.article.ref-id.
+					?generalRefArticleRefId x2rm:hasValue ?generalRefArticleRefIdValue.
+				} # General Ref Articles features
+				BIND ( iri(concat("http://bio2rdf.org/drugbank:", ?generalRefArticleRefIdValue)) AS ?generalRefArticleRefIdUri )
+			} # General Ref Articles
+		} OPTIONAL{
+			?generalReferences x2rm:hasChild ?generalRefTextbooks.
+			?generalRefTextbooks a x2rm:drugbank.drug.general-references.textbooks.
+
+			OPTIONAL{
+
+				?generalRefTextbooks x2rm:hasChild ?generalRefTextbook.
+				?generalRefTextbook a x2rm:drugbank.drug.general-references.textbooks.textbook.
+
+				OPTIONAL{
+					?generalRefTextbook x2rm:hasChild ?generalRefTextbookRefId.
+					?generalRefTextbookRefId a x2rm:drugbank.drug.general-references.textbooks.textbook.ref-id.
+					?generalRefTextbookRefId x2rm:hasValue ?generalRefTextbookRefIdValue.
+				} # General Ref Textbooks features
+				BIND ( iri(concat("http://bio2rdf.org/drugbank:", ?generalRefTextbookRefIdValue)) AS ?generalRefTextbookRefIdUri )
+			} # General Ref Textbooks
+		} OPTIONAL{
+			?generalReferences x2rm:hasChild ?generalRefLinks.
+			?generalRefLinks a x2rm:drugbank.drug.general-references.links.
+
+			OPTIONAL{
+
+				?generalRefLinks x2rm:hasChild ?generalRefLink.
+				?generalRefLink a x2rm:drugbank.drug.general-references.links.link.
+
+				OPTIONAL{
+					?generalRefLink x2rm:hasChild ?generalRefLinkRefId.
+					?generalRefLinkRefId a x2rm:drugbank.drug.general-references.links.link.ref-id.
+					?generalRefLinkRefId x2rm:hasValue ?generalRefLinkRefIdValue.
+				} # General Ref Links features
+				BIND ( iri(concat("http://bio2rdf.org/drugbank:", ?generalRefLinkRefIdValue)) AS ?generalRefLinkRefIdUri )
+			} # General Ref Links
+		} OPTIONAL{
+			?generalReferences x2rm:hasChild ?generalRefAttachments.
+			?generalRefAttachments a x2rm:drugbank.drug.general-references.attachments.
+
+			OPTIONAL{
+
+				?generalRefAttachments x2rm:hasChild ?generalRefAttachment.
+				?generalRefAttachment a x2rm:drugbank.drug.general-references.attachments.attachment.
+
+				OPTIONAL{
+					?generalRefAttachment x2rm:hasChild ?generalRefAttachmentRefId.
+					?generalRefAttachmentRefId a x2rm:drugbank.drug.general-references.attachments.attachment.ref-id.
+					?generalRefAttachmentRefId x2rm:hasValue ?generalRefAttachmentRefIdValue.
+				} # General Ref Attachments features
+				BIND ( iri(concat("http://bio2rdf.org/drugbank:", ?generalRefAttachmentRefIdValue)) AS ?generalRefAttachmentRefIdUri )
+			} # General Ref Attachments
+		} # General Reference
+	} 
+
+	BIND ( REPLACE(UCASE(STR(?drugGroup)), " ", "-") AS ?drugGroupId)
+        BIND ( iri(concat("http://bio2rdf.org/drugbank_vocabulary:", ?drugGroupId)) AS ?drugGroupUri )
+  } # graph
+  
+} # where

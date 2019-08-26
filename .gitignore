@@ -1,2 +1,9 @@
 graphdb
 graphdb-import
+*.tsv
+*.csv
+*.xml
+*.nq
+*.properties
+*.trig
+input/*

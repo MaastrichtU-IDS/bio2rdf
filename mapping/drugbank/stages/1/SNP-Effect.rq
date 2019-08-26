@@ -1,0 +1,99 @@
+PREFIX x2rm: <http://ids.unimaas.nl/xml2rdf/model#>
+PREFIX x2rd: <http://ids.unimaas.nl/xml2rdf/data/>
+PREFIX d2s: <https://w3id.org/data2services/vocab/>
+PREFIX ido: <http://identifiers.org/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX owl: <http://www.w3.org/2002/07/owl#>
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+PREFIX obo: <http://purl.obolibrary.org/obo/>
+PREFIX dc: <http://purl.org/dc/elements/1.1/>
+PREFIX dcterms: <http://purl.org/dc/terms/>
+PREFIX bl: <https://w3id.org/biolink/vocab/>
+PREFIX drugbank_vocabulary: <http://bio2rdf.org/drugbank_vocabulary:>
+PREFIX bio2rdf_vocabulary: <http://bio2rdf.org/bio2rdf_vocabulary:> 
+
+INSERT 
+{ 
+    GRAPH <https://w3id.org/data2services/graph/drugbank> {  
+
+	?uri	a drugbank_vocabulary:Resource;
+		rdf:type drugbank_vocabulary:SNP-Effect;
+		dc:identifier ?dcId;
+		rdfs:label ?label;
+		dc:title ?title;
+		bio2rdf_vocabulary:namespace "drugbank_resource";
+		bio2rdf_vocabulary:identifier ?itemId;
+		bio2rdf_vocabulary:uri ?uri;
+
+		drugbank_vocabulary:protein-name ?snpEffectProteinName;
+		drugbank_vocabulary:gene-symbol ?snpEffectGeneSymbolUri;
+		drugbank_vocabulary:uniprot-id ?snpEffectUniprotIdUri;
+		drugbank_vocabulary:rs-id ?snpEffectRsIdUri;
+		drugbank_vocabulary:allele ?snpEffectAllele;
+		drugbank_vocabulary:defining-change ?snpEffectDefiningChange;
+		drugbank_vocabulary:description ?snpEffectDesc;
+		drugbank_vocabulary:x-pubmed ?snpEffectPubmedIdUri;
+    }
+}
+WHERE {
+  
+  GRAPH <https://w3id.org/data2services/graph/xml2rdf> {
+
+	?snpEffect a x2rm:drugbank.drug.snp-effects.effect.
+
+	OPTIONAL{
+		?snpEffect x2rm:hasChild [
+		    a x2rm:drugbank.drug.snp-effects.effect.protein-name; 
+		    x2rm:hasValue ?snpEffectProteinName
+	    	];
+	} OPTIONAL{
+		?snpEffect x2rm:hasChild [
+		    a x2rm:drugbank.drug.snp-effects.effect.gene-symbol; 
+		    x2rm:hasValue ?snpEffectGeneSymbol
+	    	];
+	} OPTIONAL{
+		?snpEffect x2rm:hasChild [
+		    a x2rm:drugbank.drug.snp-effects.effect.uniprot-id; 
+		    x2rm:hasValue ?snpEffectUniprotId
+	    	];
+	} OPTIONAL{
+		?snpEffect x2rm:hasChild [
+		    a x2rm:drugbank.drug.snp-effects.effect.rs-id; 
+		    x2rm:hasValue ?snpEffectRsId	
+	    	];
+	} OPTIONAL{
+		?snpEffect x2rm:hasChild [
+		    a x2rm:drugbank.drug.snp-effects.effect.allele; 
+		    x2rm:hasValue ?snpEffectAllele
+	    	];
+	} OPTIONAL{
+		?snpEffect x2rm:hasChild [
+		    a x2rm:drugbank.drug.snp-effects.effect.defining-change; 
+		    x2rm:hasValue ?snpEffectDefiningChange
+	    	];
+	} OPTIONAL{
+		?snpEffect x2rm:hasChild [
+		    a x2rm:drugbank.drug.snp-effects.effect.description; 
+		    x2rm:hasValue ?snpEffectDesc
+	    	];
+	} OPTIONAL{
+		?snpEffect x2rm:hasChild [
+		    a x2rm:drugbank.drug.snp-effects.effect.pubmed-id; 
+		    x2rm:hasValue ?snpEffectPubmedId
+	    	];
+	} # SNP effect features
+
+
+	BIND ( iri(concat("http://bio2rdf.org/dbsnp:", ?snpEffectRsId)) AS ?snpEffectRsIdUri )
+	BIND ( iri(concat("http://bio2rdf.org/uniprot:", ?snpEffectUniprotId)) AS ?snpEffectUniprotIdUri )
+	BIND ( iri(concat("http://bio2rdf.org/hgnc:", ?snpEffectGeneSymbol)) AS ?snpEffectGeneSymbolUri )
+	BIND ( iri(concat("http://bio2rdf.org/pubmed:", ?snpEffectPubmedId)) AS ?snpEffectPubmedIdUri )
+
+	BIND ( SHA1(?snpEffectDesc) AS ?itemId)
+	BIND ( CONCAT("Effect of SNP ",?snpEffectRsId) AS ?title)
+	BIND ( concat("drugbank_resource:", ?itemId) AS ?dcId )
+	BIND ( concat(?title, " [drugbank_resource:", ?itemId, "] ") AS ?label )
+	BIND ( iri(concat("http://bio2rdf.org/drugbank_resource:", ?itemId)) AS ?uri )
+  } # graph
+  
+} # where

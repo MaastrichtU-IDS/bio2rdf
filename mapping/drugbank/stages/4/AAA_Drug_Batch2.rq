@@ -1,0 +1,212 @@
+PREFIX x2rm: <http://ids.unimaas.nl/xml2rdf/model#>
+PREFIX x2rd: <http://ids.unimaas.nl/xml2rdf/data/>
+PREFIX d2s: <https://w3id.org/data2services/vocab/>
+PREFIX ido: <http://identifiers.org/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX owl: <http://www.w3.org/2002/07/owl#>
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+PREFIX obo: <http://purl.obolibrary.org/obo/>
+PREFIX dc: <http://purl.org/dc/elements/1.1/>
+PREFIX dcterms: <http://purl.org/dc/terms/>
+PREFIX bl: <https://w3id.org/biolink/vocab/>
+PREFIX drugbank_vocabulary: <http://bio2rdf.org/drugbank_vocabulary:>
+PREFIX bio2rdf_vocabulary: <http://bio2rdf.org/bio2rdf_vocabulary:> 
+
+INSERT 
+{ 
+    GRAPH <https://w3id.org/data2services/graph/drugbank> {  
+
+	?uri	a drugbank_vocabulary:Resource;
+		rdf:type drugbank_vocabulary:Drug;
+
+		drugbank_vocabulary:synthesis-reference ?synRefUri;
+		drugbank_vocabulary:indication ?indicationUri;
+		drugbank_vocabulary:pharmacodynamics ?pharmacoUri;
+		drugbank_vocabulary:mechanism-of-action ?mechanismOfActionUri;
+		drugbank_vocabulary:toxicity ?toxicityUri;
+		drugbank_vocabulary:metabolism ?metabolismUri;
+		drugbank_vocabulary:absorption ?absorptionUri;
+		drugbank_vocabulary:half-life ?halfLifeUri;
+		drugbank_vocabulary:protein-binding ?protBindingUri;
+		drugbank_vocabulary:route-of-elimination ?routOfElmUri;
+		drugbank_vocabulary:volume-of-distribution ?volOfDistUri;
+		drugbank_vocabulary:clearance ?clearanceUri;
+		drugbank_vocabulary:drug-classification-category ?directParenturi;
+		drugbank_vocabulary:drug-classification-category ?kingdomUri;
+		drugbank_vocabulary:drug-classification-category ?superclassUri;
+		drugbank_vocabulary:drug-classification-category ?classUri;
+		drugbank_vocabulary:drug-classification-category ?subclassUri;
+		drugbank_vocabulary:classification-alternative-parent ?classAlternativeParentUri;
+		drugbank_vocabulary:classification-decription ?classDesc;
+		drugbank_vocabulary:classification-substituent ?classSubstituent;
+		
+    }
+}
+WHERE {
+  
+  GRAPH <https://w3id.org/data2services/graph/xml2rdf> {
+
+    # Get drug primary ID
+    ?drugObj a x2rm:drugbank.drug .
+
+	
+        # Get drug primary ID        
+	?drugObj x2rm:hasChild [
+            a x2rm:drugbank.drug.drugbank-id ;
+            x2rm:hasAttribute [ a x2rm:drugbank.drug.drugbank-id.-primary ] ;
+            x2rm:hasValue ?drugId
+        ];
+	
+	BIND ( iri(concat("http://bio2rdf.org/drugbank:", ?drugId)) AS ?uri )
+
+	OPTIONAL{
+		?drugObj x2rm:hasChild [ 
+		    a x2rm:drugbank.drug.synthesis-reference; 
+		    x2rm:hasValue ?synRef 
+		] ;
+	        BIND ( SHA1(STR(?synRef)) AS ?synRefId)
+    	        BIND ( iri(concat("http://bio2rdf.org/drugbank_resource:", ?synRefId)) AS ?synRefUri )
+	}OPTIONAL{
+		?drugObj x2rm:hasChild [ 
+		    a x2rm:drugbank.drug.indication; 
+		    x2rm:hasValue ?indication 
+		] ;
+	        BIND ( SHA1(STR(?synRef)) AS ?indicationId)
+    	        BIND ( iri(concat("http://bio2rdf.org/drugbank_resource:", ?indicationId)) AS ?indicationUri )
+	}OPTIONAL{
+		?drugObj x2rm:hasChild [ 
+		    a x2rm:drugbank.drug.pharmacodynamics; 
+		    x2rm:hasValue ?pharmaco 
+		] ;
+	        BIND ( SHA1(STR(?pharmaco)) AS ?pharmacoId)
+    	        BIND ( iri(concat("http://bio2rdf.org/drugbank_resource:", ?pharmacoId)) AS ?pharmacoUri )
+	}OPTIONAL{
+		?drugObj x2rm:hasChild [ 
+		    a x2rm:drugbank.drug.mechanism-of-action; 
+		    x2rm:hasValue ?mechanismOfAction 
+		] ;
+	        BIND ( SHA1(STR(?mechanismOfAction)) AS ?mechanismOfActionId)
+    	        BIND ( iri(concat("http://bio2rdf.org/drugbank_resource:", ?mechanismOfActionId)) AS ?mechanismOfActionUri )
+	}OPTIONAL{
+		?drugObj x2rm:hasChild [ 
+		    a x2rm:drugbank.drug.toxicity; 
+		    x2rm:hasValue ?toxicity 
+		] ;
+	        BIND ( SHA1(STR(?toxicity)) AS ?toxicityId)
+    	        BIND ( iri(concat("http://bio2rdf.org/drugbank_resource:", ?toxicityId)) AS ?toxicityUri )
+	}OPTIONAL{
+		?drugObj x2rm:hasChild [ 
+		    a x2rm:drugbank.drug.metabolism; 
+		    x2rm:hasValue ?metabolism 
+		] ;
+	        BIND ( SHA1(STR(?metabolism)) AS ?metabolismId)
+    	        BIND ( iri(concat("http://bio2rdf.org/drugbank_resource:", ?metabolismId)) AS ?metabolismUri )
+	}OPTIONAL{
+		?drugObj x2rm:hasChild [ 
+		    a x2rm:drugbank.drug.absorption; 
+		    x2rm:hasValue ?absorption 
+		] ;
+	        BIND ( SHA1(STR(?absorption)) AS ?absorptionId)
+    	        BIND ( iri(concat("http://bio2rdf.org/drugbank_resource:", ?absorptionId)) AS ?absorptionUri )
+	}OPTIONAL{
+		?drugObj x2rm:hasChild [ 
+		    a x2rm:drugbank.drug.half-life; 
+		    x2rm:hasValue ?halfLife 
+		] ;
+	        BIND ( SHA1(STR(?halfLife)) AS ?halfLifeId)
+    	        BIND ( iri(concat("http://bio2rdf.org/drugbank_resource:", ?halfLifeId)) AS ?halfLifeUri )
+	}OPTIONAL{
+		?drugObj x2rm:hasChild [ 
+		    a x2rm:drugbank.drug.protein-binding; 
+		    x2rm:hasValue ?protBinding 
+		] ;
+	        BIND ( SHA1(STR(?protBinding)) AS ?protBindingId)
+    	        BIND ( iri(concat("http://bio2rdf.org/drugbank_resource:", ?protBindingId)) AS ?protBindingUri )
+	}OPTIONAL{
+		?drugObj x2rm:hasChild [ 
+		    a x2rm:drugbank.drug.route-of-elimination; 
+		    x2rm:hasValue ?routOfElm 
+		] ;
+	        BIND ( SHA1(STR(?routOfElm)) AS ?routOfElmId)
+    	        BIND ( iri(concat("http://bio2rdf.org/drugbank_resource:", ?routOfElmId)) AS ?routOfElmUri )
+	} OPTIONAL{
+		?drugObj x2rm:hasChild [ 
+		    a x2rm:drugbank.drug.volume-of-distribution; 
+		    x2rm:hasValue ?volOfDist
+		] ;
+	        BIND ( SHA1(STR(?volOfDist)) AS ?volOfDistId)
+    	        BIND ( iri(concat("http://bio2rdf.org/drugbank_resource:", ?volOfDistId)) AS ?volOfDistUri )
+	} OPTIONAL{
+		?drugObj x2rm:hasChild [ 
+		    a x2rm:drugbank.drug.clearance; 
+		    x2rm:hasValue ?clearance 
+		] ;
+	        BIND ( SHA1(STR(?clearance)) AS ?clearanceId)
+    	        BIND ( iri(concat("http://bio2rdf.org/drugbank_resource:", ?clearanceId)) AS ?clearanceUri )
+	} OPTIONAL{
+		?drugObj x2rm:hasChild ?classification.
+		    
+		    ?classification a x2rm:drugbank.drug.classification; 
+		    
+		    OPTIONAL{
+			    ?classification x2rm:hasChild [
+				a x2rm:drugbank.drug.classification.description; 
+				x2rm:hasValue ?classDesc
+			    ];
+		    } OPTIONAL{
+			    ?classification x2rm:hasChild [
+				a x2rm:drugbank.drug.classification.direct-parent; 
+				x2rm:hasValue ?classDirectParent
+			    ].
+
+			    BIND ( SHA1(STR(?classDirectParent)) AS ?directParentId)
+		    	    BIND ( iri(concat("http://bio2rdf.org/drugbank_resource:", ?directParentId)) AS ?directParenturi )
+		    } OPTIONAL{
+			    ?classification x2rm:hasChild [
+				a x2rm:drugbank.drug.classification.kingdom; 
+				x2rm:hasValue ?classKingdom
+			    ].
+
+		    	    BIND ( SHA1(STR(?classKingdom)) AS ?kingdomId)
+		    	    BIND ( iri(concat("http://bio2rdf.org/drugbank_resource:", ?kingdomId)) AS ?kingdomUri )
+		    } OPTIONAL{
+			    ?classification x2rm:hasChild [
+				a x2rm:drugbank.drug.classification.superclass; 
+				x2rm:hasValue ?classSuperclass
+			    ].
+
+		    	    BIND ( SHA1(STR(?classSuperclass)) AS ?superclassId)
+		    	    BIND ( iri(concat("http://bio2rdf.org/drugbank_resource:", ?superclassId)) AS ?superclassUri )
+		    } OPTIONAL{
+			    ?classification x2rm:hasChild [
+				a x2rm:drugbank.drug.classification.class; 
+				x2rm:hasValue ?classClass
+			    ].
+
+		    	    BIND ( SHA1(STR(?classClass)) AS ?classId)
+		    	    BIND ( iri(concat("http://bio2rdf.org/drugbank_resource:", ?classId)) AS ?classUri )
+		    } OPTIONAL{
+			    ?classification x2rm:hasChild [
+				a x2rm:drugbank.drug.classification.subclass; 
+				x2rm:hasValue ?classSubclass
+			    ].
+
+			    BIND ( SHA1(STR(?classSubclass)) AS ?subclassId)
+			    BIND ( iri(concat("http://bio2rdf.org/drugbank_resource:", ?subclassId)) AS ?subclassUri )
+		    } OPTIONAL{
+			    ?classification x2rm:hasChild [
+				a x2rm:drugbank.drug.classification.alternative-parent; 
+				x2rm:hasValue ?classAlternativeParent
+			    ];
+			    BIND ( SHA1(STR(?classAlternativeParent)) AS ?classAlternativeParentId)
+			    BIND ( iri(concat("http://bio2rdf.org/drugbank_resource:", ?classAlternativeParentId)) AS ?classAlternativeParentUri )
+		    } OPTIONAL{
+			    ?classification x2rm:hasChild [
+				a x2rm:drugbank.drug.classification.substituent; 
+				x2rm:hasValue ?classSubstituent
+			    ];
+		    } # classification
+	}
+  } # graph
+  
+} # where

@@ -1,0 +1,84 @@
+PREFIX x2rm: <http://ids.unimaas.nl/xml2rdf/model#>
+PREFIX x2rd: <http://ids.unimaas.nl/xml2rdf/data/>
+PREFIX d2s: <https://w3id.org/data2services/vocab/>
+PREFIX ido: <http://identifiers.org/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX owl: <http://www.w3.org/2002/07/owl#>
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+PREFIX obo: <http://purl.obolibrary.org/obo/>
+PREFIX dc: <http://purl.org/dc/elements/1.1/>
+PREFIX dcterms: <http://purl.org/dc/terms/>
+PREFIX bl: <https://w3id.org/biolink/vocab/>
+PREFIX drugbank_vocabulary: <http://bio2rdf.org/drugbank_vocabulary:>
+PREFIX bio2rdf_vocabulary: <http://bio2rdf.org/bio2rdf_vocabulary:> 
+
+INSERT 
+{ 
+    GRAPH <https://w3id.org/data2services/graph/drugbank> {  
+
+	?uri	a drugbank_vocabulary:Resource;
+		rdf:type drugbank_vocabulary:Salt;
+		dc:identifier ?dcId;
+		rdfs:label ?label;
+		dc:title ?saltName;
+		bio2rdf_vocabulary:namespace "drugbank";
+		bio2rdf_vocabulary:identifier ?saltId;
+		bio2rdf_vocabulary:uri ?uri;
+		drugbank_vocabulary:average_mass ?saltAvgMass;
+		drugbank_vocabulary:monoisotopic_mass ?saltMonoMass;
+		drugbank_vocabulary:x-inchikey ?saltInchi;
+		drugbank_vocabulary:x-cas ?saltCas;
+		drugbank_vocabulary:x-unii ?saltUnii;
+       
+    }
+}
+WHERE {
+  
+  GRAPH <https://w3id.org/data2services/graph/xml2rdf> {
+
+    ?salt a x2rm:drugbank.drug.salts.salt; 
+
+	OPTIONAL{
+		?salt x2rm:hasChild [
+		    a x2rm:drugbank.drug.salts.salt.drugbank-id ;
+		    x2rm:hasAttribute [ a x2rm:drugbank.drug.salts.salt.drugbank-id.-primary ] ;
+		    x2rm:hasValue ?saltId
+		].
+		BIND ( concat("drugbank:", ?saltId) AS ?dcId )
+	} OPTIONAL{
+		?salt x2rm:hasChild [
+		    a x2rm:drugbank.drug.salts.salt.name; 
+		    x2rm:hasValue ?saltName
+	    	].
+		BIND ( concat(?saltName, " [drugbank:", ?saltId, "] ") AS ?label )
+	} OPTIONAL{
+		?salt x2rm:hasChild [
+		    a x2rm:drugbank.drug.salts.salt.unii; 
+		    x2rm:hasValue ?saltUnii
+	    	];
+	} OPTIONAL{
+		?salt x2rm:hasChild [
+		    a x2rm:drugbank.drug.salts.salt.cas-number; 
+		    x2rm:hasValue ?saltCas
+	    	];
+	} OPTIONAL{
+		?salt x2rm:hasChild [
+		    a x2rm:drugbank.drug.salts.salt.inchikey; 
+		    x2rm:hasValue ?saltInchi
+	    	];
+	} OPTIONAL{
+		?salt x2rm:hasChild [
+		    a x2rm:drugbank.drug.salts.salt.average-mass; 
+		    x2rm:hasValue ?saltAvgMass
+	    	];
+	} OPTIONAL{
+		?salt x2rm:hasChild [
+		    a x2rm:drugbank.drug.salts.salt.monoisotopic-mass; 
+		    x2rm:hasValue ?saltMonoMass
+	    	];
+	} # salt
+
+	BIND ( iri(concat("http://bio2rdf.org/drugbank:", ?saltId)) AS ?uri )
+  } # graph
+  
+} # where

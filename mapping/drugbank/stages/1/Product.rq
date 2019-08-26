@@ -1,0 +1,153 @@
+PREFIX x2rm: <http://ids.unimaas.nl/xml2rdf/model#>
+PREFIX x2rd: <http://ids.unimaas.nl/xml2rdf/data/>
+PREFIX d2s: <https://w3id.org/data2services/vocab/>
+PREFIX ido: <http://identifiers.org/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX owl: <http://www.w3.org/2002/07/owl#>
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+PREFIX obo: <http://purl.obolibrary.org/obo/>
+PREFIX dc: <http://purl.org/dc/elements/1.1/>
+PREFIX dcterms: <http://purl.org/dc/terms/>
+PREFIX bl: <https://w3id.org/biolink/vocab/>
+PREFIX drugbank_vocabulary: <http://bio2rdf.org/drugbank_vocabulary:>
+PREFIX bio2rdf_vocabulary: <http://bio2rdf.org/bio2rdf_vocabulary:> 
+
+INSERT 
+{ 
+    GRAPH <https://w3id.org/data2services/graph/drugbank>  {  
+
+	?uri	a drugbank_vocabulary:Resource;
+		rdf:type drugbank_vocabulary:Product;
+		dc:identifier ?dcId;
+		rdfs:label ?label;
+		dc:title ?productName;
+		bio2rdf_vocabulary:namespace "drugbank_resource";
+		bio2rdf_vocabulary:identifier ?productId;
+		bio2rdf_vocabulary:uri ?uri;
+		drugbank_vocabulary:labeller ?productLabeller;
+		drugbank_vocabulary:ndc-id ?productNDCid;
+		drugbank_vocabulary:ndc-product-code ?productNDCcode;
+		drugbank_vocabulary:dpd-id ?productDPDid;
+		drugbank_vocabulary:ema-product-code ?productEmaCode;
+		drugbank_vocabulary:ema-ma-number ?productEmaNumber;
+		drugbank_vocabulary:started-marketing-on ?productStartedMarketing;
+		drugbank_vocabulary:ended-marketing-on ?productEndedMarketing;
+		drugbank_vocabulary:dosage-form ?productDosageForm;
+		drugbank_vocabulary:strength ?productStrength;
+		drugbank_vocabulary:route ?productRoute;
+		drugbank_vocabulary:fda-application-number ?productFDAnum;
+		drugbank_vocabulary:generic ?productGeneric;
+		drugbank_vocabulary:over-the-counter ?productOTC;
+		drugbank_vocabulary:approved ?productApproved;
+		drugbank_vocabulary:country ?productCountry;
+		drugbank_vocabulary:source ?productSource.
+       
+    }
+}
+WHERE {
+  
+  GRAPH <https://w3id.org/data2services/graph/xml2rdf> {
+
+
+
+	?product a x2rm:drugbank.drug.products.product.
+			
+		OPTIONAL{
+			?product x2rm:hasChild [
+			    a x2rm:drugbank.drug.products.product.name; 
+			    x2rm:hasValue ?productName
+		    	];
+		} OPTIONAL{
+			?product x2rm:hasChild [
+			    a x2rm:drugbank.drug.products.product.labeller; 
+			    x2rm:hasValue ?productLabeller
+		    	];
+		} OPTIONAL{
+			?product x2rm:hasChild [
+			    a x2rm:drugbank.drug.products.product.ndc-id; 
+			    x2rm:hasValue ?productNDCid
+		    	];
+		} OPTIONAL{
+			?product x2rm:hasChild [
+			    a x2rm:drugbank.drug.products.product.ndc-product-code; 
+			    x2rm:hasValue ?productNDCcode
+		    	];
+		} OPTIONAL{
+			?product x2rm:hasChild [
+			    a x2rm:drugbank.drug.products.product.dpd-id; 
+			    x2rm:hasValue ?productDPDid
+		    	];
+		} OPTIONAL{
+			?product x2rm:hasChild [
+			    a x2rm:drugbank.drug.products.product.ema-product-code; 
+			    x2rm:hasValue ?productEmaCode
+		    	];
+		} OPTIONAL{
+			?product x2rm:hasChild [
+			    a x2rm:drugbank.drug.products.product.ema-ma-number; 
+			    x2rm:hasValue ?productEmaNumber
+		    	];
+		} OPTIONAL{
+			?product x2rm:hasChild [
+			    a x2rm:drugbank.drug.products.product.started-marketing-on; 
+			    x2rm:hasValue ?productStartedMarketing
+		    	];
+		} OPTIONAL{
+			?product x2rm:hasChild [
+			    a x2rm:drugbank.drug.products.product.ended-marketing-on; 
+			    x2rm:hasValue ?productEndedMarketing
+		    	];
+		} OPTIONAL{
+			?product x2rm:hasChild [
+			    a x2rm:drugbank.drug.products.product.dosage-form; 
+			    x2rm:hasValue ?productDosageForm
+		    	];
+		} OPTIONAL{
+			?product x2rm:hasChild [
+			    a x2rm:drugbank.drug.products.product.strength; 
+			    x2rm:hasValue ?productStrength
+		    	];
+		} OPTIONAL{
+			?product x2rm:hasChild [
+			    a x2rm:drugbank.drug.products.product.route; 
+			    x2rm:hasValue ?productRoute
+		    	];
+		} OPTIONAL{
+			?product x2rm:hasChild [
+			    a x2rm:drugbank.drug.products.product.fda-application-number; 
+			    x2rm:hasValue ?productFDAnum
+		    	];
+		} OPTIONAL{
+			?product x2rm:hasChild [
+			    a x2rm:drugbank.drug.products.product.generic; 
+			    x2rm:hasValue ?productGeneric
+		    	];
+		} OPTIONAL{
+			?product x2rm:hasChild [
+			    a x2rm:drugbank.drug.products.product.over-the-counter; 
+			    x2rm:hasValue ?productOTC
+		    	];
+		} OPTIONAL{
+			?product x2rm:hasChild [
+			    a x2rm:drugbank.drug.products.product.approved; 
+			    x2rm:hasValue ?productApproved
+		    	];
+		} OPTIONAL{
+			?product x2rm:hasChild [
+			    a x2rm:drugbank.drug.products.product.country; 
+			    x2rm:hasValue ?productCountry
+		    	];
+		} OPTIONAL{
+			?product x2rm:hasChild [
+			    a x2rm:drugbank.drug.products.product.source; 
+			    x2rm:hasValue ?productSource
+		    	];
+		} 
+
+		BIND ( SHA1(STR(?productName)) AS ?productId)
+		BIND ( concat("drugbank_resource:", ?productId) AS ?dcId )
+		BIND ( concat(?productName, " [drugbank_resource:", ?productId, "] ") AS ?label )
+		BIND ( iri(concat("http://bio2rdf.org/drugbank_resource:", ?productId)) AS ?uri )
+  } # graph
+  
+} # where

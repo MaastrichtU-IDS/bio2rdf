@@ -1,0 +1,170 @@
+PREFIX x2rm: <http://ids.unimaas.nl/xml2rdf/model#>
+PREFIX x2rd: <http://ids.unimaas.nl/xml2rdf/data/>
+PREFIX d2s: <https://w3id.org/data2services/vocab/>
+PREFIX ido: <http://identifiers.org/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX owl: <http://www.w3.org/2002/07/owl#>
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+PREFIX obo: <http://purl.obolibrary.org/obo/>
+PREFIX dc: <http://purl.org/dc/elements/1.1/>
+PREFIX dcterms: <http://purl.org/dc/terms/>
+PREFIX bl: <https://w3id.org/biolink/vocab/>
+PREFIX drugbank_vocabulary: <http://bio2rdf.org/drugbank_vocabulary:>
+PREFIX bio2rdf_vocabulary: <http://bio2rdf.org/bio2rdf_vocabulary:> 
+
+INSERT 
+{ 
+    GRAPH <https://w3id.org/data2services/graph/drugbank>  {  
+
+	?uri	a drugbank_vocabulary:Resource;
+		rdf:type drugbank_vocabulary:Transporter;
+		dc:identifier ?dcId;
+		rdfs:label ?label;
+		dc:title ?transporterName;
+		bio2rdf_vocabulary:namespace "drugbank";
+		bio2rdf_vocabulary:identifier ?transporterId;
+		bio2rdf_vocabulary:uri ?uri;
+
+		drugbank_vocabulary:organism ?transporterOrganism;
+		drugbank_vocabulary:x-ref ?transporterRefArticleRefIdUri;
+		drugbank_vocabulary:x-ref ?transporterRefTextbookRefIdUri;
+		drugbank_vocabulary:x-ref ?transporterRefLinkRefIdUri;
+		drugbank_vocabulary:x-ref ?transporterRefAttachmentRefIdUri;
+
+		drugbank_vocabulary:action ?transporterActionUri;
+		drugbank_vocabulary:known-action ?transporterKnownActionUri;
+		drugbank_vocabulary:polypeptide ?transporterPolypeptideUri;
+
+    }
+}
+WHERE {
+  
+  GRAPH <https://w3id.org/data2services/graph/xml2rdf> {
+
+	?transporter a x2rm:drugbank.drug.transporters.transporter.
+
+	?transporter x2rm:hasChild [
+	    a x2rm:drugbank.drug.transporters.transporter.id; 
+	    x2rm:hasValue ?transporterId
+    	].
+
+	?transporter x2rm:hasChild [
+	    a x2rm:drugbank.drug.transporters.transporter.name; 
+	    x2rm:hasValue ?transporterName
+    	].
+
+	OPTIONAL{
+
+		?transporter x2rm:hasChild [
+		    a x2rm:drugbank.drug.transporters.transporter.organism; 
+		    x2rm:hasValue ?transporterOrganism
+	    	];
+	} OPTIONAL{
+		?transporter x2rm:hasChild ?transporterActions.
+		?transporterActions a x2rm:drugbank.drug.transporters.transporter.actions.
+
+			OPTIONAL{
+
+				?transporterActions x2rm:hasChild ?transporterAction.
+				?transporterAction a x2rm:drugbank.drug.transporters.transporter.actions.action.
+				?transporterAction x2rm:hasValue ?transporterActionValue.
+
+				BIND ( REPLACE(UCASE(STR(?transporterActionValue)), " ", "-") AS ?transporterActionId)
+				BIND ( iri(concat("http://bio2rdf.org/drugbank_resource:", ?transporterActionId)) AS ?transporterActionUri )
+			} # Transporter action
+	} OPTIONAL{
+		?transporter x2rm:hasChild ?transporterReferences.
+		?transporterReferences a x2rm:drugbank.drug.transporters.transporter.references.
+			
+			OPTIONAL{
+				?transporterReferences x2rm:hasChild ?transporterRefArticles.
+				?transporterRefArticles a x2rm:drugbank.drug.transporters.transporter.references.articles.
+
+				OPTIONAL{
+
+					?transporterRefArticles x2rm:hasChild ?transporterRefArticle.
+					?transporterRefArticle a x2rm:drugbank.drug.transporters.transporter.references.articles.article.
+
+					OPTIONAL{
+						?transporterRefArticle x2rm:hasChild ?transporterRefArticleRefId.
+						?transporterRefArticleRefId a x2rm:drugbank.drug.transporters.transporter.references.articles.article.ref-id.
+						?transporterRefArticleRefId x2rm:hasValue ?transporterRefArticleRefIdValue.
+					} # Transporter Ref Articles features
+
+					BIND ( iri(concat("http://bio2rdf.org/drugbank:", ?transporterRefArticleRefIdValue)) AS ?transporterRefArticleRefIdUri )
+				} # Transporter Ref Articles
+			} OPTIONAL{
+				?transporterReferences x2rm:hasChild ?transporterRefTextbooks.
+				?transporterRefTextbooks a x2rm:drugbank.drug.transporters.transporter.references.textbooks.
+
+				OPTIONAL{
+
+					?transporterRefTextbooks x2rm:hasChild ?transporterRefTextbook.
+					?transporterRefTextbook a x2rm:drugbank.drug.transporters.transporter.references.textbooks.textbook.
+
+					OPTIONAL{
+						?transporterRefTextbook x2rm:hasChild ?transporterRefTextbookRefId.
+						?transporterRefTextbookRefId a x2rm:drugbank.drug.transporters.transporter.references.textbooks.textbook.ref-id.
+						?transporterRefTextbookRefId x2rm:hasValue ?transporterRefTextbookRefIdValue.
+					} # Transporter Ref Textbooks features
+					BIND ( iri(concat("http://bio2rdf.org/drugbank:", ?transporterRefTextbookRefIdValue)) AS ?transporterRefTextbookRefIdUri )
+				} # Transporter Ref Textbooks
+			} OPTIONAL{
+				?transporterReferences x2rm:hasChild ?transporterRefLinks.
+				?transporterRefLinks a x2rm:drugbank.drug.transporters.transporter.references.links.
+
+				OPTIONAL{
+
+					?transporterRefLinks x2rm:hasChild ?transporterRefLink.
+					?transporterRefLink a x2rm:drugbank.drug.transporters.transporter.references.links.link.
+
+					OPTIONAL{
+						?transporterRefLink x2rm:hasChild ?transporterRefLinkRefId.
+						?transporterRefLinkRefId a x2rm:drugbank.drug.transporters.transporter.references.links.link.ref-id.
+						?transporterRefLinkRefId x2rm:hasValue ?transporterRefLinkRefIdValue.
+					} # Transporter Ref Links features
+					BIND ( iri(concat("http://bio2rdf.org/drugbank:", ?transporterRefLinkRefIdValue)) AS ?transporterRefLinkRefIdUri )
+				} # Transporter Ref Links
+			} OPTIONAL{
+				?transporterReferences x2rm:hasChild ?transporterRefAttachments.
+				?transporterRefAttachments a x2rm:drugbank.drug.transporters.transporter.references.attachments.
+
+				OPTIONAL{
+
+					?transporterRefAttachments x2rm:hasChild ?transporterRefAttachment.
+					?transporterRefAttachment a x2rm:drugbank.drug.transporters.transporter.references.attachments.attachment.
+
+					OPTIONAL{
+						?transporterRefAttachment x2rm:hasChild ?transporterRefAttachmentRefId.
+						?transporterRefAttachmentRefId a x2rm:drugbank.drug.transporters.transporter.references.attachments.attachment.ref-id.
+						?transporterRefAttachmentRefId x2rm:hasValue ?transporterRefAttachmentRefIdValue.
+					}# Transporter Ref Attachments features
+					BIND ( iri(concat("http://bio2rdf.org/drugbank:", ?transporterRefAttachmentRefIdValue)) AS ?transporterRefAttachmentRefIdUri )
+				} # Transporter Ref Attachments
+			} # Transporter Reference
+	} OPTIONAL{
+		?transporter x2rm:hasChild ?transporterKnownAction.
+		?transporterKnownAction a x2rm:drugbank.drug.transporters.transporter.known-action.
+		?transporterKnownAction x2rm:hasValue ?transporterKnownActionValue.
+
+		BIND ( REPLACE(UCASE(STR(?transporterKnownActionValue)), " ", "-") AS ?transporterKnownActionId)
+		BIND ( iri(concat("http://bio2rdf.org/drugbank_resource:", ?transporterKnownActionId)) AS ?transporterKnownActionUri )
+	} OPTIONAL{
+		?transporter x2rm:hasChild ?transporterPolypeptide.
+		?transporterPolypeptide a x2rm:drugbank.drug.transporters.transporter.polypeptide.
+
+		?transporterPolypeptide  x2rm:hasAttribute ?transporterPolypeptideIdAttr.
+		?transporterPolypeptideIdAttr a x2rm:drugbank.drug.transporters.transporter.polypeptide.-id.
+		?transporterPolypeptideIdAttr x2rm:hasValue ?transporterPolypeptideId.
+
+		BIND ( iri(concat("drugbank:", ?transporterPolypeptideId) ) AS ?transporterPPId )
+		BIND ( iri(concat("http://bio2rdf.org/drugbank:", ?transporterPolypeptideId)) AS ?transporterPolypeptideUri )
+	} # Transporter features
+
+
+	BIND ( concat("drugbank:", ?transporterId) AS ?dcId )
+	BIND ( concat(?transporterName, " [drugbank:", ?transporterId, "] ") AS ?label )
+	BIND ( iri(concat("http://bio2rdf.org/drugbank:", ?transporterId)) AS ?uri )	
+  } # graph
+  
+} # where

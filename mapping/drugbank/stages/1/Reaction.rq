@@ -1,0 +1,89 @@
+PREFIX x2rm: <http://ids.unimaas.nl/xml2rdf/model#>
+PREFIX x2rd: <http://ids.unimaas.nl/xml2rdf/data/>
+PREFIX d2s: <https://w3id.org/data2services/vocab/>
+PREFIX ido: <http://identifiers.org/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX owl: <http://www.w3.org/2002/07/owl#>
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+PREFIX obo: <http://purl.obolibrary.org/obo/>
+PREFIX dc: <http://purl.org/dc/elements/1.1/>
+PREFIX dcterms: <http://purl.org/dc/terms/>
+PREFIX bl: <https://w3id.org/biolink/vocab/>
+PREFIX drugbank_vocabulary: <http://bio2rdf.org/drugbank_vocabulary:>
+PREFIX bio2rdf_vocabulary: <http://bio2rdf.org/bio2rdf_vocabulary:> 
+
+INSERT 
+{ 
+    GRAPH <https://w3id.org/data2services/graph/drugbank>  {  
+
+	?uri	a drugbank_vocabulary:Resource;
+		rdf:type drugbank_vocabulary:Reaction;
+		dc:identifier ?dcId;
+		rdfs:label ?label;
+		dc:title ?title;
+		bio2rdf_vocabulary:namespace "drugbank_resource";
+		bio2rdf_vocabulary:identifier ?itemId;
+		bio2rdf_vocabulary:uri ?uri;
+
+		drugbank_vocabulary:sequence ?reactionSequence;
+		drugbank_vocabulary:left-element ?reactionLeftElementDBidUri;
+		drugbank_vocabulary:right-element ?reactionRightElementDBidUri;
+		drugbank_vocabulary:reaction-enzyme ?reactionEnzymeDBidUri;
+    }
+}
+WHERE {
+  
+  GRAPH <https://w3id.org/data2services/graph/xml2rdf>  {
+
+	?reaction a x2rm:drugbank.drug.reactions.reaction.
+
+	OPTIONAL{
+		?reaction x2rm:hasChild [
+		    a x2rm:drugbank.drug.reactions.reaction.sequence; 
+		    x2rm:hasValue ?reactionSequence
+	    	];
+	} OPTIONAL{
+		?reaction x2rm:hasChild ?reactionLeftElement.
+		?reactionLeftElement a x2rm:drugbank.drug.reactions.reaction.left-element.
+		
+		?reactionLeftElement x2rm:hasChild ?reactionLeftElementDBid.
+		?reactionLeftElementDBid a x2rm:drugbank.drug.reactions.reaction.left-element.drugbank-id.
+		?reactionLeftElementDBid x2rm:hasValue ?reactionLeftElementDBidValue.
+
+	} OPTIONAL{
+		?reaction x2rm:hasChild ?reactionRightElement.
+		?reactionRightElement a x2rm:drugbank.drug.reactions.reaction.right-element.
+		
+		?reactionRightElement x2rm:hasChild ?reactionRightElementDBid.
+		?reactionRightElementDBid a x2rm:drugbank.drug.reactions.reaction.right-element.drugbank-id.
+		?reactionRightElementDBid x2rm:hasValue ?reactionRightElementDBidValue.
+
+	} OPTIONAL{
+		?reaction x2rm:hasChild ?reactionEnzymes.
+			?reactionEnzymes a x2rm:drugbank.drug.reactions.reaction.enzymes.
+
+			OPTIONAL{
+
+				?reactionEnzymes x2rm:hasChild ?reactionEnzyme.
+				?reactionEnzyme a x2rm:drugbank.drug.reactions.reaction.enzymes.enzyme.
+				
+				?reactionEnzyme x2rm:hasChild ?reactionEnzymeDBid.
+				?reactionEnzymeDBid a x2rm:drugbank.drug.reactions.reaction.enzymes.enzyme.drugbank-id.
+				?reactionEnzymeDBid x2rm:hasValue ?reactionEnzymeDBidValue.
+
+			} # reaction enzyme
+	} # reaction features
+
+
+	BIND ( iri(concat("http://bio2rdf.org/drugbank:", ?reactionLeftElementDBidValue)) AS ?reactionLeftElementDBidUri )
+	BIND ( iri(concat("http://bio2rdf.org/drugbank:", ?reactionRightElementDBidValue)) AS ?reactionRightElementDBidUri )
+	BIND ( iri(concat("http://bio2rdf.org/drugbank:", ?reactionEnzymeDBidValue)) AS ?reactionEnzymeDBidUri )
+
+	BIND ( SHA1(CONCAT(?reactionLeftElementDBidValue,"_",?reactionRightElementDBidValue)) AS ?itemId)
+	BIND ( CONCAT("Reaction between ",?reactionLeftElementDBidValue," and ",?reactionRightElementDBidValue) AS ?title)
+	BIND ( concat("drugbank_resource:", ?itemId) AS ?dcId )
+	BIND ( concat(?title, " [drugbank_resource:", ?itemId, "] ") AS ?label )
+	BIND ( iri(concat("http://bio2rdf.org/drugbank_resource:", ?itemId)) AS ?uri )
+  } # graph
+  
+} # where

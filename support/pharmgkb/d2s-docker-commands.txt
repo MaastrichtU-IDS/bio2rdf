@@ -1,6 +1,6 @@
 
 # Please define the absolute path of the folder that contains the structure (input, output, support, mapping)
-export ABS_PATH=/home/apc/Maastricht/bio2rdf-github
+export ABS_PATH=/media/apc/DATA/Maastricht/bio2rdf-github
 
 # Please define the dataset folder name
 export DATASET=pharmgkb
@@ -36,16 +36,16 @@ sudo docker run -it --rm --link drill:drill -v ${ABS_PATH}:/data r2rml /data/out
 
 
 # Upload the generic RDF to GraphDB to the created repository in the previous comment
-sudo docker run -it --rm --link graphdb:graphdb -v ${ABS_PATH}:/data rdf-upload -m "HTTP" -if "/data/output/${DATASET}" -url "http://graphdb:7200" -rep "test"
+sudo docker run -it --rm --link graphdb:graphdb -v ${ABS_PATH}:/data rdf-upload -m "HTTP" -if "/data/output/${DATASET}" -url "http://graphdb:7200" -rep "pharmgkb"
 
 
 #split relationships.tsv
 
-sudo time -v java -jar data2services-sparql-operations-0.0.1-SNAPSHOT-jar-with-dependencies.jar -op split --split-property "https://w3id.org/data2services/model/Pmids" --split-class "https://w3id.org/data2services/data/input/pharmgkb/relationships.tsv" --split-delimiter ";" -ep "http://localhost:7200" -uep "test" --split-delete
+sudo time -v java -jar data2services-sparql-operations-0.0.1-SNAPSHOT-jar-with-dependencies.jar -op split --split-property "https://w3id.org/data2services/model/Pmids" --split-class "https://w3id.org/data2services/data/input/pharmgkb/relationships.tsv" --split-delimiter ";" -ep "http://localhost:7200" -rep "pharmgkb" --split-delete
 
 
 # map to target RDF drugs.tsv
-sudo docker run -it --link graphdb:graphdb -v ${ABS_PATH}:/data vemonet/data2services-sparql-operations -f "/data/mapping/${DATASET}/drugs.rq" -ep "http://graphdb:7200/repositories/test/statements" 
+sudo time -v java -jar data2services-sparql-operations-0.0.1-SNAPSHOT-jar-with-dependencies.jar -f "${ABS_PATH}/mapping/${DATASET}" -ep "http://graphdb:7200/repositories/pharmgkb/statements" 
 
 
 # map to target RDF  variants.tsv
@@ -83,9 +83,9 @@ sudo docker run -it --link graphdb:graphdb -v ${ABS_PATH}:/data vemonet/data2ser
 
 #split chemicals.tsv
 
-sudo time -v java -jar data2services-sparql-operations-0.0.1-SNAPSHOT-jar-with-dependencies.jar -op split --split-property "http://bio2rdf.org/pharmgkb_vocabulary:generic_name" --split-class "http://bio2rdf.org/pharmgkb_vocabulary:Chemical" --split-delimiter ",\"" -ep "http://localhost:7200" -uep "test" --trim-delimiter "\"" --split-delete
+sudo time -v java -jar data2services-sparql-operations-0.0.1-SNAPSHOT-jar-with-dependencies.jar -op split --split-property "http://bio2rdf.org/pharmgkb_vocabulary:generic_name" --split-class "http://bio2rdf.org/pharmgkb_vocabulary:Chemical" -ep "http://localhost:7200" -uep "pharmgkb" --split-delete
 
-sudo time -v java -jar data2services-sparql-operations-0.0.1-SNAPSHOT-jar-with-dependencies.jar -op split --split-property "http://bio2rdf.org/pharmgkb_vocabulary:trade_name" --split-class "http://bio2rdf.org/pharmgkb_vocabulary:Chemical" --split-delimiter ",\"" -ep "http://localhost:7200" -uep "test" --trim-delimiter "\"" --split-delete
+sudo time -v java -jar data2services-sparql-operations-0.0.1-SNAPSHOT-jar-with-dependencies.jar -op split --split-property "http://bio2rdf.org/pharmgkb_vocabulary:trade_name" --split-class "http://bio2rdf.org/pharmgkb_vocabulary:Chemical" -ep "http://localhost:7200" -rep "pharmgkb" --split-quote "\""
 
 sudo time -v java -jar data2services-sparql-operations-0.0.1-SNAPSHOT-jar-with-dependencies.jar -op split --split-property "http://bio2rdf.org/pharmgkb_vocabulary:brand_mixture" --split-class "http://bio2rdf.org/pharmgkb_vocabulary:Chemical" --split-delimiter ",\"" -ep "http://localhost:7200" -uep "test" --trim-delimiter "\"" --split-delete
 
@@ -128,7 +128,7 @@ sudo time -v java -jar data2services-sparql-operations-0.0.1-SNAPSHOT-jar-with-d
 
 sudo time -v java -jar data2services-sparql-operations-0.0.1-SNAPSHOT-jar-with-dependencies.jar -op split --split-property "http://bio2rdf.org/pharmgkb_vocabulary:alternative-name" --split-class "http://bio2rdf.org/pharmgkb_vocabulary:Phenotype" --split-delimiter ",\"" -ep "http://localhost:7200" -uep "test" --trim-delimiter "\"" --split-delete
 
-sudo time -v java -jar data2services-sparql-operations-0.0.1-SNAPSHOT-jar-with-dependencies.jar -op split --split-property "http://bio2rdf.org/pharmgkb_vocabulary:x-ref" --split-class "http://bio2rdf.org/pharmgkb_vocabulary:Phenotype" --split-delimiter ",\"" -ep "http://localhost:7200" -uep "test" --trim-delimiter "\"" --split-delete --uri-expansion "infer"
+sudo time -v java -jar data2services-sparql-operations-0.0.1-SNAPSHOT-jar-with-dependencies.jar -op split --split-property "http://bio2rdf.org/pharmgkb_vocabulary:x-ref" --split-class "http://bio2rdf.org/pharmgkb_vocabulary:Phenotype" --split-delimiter ",\"" -ep "http://localhost:7200" -rep "pharmgkb" --trim-delimiter "\"" --split-delete --uri-expansion "infer"
 
 
 
@@ -184,6 +184,6 @@ sudo time -v java -jar data2services-sparql-operations-0.0.1-SNAPSHOT-jar-with-d
 
 # Test the download command
 
-java -jar data2services-download-java-0.0.1-SNAPSHOT-jar-with-dependencies.jar -ds pharmgkb -dp "/home/apc/Maastricht/bio2rdf-github/input/pharmgkb/" -dcsv ../datasets.csv
+#java -jar data2services-download-java-0.0.1-SNAPSHOT-jar-with-dependencies.jar -ds pharmgkb -dp "/home/apc/Maastricht/bio2rdf-github/input/pharmgkb/" -dcsv ../datasets.csv
 
 

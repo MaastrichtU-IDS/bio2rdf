@@ -1,0 +1,132 @@
+PREFIX x2rm: <http://ids.unimaas.nl/xml2rdf/model#>
+PREFIX x2rd: <http://ids.unimaas.nl/xml2rdf/data/>
+PREFIX d2s: <https://w3id.org/data2services/vocab/>
+PREFIX ido: <http://identifiers.org/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX owl: <http://www.w3.org/2002/07/owl#>
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+PREFIX obo: <http://purl.obolibrary.org/obo/>
+PREFIX dc: <http://purl.org/dc/elements/1.1/>
+PREFIX dcterms: <http://purl.org/dc/terms/>
+PREFIX bl: <https://w3id.org/biolink/vocab/>
+PREFIX drugbank_vocabulary: <http://bio2rdf.org/drugbank_vocabulary:>
+PREFIX bio2rdf_vocabulary: <http://bio2rdf.org/bio2rdf_vocabulary:> 
+
+INSERT 
+{ 
+    GRAPH <https://w3id.org/data2services/graph/drugbank> {  
+
+	?uri	a drugbank_vocabulary:Resource;
+		rdf:type drugbank_vocabulary:Drug;		
+
+		drugbank_vocabulary:pathway ?pathwayNameUri;
+		drugbank_vocabulary:reaction ?reactionUri;
+		drugbank_vocabulary:snp-effect ?snpEffectUri;
+		drugbank_vocabulary:snp-adverse-drug-reactions ?snpAdvDrugReactionUri;
+
+    }
+}
+WHERE {
+  
+  GRAPH <https://w3id.org/data2services/graph/xml2rdf> {
+
+    # Get drug primary ID
+    ?drugObj a x2rm:drugbank.drug .
+
+        # Get drug primary ID        
+	?drugObj x2rm:hasChild [
+            a x2rm:drugbank.drug.drugbank-id ;
+            x2rm:hasAttribute [ a x2rm:drugbank.drug.drugbank-id.-primary ] ;
+            x2rm:hasValue ?drugId
+        ];
+	
+	BIND ( iri(concat("http://bio2rdf.org/drugbank:", ?drugId)) AS ?uri )
+
+	OPTIONAL{
+		?drugObj x2rm:hasChild ?pathways.
+
+		?pathways a x2rm:drugbank.drug.pathways. 
+
+		    OPTIONAL{
+		    	?pathways x2rm:hasChild ?pathway.
+			?pathway a x2rm:drugbank.drug.pathways.pathway; 
+
+			OPTIONAL{
+				?pathway x2rm:hasChild [
+				    a x2rm:drugbank.drug.pathways.pathway.name; 
+				    x2rm:hasValue ?pathwayName
+			    	];
+			} # pathway features
+
+			BIND ( SHA1(STR(?pathwayName)) AS ?pathwayNameId)
+			BIND ( iri(concat("http://bio2rdf.org/drugbank_resource:", ?pathwayNameId)) AS ?pathwayNameUri )
+		    } # pathway
+	} OPTIONAL{
+		?drugObj x2rm:hasChild ?reactions.
+
+		?reactions a x2rm:drugbank.drug.reactions.
+
+		    OPTIONAL{
+		    	?reactions x2rm:hasChild ?reaction.
+			?reaction a x2rm:drugbank.drug.reactions.reaction.
+
+			OPTIONAL{
+				?reaction x2rm:hasChild ?reactionLeftElement.
+				?reactionLeftElement a x2rm:drugbank.drug.reactions.reaction.left-element.
+				
+				?reactionLeftElement x2rm:hasChild ?reactionLeftElementDBid.
+				?reactionLeftElementDBid a x2rm:drugbank.drug.reactions.reaction.left-element.drugbank-id.
+				?reactionLeftElementDBid x2rm:hasValue ?reactionLeftElementDBidValue.
+
+			} OPTIONAL{
+				?reaction x2rm:hasChild ?reactionRightElement.
+				?reactionRightElement a x2rm:drugbank.drug.reactions.reaction.right-element.
+				
+				?reactionRightElement x2rm:hasChild ?reactionRightElementDBid.
+				?reactionRightElementDBid a x2rm:drugbank.drug.reactions.reaction.right-element.drugbank-id.
+				?reactionRightElementDBid x2rm:hasValue ?reactionRightElementDBidValue.
+
+			}# reaction features
+			BIND ( SHA1(CONCAT(?reactionLeftElementDBidValue,"_",?reactionRightElementDBidValue)) AS ?reactionId)
+			BIND ( iri(concat("http://bio2rdf.org/drugbank_resource:", ?reactionId)) AS ?reactionUri )
+		    } # reaction
+	} OPTIONAL{
+		?drugObj x2rm:hasChild ?snpEffects.
+
+		?snpEffects a x2rm:drugbank.drug.snp-effects.
+
+		    OPTIONAL{
+		    	?snpEffects x2rm:hasChild ?snpEffect.
+			?snpEffect a x2rm:drugbank.drug.snp-effects.effect.
+
+			OPTIONAL{
+				?snpEffect x2rm:hasChild [
+				    a x2rm:drugbank.drug.snp-effects.effect.description; 
+				    x2rm:hasValue ?snpEffectDesc
+			    	];
+			} # SNP effect features
+			BIND ( SHA1(?snpEffectDesc) AS ?snpEffectId)
+			BIND ( iri(concat("http://bio2rdf.org/drugbank_resource:", ?snpEffectId)) AS ?snpEffectUri )
+		    } # SNP effect
+	} OPTIONAL{
+		?drugObj x2rm:hasChild ?snpAdvDrugReactions.
+
+		?snpAdvDrugReactions a x2rm:drugbank.drug.snp-adverse-drug-reactions. 
+
+		    OPTIONAL{
+		    	?snpAdvDrugReactions x2rm:hasChild ?snpAdvDrugReaction.
+			?snpAdvDrugReaction a x2rm:drugbank.drug.snp-adverse-drug-reactions.reaction; 
+
+			OPTIONAL{
+				?snpAdvDrugReaction x2rm:hasChild [
+				    a x2rm:drugbank.drug.snp-adverse-drug-reactions.reaction.description; 
+				    x2rm:hasValue ?snpAdvDrugReactionDesc
+			    	];
+			} # SNP drug reaction features
+			BIND ( SHA1(?snpAdvDrugReactionDesc) AS ?snpAdvDrugReactionId)
+			BIND ( iri(concat("http://bio2rdf.org/drugbank_resource:", ?snpAdvDrugReactionId)) AS ?snpAdvDrugReactionUri )
+		    } # SNP reaction
+	}
+  } # graph
+  
+} # where

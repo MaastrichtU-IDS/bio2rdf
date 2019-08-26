@@ -1,0 +1,79 @@
+PREFIX x2rm: <http://ids.unimaas.nl/xml2rdf/model#>
+PREFIX x2rd: <http://ids.unimaas.nl/xml2rdf/data/>
+PREFIX d2s: <https://w3id.org/data2services/vocab/>
+PREFIX ido: <http://identifiers.org/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX owl: <http://www.w3.org/2002/07/owl#>
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+PREFIX obo: <http://purl.obolibrary.org/obo/>
+PREFIX dc: <http://purl.org/dc/elements/1.1/>
+PREFIX dcterms: <http://purl.org/dc/terms/>
+PREFIX bl: <https://w3id.org/biolink/vocab/>
+PREFIX drugbank_vocabulary: <http://bio2rdf.org/drugbank_vocabulary:>
+PREFIX bio2rdf_vocabulary: <http://bio2rdf.org/bio2rdf_vocabulary:> 
+
+INSERT 
+{ 
+    GRAPH <https://w3id.org/data2services/graph/drugbank> {  
+
+	?uri	a drugbank_vocabulary:Resource;
+		rdf:type drugbank_vocabulary:Calculated-Property;
+		rdf:type ?typeClass;
+		dc:identifier ?dcId;
+		rdfs:label ?label;
+		dc:title ?title;
+		bio2rdf_vocabulary:namespace "drugbank_resource";
+		bio2rdf_vocabulary:identifier ?itemId;
+		bio2rdf_vocabulary:uri ?uri;
+
+		rdf:value ?propertyValue;
+		drugbank_vocabulary:source ?propertySource;
+    }
+}
+WHERE {
+  
+  GRAPH <https://w3id.org/data2services/graph/xml2rdf> {
+
+    	?drugObj a x2rm:drugbank.drug .
+	?drugObj x2rm:hasChild ?calculatedProperties.
+
+	?drugObj x2rm:hasChild [
+            a x2rm:drugbank.drug.drugbank-id ;
+            x2rm:hasAttribute [ a x2rm:drugbank.drug.drugbank-id.-primary ] ;
+            x2rm:hasValue ?drugId
+        ].
+
+	?calculatedProperties a x2rm:drugbank.drug.calculated-properties.
+
+	    OPTIONAL{
+	    	?calculatedProperties x2rm:hasChild ?property.
+		?property a x2rm:drugbank.drug.calculated-properties.property.
+		
+		OPTIONAL{
+			?property x2rm:hasChild [
+			    a x2rm:drugbank.drug.calculated-properties.property.kind; 
+			    x2rm:hasValue ?propertyKind
+		    	];
+		} OPTIONAL{
+			?property x2rm:hasChild [
+			    a x2rm:drugbank.drug.calculated-properties.property.value; 
+			    x2rm:hasValue ?propertyValue
+		    	];
+		} OPTIONAL{
+			?property x2rm:hasChild [
+			    a x2rm:drugbank.drug.calculated-properties.property.source; 
+			    x2rm:hasValue ?propertySource
+		    	];
+		} # property features
+	    } # property
+
+	BIND ( iri(concat("http://bio2rdf.org/drugbank_vocabulary:",REPLACE(UCASE(STR(?propertyKind)), " ", "-"))) AS ?typeClass)
+	BIND ( REPLACE(LCASE(STR(?propertyKind)), " ", "-") AS ?propertyNorm)
+	BIND ( concat("calculated-property","-",?drugId,"-",?propertyNorm) AS ?itemId)
+	BIND ( concat("drugbank_resource:", ?itemId) AS ?dcId )
+	BIND ( concat(?propertyKind," for ", ?drugId) AS ?title )
+	BIND ( concat(?title, " [drugbank_resource:", ?itemId, "] ") AS ?label )
+	BIND ( iri(concat("http://bio2rdf.org/drugbank_resource:", ?itemId)) AS ?uri )
+  } # graph
+  
+} # where

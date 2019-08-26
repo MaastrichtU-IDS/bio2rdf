@@ -1,0 +1,74 @@
+PREFIX x2rm: <http://ids.unimaas.nl/xml2rdf/model#>
+PREFIX x2rd: <http://ids.unimaas.nl/xml2rdf/data/>
+PREFIX d2s: <https://w3id.org/data2services/vocab/>
+PREFIX ido: <http://identifiers.org/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX owl: <http://www.w3.org/2002/07/owl#>
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+PREFIX obo: <http://purl.obolibrary.org/obo/>
+PREFIX dc: <http://purl.org/dc/elements/1.1/>
+PREFIX dcterms: <http://purl.org/dc/terms/>
+PREFIX bl: <https://w3id.org/biolink/vocab/>
+PREFIX drugbank_vocabulary: <http://bio2rdf.org/drugbank_vocabulary:>
+PREFIX bio2rdf_vocabulary: <http://bio2rdf.org/bio2rdf_vocabulary:> 
+
+INSERT 
+{ 
+    GRAPH <https://w3id.org/data2services/graph/drugbank> {  
+
+	?uri	a drugbank_vocabulary:Resource;
+		rdf:type drugbank_vocabulary:Textbook;
+		dc:identifier ?dcId;
+		rdfs:label ?label;
+		dc:title ?title;
+		bio2rdf_vocabulary:namespace "drugbank";
+		bio2rdf_vocabulary:identifier ?textbookRefIdValue;
+		bio2rdf_vocabulary:uri ?uri;
+
+		drugbank_vocabulary:x-pubmed ?textbookPubmedIdUri;
+		drugbank_vocabulary:citation ?textbookCitationValue;
+    }
+}
+WHERE {
+  
+  GRAPH <https://w3id.org/data2services/graph/xml2rdf> {
+
+	?textbook a ?textbookType.
+
+	OPTIONAL{
+		?textbook x2rm:hasChild ?textbookRefId.
+		?textbookRefId a ?textbookRefIdType.
+		?textbookRefId x2rm:hasValue ?textbookRefIdValue.
+	} OPTIONAL{
+		?textbook x2rm:hasChild ?textbookPubmedId.
+		?textbookPubmedId a ?textbookPubmedIdType.
+		?textbookPubmedId x2rm:hasValue ?textbookPubmedIdValue.
+	} OPTIONAL{
+		?textbook x2rm:hasChild ?textbookCitation.
+		?textbookCitation a ?textbookCitationType.
+		?textbookCitation x2rm:hasValue ?textbookCitationValue.
+	} # Target Ref Articles features
+  
+	VALUES( ?textbookType ?textbookRefIdType ?textbookPubmedIdType ?textbookCitationType) {
+
+		(x2rm:drugbank.drug.general-references.textbooks.textbook x2rm:drugbank.drug.general-references.textbooks.textbook.ref-id x2rm:drugbank.drug.general-references.textbooks.textbook.isbn x2rm:drugbank.drug.general-references.textbooks.textbook.citation)
+
+		(x2rm:drugbank.drug.targets.target.references.textbooks.textbook x2rm:drugbank.drug.targets.target.references.textbooks.textbook.ref-id x2rm:drugbank.drug.targets.target.references.textbooks.textbook.isbn x2rm:drugbank.drug.targets.target.references.textbooks.textbook.citation)
+
+		(x2rm:drugbank.drug.enzymes.enzyme.references.textbooks.textbook x2rm:drugbank.drug.enzymes.enzyme.references.textbooks.textbook.ref-id x2rm:drugbank.drug.enzymes.enzyme.references.textbooks.textbook.isbn x2rm:drugbank.drug.enzymes.enzyme.references.textbooks.textbook.citation)
+
+		(x2rm:drugbank.drug.carriers.carrier.references.textbooks.textbook x2rm:drugbank.drug.carriers.carrier.references.textbooks.textbook.ref-id x2rm:drugbank.drug.carriers.carrier.references.textbooks.textbook.isbn x2rm:drugbank.drug.carriers.carrier.references.textbooks.textbook.citation)
+
+		(x2rm:drugbank.drug.transporters.transporter.references.textbooks.textbook x2rm:drugbank.drug.transporters.transporter.references.textbooks.textbook.ref-id x2rm:drugbank.drug.transporters.transporter.references.textbooks.textbook.isbn x2rm:drugbank.drug.transporters.transporter.references.textbooks.textbook.citation)
+
+	} # VALUES
+
+	BIND ( iri(concat("http://bio2rdf.org/pubmed:", ?textbookPubmedIdValue)) AS ?textbookPubmedIdUri )
+
+	BIND ( concat("drugbank:", ?textbookRefIdValue) AS ?dcId )
+	BIND ( concat("Reference Textbook ", ?textbookRefIdValue) AS ?title)
+	BIND ( concat(?title, " [drugbank:", ?textbookRefIdValue, "] ") AS ?label )
+	BIND ( iri(concat("http://bio2rdf.org/drugbank:", ?textbookRefIdValue)) AS ?uri )	
+  } # graph
+  
+} # where

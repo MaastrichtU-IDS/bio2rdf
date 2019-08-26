@@ -1,0 +1,241 @@
+PREFIX x2rm: <http://ids.unimaas.nl/xml2rdf/model#>
+PREFIX x2rd: <http://ids.unimaas.nl/xml2rdf/data/>
+PREFIX d2s: <https://w3id.org/data2services/vocab/>
+PREFIX ido: <http://identifiers.org/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX owl: <http://www.w3.org/2002/07/owl#>
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+PREFIX obo: <http://purl.obolibrary.org/obo/>
+PREFIX dc: <http://purl.org/dc/elements/1.1/>
+PREFIX dcterms: <http://purl.org/dc/terms/>
+PREFIX bl: <https://w3id.org/biolink/vocab/>
+PREFIX drugbank_vocabulary: <http://bio2rdf.org/drugbank_vocabulary:>
+PREFIX bio2rdf_vocabulary: <http://bio2rdf.org/bio2rdf_vocabulary:> 
+
+INSERT 
+{ 
+    GRAPH <https://w3id.org/data2services/graph/drugbank> {  
+
+	?uri	a drugbank_vocabulary:Resource;
+		rdf:type drugbank_vocabulary:Polypeptide;
+		dc:identifier ?dcId;
+		rdfs:label ?label;
+		dc:title ?transporterPolypeptideNameValue;
+		bio2rdf_vocabulary:namespace "drugbank";
+		bio2rdf_vocabulary:identifier ?linkRefIdValue;
+		bio2rdf_vocabulary:uri ?uri;
+
+		drugbank_vocabulary:source ?transporterPolypeptideSource;
+		drugbank_vocabulary:organism ?transporterPolypeptideOrganismValue;
+
+		?transporterPolypeptideGoClassifierPredicate ?transporterPolypeptideGoClassifierDescValue;
+
+		drugbank_vocabulary:x-pfam ?transporterPolypeptidePfamIdentifierUri;
+		drugbank_vocabulary:x-taxonomy ?transporterPolypeptideOrganismTaxonomyUri;
+
+		drugbank_vocabulary:general-function ?transporterPolypeptideGeneralFunctionUri;
+		drugbank_vocabulary:specific-function ?transporterPolypeptideSpecificFunctionUri;
+		drugbank_vocabulary:cellular-location ?transporterPolypeptideCellularLocationUri;
+
+		drugbank_vocabulary:gene-name ?transporterPolypeptideGeneNameValue;
+		drugbank_vocabulary:locus ?transporterPolypeptideLocusValue;
+		drugbank_vocabulary:transmembrane-regions ?transporterPolypeptideTransRegionsValue;
+		drugbank_vocabulary:signal-regions ?transporterPolypeptideSignalRegionsValue;
+		drugbank_vocabulary:theoretical-pi ?transporterPolypeptidePiValue;
+		drugbank_vocabulary:molecular-weight ?transporterPolypeptideMolWValue;
+		drugbank_vocabulary:chromosome-location ?transporterPolypeptideChrLocationValue;
+
+		drugbank_vocabulary:sequence-format ?transporterPolypeptideAAseqFormatUri;
+		?transporterPolypeptideAAseqFormatPredicateUri ?transporterPolypeptideAAseqValue;
+
+		drugbank_vocabulary:sequence-format ?transporterPolypeptideGeneSeqFormatUri;
+		?transporterPolypeptideGeneSeqFormatPredicateUri ?transporterPolypeptideGeneSeqValue;  
+
+		drugbank_vocabulary:synonym ?transporterPolypeptideSynonymUri;
+		?exIdPredicate ?exIdReferenceUri.
+
+    }
+}
+WHERE {
+  
+  GRAPH <https://w3id.org/data2services/graph/xml2rdf> {
+
+	?transporterPolypeptide a x2rm:drugbank.drug.transporters.transporter.polypeptide.
+
+	?transporterPolypeptide  x2rm:hasAttribute ?transporterPolypeptideIdAttr.
+	?transporterPolypeptideIdAttr a x2rm:drugbank.drug.transporters.transporter.polypeptide.-id.
+	?transporterPolypeptideIdAttr x2rm:hasValue ?transporterPolypeptideId.
+
+	?transporterPolypeptide  x2rm:hasAttribute ?transporterPolypeptideSourceAttr.
+	?transporterPolypeptideSourceAttr a x2rm:drugbank.drug.transporters.transporter.polypeptide.-source.
+	?transporterPolypeptideSourceAttr x2rm:hasValue ?transporterPolypeptideSource.
+
+		OPTIONAL{
+			?transporterPolypeptide x2rm:hasChild ?transporterPolypeptideName.
+			?transporterPolypeptideName a x2rm:drugbank.drug.transporters.transporter.polypeptide.name.
+			?transporterPolypeptideName x2rm:hasValue ?transporterPolypeptideNameValue.
+		} OPTIONAL{
+			?transporterPolypeptide x2rm:hasChild ?transporterPolypeptideGeneralFunction.
+			?transporterPolypeptideGeneralFunction a x2rm:drugbank.drug.transporters.transporter.polypeptide.general-function.
+			?transporterPolypeptideGeneralFunction x2rm:hasValue ?transporterPolypeptideGeneralFunctionValue.
+
+			BIND ( SHA1(?transporterPolypeptideGeneralFunctionValue) AS ?transporterPolypeptideGeneralFunctionId)
+			BIND ( iri(concat("http://bio2rdf.org/drugbank_resource:", ?transporterPolypeptideGeneralFunctionId)) AS ?transporterPolypeptideGeneralFunctionUri )
+		} OPTIONAL{
+			?transporterPolypeptide x2rm:hasChild ?transporterPolypeptideSpecificFunction.
+			?transporterPolypeptideSpecificFunction a x2rm:drugbank.drug.transporters.transporter.polypeptide.specific-function.
+			?transporterPolypeptideSpecificFunction x2rm:hasValue ?transporterPolypeptideSpecificFunctionValue.
+
+			BIND ( SHA1(?transporterPolypeptideSpecificFunctionValue) AS ?transporterPolypeptideSpecificFunctionId)
+			BIND ( iri(concat("http://bio2rdf.org/drugbank_resource:", ?transporterPolypeptideSpecificFunctionId)) AS ?transporterPolypeptideSpecificFunctionUri )
+		} OPTIONAL{
+			?transporterPolypeptide x2rm:hasChild ?transporterPolypeptideGeneName.
+			?transporterPolypeptideGeneName a x2rm:drugbank.drug.transporters.transporter.polypeptide.gene-name.
+			?transporterPolypeptideGeneName x2rm:hasValue ?transporterPolypeptideGeneNameValue.
+		} OPTIONAL{
+			?transporterPolypeptide x2rm:hasChild ?transporterPolypeptideLocus.
+			?transporterPolypeptideLocus a x2rm:drugbank.drug.transporters.transporter.polypeptide.locus.
+			?transporterPolypeptideLocus x2rm:hasValue ?transporterPolypeptideLocusValue.
+		} OPTIONAL{
+			?transporterPolypeptide x2rm:hasChild ?transporterPolypeptideCellularLocation.
+			?transporterPolypeptideCellularLocation a x2rm:drugbank.drug.transporters.transporter.polypeptide.cellular-location.
+			?transporterPolypeptideCellularLocation x2rm:hasValue ?transporterPolypeptideCellularLocationValue.
+
+			BIND ( SHA1(?transporterPolypeptideCellularLocationValue) AS ?transporterPolypeptideCellularLocationId)
+			BIND ( iri(concat("http://bio2rdf.org/drugbank_resource:", ?transporterPolypeptideCellularLocationId)) AS ?transporterPolypeptideCellularLocationUri )
+		} OPTIONAL{
+			?transporterPolypeptide x2rm:hasChild ?transporterPolypeptideTransRegions.
+			?transporterPolypeptideTransRegions a x2rm:drugbank.drug.transporters.transporter.polypeptide.transmembrane-regions.
+			?transporterPolypeptideTransRegions x2rm:hasValue ?transporterPolypeptideTransRegionsValue.
+		} OPTIONAL{
+			?transporterPolypeptide x2rm:hasChild ?transporterPolypeptideSignalRegions.
+			?transporterPolypeptideSignalRegions a x2rm:drugbank.drug.transporters.transporter.polypeptide.signal-regions.
+			?transporterPolypeptideSignalRegions x2rm:hasValue ?transporterPolypeptideSignalRegionsValue.
+		} OPTIONAL{
+			?transporterPolypeptide x2rm:hasChild ?transporterPolypeptidePi.
+			?transporterPolypeptidePi a x2rm:drugbank.drug.transporters.transporter.polypeptide.theoretical-pi.
+			?transporterPolypeptidePi x2rm:hasValue ?transporterPolypeptidePiValue.
+		} OPTIONAL{
+			?transporterPolypeptide x2rm:hasChild ?transporterPolypeptideMolW.
+			?transporterPolypeptideMolW a x2rm:drugbank.drug.transporters.transporter.polypeptide.molecular-weight.
+			?transporterPolypeptideMolW x2rm:hasValue ?transporterPolypeptideMolWValue.
+		} OPTIONAL{
+			?transporterPolypeptide x2rm:hasChild ?transporterPolypeptideChrLocation.
+			?transporterPolypeptideChrLocation a x2rm:drugbank.drug.transporters.transporter.polypeptide.chromosome-location.
+			?transporterPolypeptideChrLocation x2rm:hasValue ?transporterPolypeptideChrLocationValue.
+		} OPTIONAL{
+			?transporterPolypeptide x2rm:hasChild ?transporterPolypeptideOrganism.
+			?transporterPolypeptideOrganism a x2rm:drugbank.drug.transporters.transporter.polypeptide.organism.
+			?transporterPolypeptideOrganism x2rm:hasValue ?transporterPolypeptideOrganismValue.
+
+			?transporterPolypeptideOrganism  x2rm:hasAttribute ?transporterPolypeptideOrganismTaxAttr.
+			?transporterPolypeptideOrganismTaxAttr a x2rm:drugbank.drug.transporters.transporter.polypeptide.organism.-ncbi-taxonomy-id.
+			?transporterPolypeptideOrganismTaxAttr x2rm:hasValue ?transporterPolypeptideOrganismTaxonomy.
+
+			BIND ( iri(concat("http://bio2rdf.org/taxonomy:", ?transporterPolypeptideOrganismTaxonomy)) AS ?transporterPolypeptideOrganismTaxonomyUri )
+		} OPTIONAL{
+			?transporterPolypeptide x2rm:hasChild ?transporterPolypeptideAAseq.
+			?transporterPolypeptideAAseq a x2rm:drugbank.drug.transporters.transporter.polypeptide.amino-acid-sequence.
+			?transporterPolypeptideAAseq x2rm:hasValue ?transporterPolypeptideAAseqValue.
+
+			?transporterPolypeptideAAseq  x2rm:hasAttribute ?transporterPolypeptideAAseqFormatAttr.
+			?transporterPolypeptideAAseqFormatAttr a x2rm:drugbank.drug.transporters.transporter.polypeptide.amino-acid-sequence.-format.
+			?transporterPolypeptideAAseqFormatAttr x2rm:hasValue ?transporterPolypeptideAAseqFormat.
+
+			BIND ( REPLACE(UCASE(STR(?transporterPolypeptideAAseqFormat)), " ", "-") AS ?transporterPolypeptideAAseqFormatId)
+			BIND ( REPLACE(LCASE(STR(?transporterPolypeptideAAseqFormat)), " ", "-") AS ?transporterPolypeptideAAseqFormatPredicate)
+			BIND ( iri(concat("http://bio2rdf.org/drugbank_resource:", ?transporterPolypeptideAAseqFormatId)) AS ?transporterPolypeptideAAseqFormatUri )
+			BIND ( iri(concat("http://bio2rdf.org/drugbank_vocabulary:", ?transporterPolypeptideAAseqFormatPredicate,"-sequence")) AS ?transporterPolypeptideAAseqFormatPredicateUri )
+		} OPTIONAL{
+			?transporterPolypeptide x2rm:hasChild ?transporterPolypeptideGeneSeq.
+			?transporterPolypeptideGeneSeq a x2rm:drugbank.drug.transporters.transporter.polypeptide.gene-sequence.
+			?transporterPolypeptideGeneSeq x2rm:hasValue ?transporterPolypeptideGeneSeqValue.
+
+			?transporterPolypeptideGeneSeq  x2rm:hasAttribute ?transporterPolypeptideGeneSeqFormatAttr.
+			?transporterPolypeptideGeneSeqFormatAttr a x2rm:drugbank.drug.transporters.transporter.polypeptide.gene-sequence.-format.
+			?transporterPolypeptideGeneSeqFormatAttr x2rm:hasValue ?transporterPolypeptideGeneSeqFormat.
+
+			BIND ( REPLACE(UCASE(STR(?transporterPolypeptideGeneSeqFormat)), " ", "-") AS ?transporterPolypeptideGeneSeqFormatId)
+			BIND ( REPLACE(LCASE(STR(?transporterPolypeptideGeneSeqFormat)), " ", "-") AS ?transporterPolypeptideGeneSeqFormatPredicate)
+			BIND ( iri(concat("http://bio2rdf.org/drugbank_resource:", ?transporterPolypeptideGeneSeqFormatId)) AS ?transporterPolypeptideGeneSeqFormatUri )
+			BIND ( iri(concat("http://bio2rdf.org/drugbank_vocabulary:", ?transporterPolypeptideGeneSeqFormatPredicate,"-sequence")) AS ?transporterPolypeptideGeneSeqFormatPredicateUri )
+		} OPTIONAL{
+			?transporterPolypeptide x2rm:hasChild ?transporterPolypeptideSynonyms.
+
+			?transporterPolypeptideSynonyms a x2rm:drugbank.drug.transporters.transporter.polypeptide.synonyms.
+
+			    OPTIONAL{
+			    	?transporterPolypeptideSynonyms x2rm:hasChild ?transporterPolypeptideSynonym.
+				?transporterPolypeptideSynonym a x2rm:drugbank.drug.transporters.transporter.polypeptide.synonyms.synonym.
+				?transporterPolypeptideSynonym x2rm:hasValue ?transporterPolypeptideSynonymText.
+			    } # Transporter Polypeptide Synonyms features
+
+			    BIND ( SHA1(STR(?transporterPolypeptideSynonymText)) AS ?transporterPolypeptideSynonymId)
+			    BIND ( iri(concat("http://bio2rdf.org/drugbank_resource:", ?transporterPolypeptideSynonymId)) AS ?transporterPolypeptideSynonymUri )
+		} OPTIONAL{
+			?transporterPolypeptide x2rm:hasChild ?transporterPolypeptideExtIds.
+
+			?transporterPolypeptideExtIds a x2rm:drugbank.drug.transporters.transporter.polypeptide.external-identifiers.
+
+			    OPTIONAL{
+			    	?transporterPolypeptideExtIds x2rm:hasChild ?transporterPolypeptideExtId.
+				?transporterPolypeptideExtId a x2rm:drugbank.drug.transporters.transporter.polypeptide.external-identifiers.external-identifier.
+
+					OPTIONAL{
+						?transporterPolypeptideExtId x2rm:hasChild ?transporterPolypeptideExtIdResource.
+						?transporterPolypeptideExtIdResource a x2rm:drugbank.drug.transporters.transporter.polypeptide.external-identifiers.external-identifier.resource.
+						?transporterPolypeptideExtIdResource x2rm:hasValue ?transporterPolypeptideExtIdResourceValue.
+					} OPTIONAL{
+						?transporterPolypeptideExtId x2rm:hasChild ?transporterPolypeptideExtIdIdentifier.
+						?transporterPolypeptideExtIdIdentifier a x2rm:drugbank.drug.transporters.transporter.polypeptide.external-identifiers.external-identifier.identifier.
+						?transporterPolypeptideExtIdIdentifier x2rm:hasValue ?transporterPolypeptideExtIdIdentifierValue.
+					} # Transporter Polypeptide Ext Id features
+					BIND ( REPLACE(LCASE(STR(?transporterPolypeptideExtIdResourceValue)), " ", "-") AS ?exIdResource)
+					BIND ( concat(?exIdResource, ":", ?transporterPolypeptideExtIdIdentifierValue) AS ?exIdReferenceUri )
+					BIND ( iri(concat("http://bio2rdf.org/drugbank_vocabulary:x-", ?exIdResource)) AS ?exIdPredicate )
+			    } # Transporter Polypeptide Ext Id
+		} OPTIONAL{
+			?transporterPolypeptide x2rm:hasChild ?transporterPolypeptidePfams.
+
+			?transporterPolypeptidePfams a x2rm:drugbank.drug.transporters.transporter.polypeptide.pfams.
+
+			    OPTIONAL{
+			    	?transporterPolypeptidePfams x2rm:hasChild ?transporterPolypeptidePfam.
+				?transporterPolypeptidePfam a x2rm:drugbank.drug.transporters.transporter.polypeptide.pfams.pfam.
+
+					OPTIONAL{
+						?transporterPolypeptidePfam x2rm:hasChild ?transporterPolypeptidePfamIdentifier.
+						?transporterPolypeptidePfamIdentifier a x2rm:drugbank.drug.transporters.transporter.polypeptide.pfams.pfam.identifier.
+						?transporterPolypeptidePfamIdentifier x2rm:hasValue ?transporterPolypeptidePfamIdentifierValue.
+					}# Transporter Polypeptide Pfam features
+					BIND ( iri(concat("http://bio2rdf.org/pfam:", ?transporterPolypeptidePfamIdentifierValue)) AS ?transporterPolypeptidePfamIdentifierUri )
+			    } # Transporter Polypeptide Pfam
+		} OPTIONAL{
+			?transporterPolypeptide x2rm:hasChild ?transporterPolypeptideGoClassifiers.
+
+			?transporterPolypeptideGoClassifiers a x2rm:drugbank.drug.transporters.transporter.polypeptide.go-classifiers.
+
+			    OPTIONAL{
+			    	?transporterPolypeptideGoClassifiers x2rm:hasChild ?transporterPolypeptideGoClassifier.
+				?transporterPolypeptideGoClassifier a x2rm:drugbank.drug.transporters.transporter.polypeptide.go-classifiers.go-classifier.
+
+					OPTIONAL{
+						?transporterPolypeptideGoClassifier x2rm:hasChild ?transporterPolypeptideGoClassifierCategory.
+						?transporterPolypeptideGoClassifierCategory a x2rm:drugbank.drug.transporters.transporter.polypeptide.go-classifiers.go-classifier.category.
+						?transporterPolypeptideGoClassifierCategory x2rm:hasValue ?transporterPolypeptideGoClassifierCategoryValue.
+					} OPTIONAL{
+						?transporterPolypeptideGoClassifier x2rm:hasChild ?transporterPolypeptideGoClassifierDesc.
+						?transporterPolypeptideGoClassifierDesc a x2rm:drugbank.drug.transporters.transporter.polypeptide.go-classifiers.go-classifier.description.
+						?transporterPolypeptideGoClassifierDesc x2rm:hasValue ?transporterPolypeptideGoClassifierDescValue.
+					} # Transporter Polypeptide GO Classifier features
+					BIND ( iri(concat("http://bio2rdf.org/drugbank_vocabulary:go-", ?transporterPolypeptideGoClassifierCategoryValue)) AS ?transporterPolypeptideGoClassifierPredicate )
+			    } # Transporter Polypeptide GO Classifier
+		} # Transporter Polypeptide
+
+
+	BIND ( concat("drugbank:", ?transporterPolypeptideId) AS ?dcId )
+	BIND ( concat(?transporterPolypeptideNameValue, " [drugbank:", ?transporterPolypeptideId, "] ") AS ?label )
+	BIND ( iri(concat("http://bio2rdf.org/drugbank:", ?transporterPolypeptideId)) AS ?uri )	
+  } # graph
+  
+} # where

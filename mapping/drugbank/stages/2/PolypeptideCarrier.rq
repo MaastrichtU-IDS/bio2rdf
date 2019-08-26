@@ -1,0 +1,241 @@
+PREFIX x2rm: <http://ids.unimaas.nl/xml2rdf/model#>
+PREFIX x2rd: <http://ids.unimaas.nl/xml2rdf/data/>
+PREFIX d2s: <https://w3id.org/data2services/vocab/>
+PREFIX ido: <http://identifiers.org/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX owl: <http://www.w3.org/2002/07/owl#>
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+PREFIX obo: <http://purl.obolibrary.org/obo/>
+PREFIX dc: <http://purl.org/dc/elements/1.1/>
+PREFIX dcterms: <http://purl.org/dc/terms/>
+PREFIX bl: <https://w3id.org/biolink/vocab/>
+PREFIX drugbank_vocabulary: <http://bio2rdf.org/drugbank_vocabulary:>
+PREFIX bio2rdf_vocabulary: <http://bio2rdf.org/bio2rdf_vocabulary:> 
+
+INSERT 
+{ 
+    GRAPH <https://w3id.org/data2services/graph/drugbank> {  
+
+	?uri	a drugbank_vocabulary:Resource;
+		rdf:type drugbank_vocabulary:Polypeptide;
+		dc:identifier ?dcId;
+		rdfs:label ?label;
+		dc:title ?carrierPolypeptideNameValue;
+		bio2rdf_vocabulary:namespace "drugbank";
+		bio2rdf_vocabulary:identifier ?linkRefIdValue;
+		bio2rdf_vocabulary:uri ?uri;
+
+		drugbank_vocabulary:source ?carrierPolypeptideSource;
+		drugbank_vocabulary:organism ?carrierPolypeptideOrganismValue;
+
+		?carrierPolypeptideGoClassifierPredicate ?carrierPolypeptideGoClassifierDescValue;
+
+		drugbank_vocabulary:x-pfam ?carrierPolypeptidePfamIdentifierUri;
+		drugbank_vocabulary:x-taxonomy ?carrierPolypeptideOrganismTaxonomyUri;
+
+		drugbank_vocabulary:general-function ?carrierPolypeptideGeneralFunctionUri;
+		drugbank_vocabulary:specific-function ?carrierPolypeptideSpecificFunctionUri;
+		drugbank_vocabulary:cellular-location ?carrierPolypeptideCellularLocationUri;
+
+		drugbank_vocabulary:gene-name ?carrierPolypeptideGeneNameValue;
+		drugbank_vocabulary:locus ?carrierPolypeptideLocusValue;
+		drugbank_vocabulary:transmembrane-regions ?carrierPolypeptideTransRegionsValue;
+		drugbank_vocabulary:signal-regions ?carrierPolypeptideSignalRegionsValue;
+		drugbank_vocabulary:theoretical-pi ?carrierPolypeptidePiValue;
+		drugbank_vocabulary:molecular-weight ?carrierPolypeptideMolWValue;
+		drugbank_vocabulary:chromosome-location ?carrierPolypeptideChrLocationValue;
+
+		drugbank_vocabulary:sequence-format ?carrierPolypeptideAAseqFormatUri;
+		?carrierPolypeptideAAseqFormatPredicateUri ?carrierPolypeptideAAseqValue;
+
+		drugbank_vocabulary:sequence-format ?carrierPolypeptideGeneSeqFormatUri;
+		?carrierPolypeptideGeneSeqFormatPredicateUri ?carrierPolypeptideGeneSeqValue;  
+
+		drugbank_vocabulary:synonym ?carrierPolypeptideSynonymUri;
+		?exIdPredicate ?exIdReferenceUri.
+
+    }
+}
+WHERE {
+  
+  GRAPH <https://w3id.org/data2services/graph/xml2rdf> {
+
+	?carrierPolypeptide a x2rm:drugbank.drug.carriers.carrier.polypeptide.
+
+	?carrierPolypeptide  x2rm:hasAttribute ?carrierPolypeptideIdAttr.
+	?carrierPolypeptideIdAttr a x2rm:drugbank.drug.carriers.carrier.polypeptide.-id.
+	?carrierPolypeptideIdAttr x2rm:hasValue ?carrierPolypeptideId.
+
+	?carrierPolypeptide  x2rm:hasAttribute ?carrierPolypeptideSourceAttr.
+	?carrierPolypeptideSourceAttr a x2rm:drugbank.drug.carriers.carrier.polypeptide.-source.
+	?carrierPolypeptideSourceAttr x2rm:hasValue ?carrierPolypeptideSource.
+
+		OPTIONAL{
+			?carrierPolypeptide x2rm:hasChild ?carrierPolypeptideName.
+			?carrierPolypeptideName a x2rm:drugbank.drug.carriers.carrier.polypeptide.name.
+			?carrierPolypeptideName x2rm:hasValue ?carrierPolypeptideNameValue.
+		} OPTIONAL{
+			?carrierPolypeptide x2rm:hasChild ?carrierPolypeptideGeneralFunction.
+			?carrierPolypeptideGeneralFunction a x2rm:drugbank.drug.carriers.carrier.polypeptide.general-function.
+			?carrierPolypeptideGeneralFunction x2rm:hasValue ?carrierPolypeptideGeneralFunctionValue.
+
+			BIND ( SHA1(?carrierPolypeptideGeneralFunctionValue) AS ?carrierPolypeptideGeneralFunctionId)
+			BIND ( iri(concat("http://bio2rdf.org/drugbank_resource:", ?carrierPolypeptideGeneralFunctionId)) AS ?carrierPolypeptideGeneralFunctionUri )
+		} OPTIONAL{
+			?carrierPolypeptide x2rm:hasChild ?carrierPolypeptideSpecificFunction.
+			?carrierPolypeptideSpecificFunction a x2rm:drugbank.drug.carriers.carrier.polypeptide.specific-function.
+			?carrierPolypeptideSpecificFunction x2rm:hasValue ?carrierPolypeptideSpecificFunctionValue.
+
+			BIND ( SHA1(?carrierPolypeptideSpecificFunctionValue) AS ?carrierPolypeptideSpecificFunctionId)
+			BIND ( iri(concat("http://bio2rdf.org/drugbank_resource:", ?carrierPolypeptideSpecificFunctionId)) AS ?carrierPolypeptideSpecificFunctionUri )
+		} OPTIONAL{
+			?carrierPolypeptide x2rm:hasChild ?carrierPolypeptideGeneName.
+			?carrierPolypeptideGeneName a x2rm:drugbank.drug.carriers.carrier.polypeptide.gene-name.
+			?carrierPolypeptideGeneName x2rm:hasValue ?carrierPolypeptideGeneNameValue.
+		} OPTIONAL{
+			?carrierPolypeptide x2rm:hasChild ?carrierPolypeptideLocus.
+			?carrierPolypeptideLocus a x2rm:drugbank.drug.carriers.carrier.polypeptide.locus.
+			?carrierPolypeptideLocus x2rm:hasValue ?carrierPolypeptideLocusValue.
+		} OPTIONAL{
+			?carrierPolypeptide x2rm:hasChild ?carrierPolypeptideCellularLocation.
+			?carrierPolypeptideCellularLocation a x2rm:drugbank.drug.carriers.carrier.polypeptide.cellular-location.
+			?carrierPolypeptideCellularLocation x2rm:hasValue ?carrierPolypeptideCellularLocationValue.
+
+			BIND ( SHA1(?carrierPolypeptideCellularLocationValue) AS ?carrierPolypeptideCellularLocationId)
+			BIND ( iri(concat("http://bio2rdf.org/drugbank_resource:", ?carrierPolypeptideCellularLocationId)) AS ?carrierPolypeptideCellularLocationUri )
+		} OPTIONAL{
+			?carrierPolypeptide x2rm:hasChild ?carrierPolypeptideTransRegions.
+			?carrierPolypeptideTransRegions a x2rm:drugbank.drug.carriers.carrier.polypeptide.transmembrane-regions.
+			?carrierPolypeptideTransRegions x2rm:hasValue ?carrierPolypeptideTransRegionsValue.
+		} OPTIONAL{
+			?carrierPolypeptide x2rm:hasChild ?carrierPolypeptideSignalRegions.
+			?carrierPolypeptideSignalRegions a x2rm:drugbank.drug.carriers.carrier.polypeptide.signal-regions.
+			?carrierPolypeptideSignalRegions x2rm:hasValue ?carrierPolypeptideSignalRegionsValue.
+		} OPTIONAL{
+			?carrierPolypeptide x2rm:hasChild ?carrierPolypeptidePi.
+			?carrierPolypeptidePi a x2rm:drugbank.drug.carriers.carrier.polypeptide.theoretical-pi.
+			?carrierPolypeptidePi x2rm:hasValue ?carrierPolypeptidePiValue.
+		} OPTIONAL{
+			?carrierPolypeptide x2rm:hasChild ?carrierPolypeptideMolW.
+			?carrierPolypeptideMolW a x2rm:drugbank.drug.carriers.carrier.polypeptide.molecular-weight.
+			?carrierPolypeptideMolW x2rm:hasValue ?carrierPolypeptideMolWValue.
+		} OPTIONAL{
+			?carrierPolypeptide x2rm:hasChild ?carrierPolypeptideChrLocation.
+			?carrierPolypeptideChrLocation a x2rm:drugbank.drug.carriers.carrier.polypeptide.chromosome-location.
+			?carrierPolypeptideChrLocation x2rm:hasValue ?carrierPolypeptideChrLocationValue.
+		} OPTIONAL{
+			?carrierPolypeptide x2rm:hasChild ?carrierPolypeptideOrganism.
+			?carrierPolypeptideOrganism a x2rm:drugbank.drug.carriers.carrier.polypeptide.organism.
+			?carrierPolypeptideOrganism x2rm:hasValue ?carrierPolypeptideOrganismValue.
+
+			?carrierPolypeptideOrganism  x2rm:hasAttribute ?carrierPolypeptideOrganismTaxAttr.
+			?carrierPolypeptideOrganismTaxAttr a x2rm:drugbank.drug.carriers.carrier.polypeptide.organism.-ncbi-taxonomy-id.
+			?carrierPolypeptideOrganismTaxAttr x2rm:hasValue ?carrierPolypeptideOrganismTaxonomy.
+
+			BIND ( iri(concat("http://bio2rdf.org/taxonomy:", ?carrierPolypeptideOrganismTaxonomy)) AS ?carrierPolypeptideOrganismTaxonomyUri )
+		} OPTIONAL{
+			?carrierPolypeptide x2rm:hasChild ?carrierPolypeptideAAseq.
+			?carrierPolypeptideAAseq a x2rm:drugbank.drug.carriers.carrier.polypeptide.amino-acid-sequence.
+			?carrierPolypeptideAAseq x2rm:hasValue ?carrierPolypeptideAAseqValue.
+
+			?carrierPolypeptideAAseq  x2rm:hasAttribute ?carrierPolypeptideAAseqFormatAttr.
+			?carrierPolypeptideAAseqFormatAttr a x2rm:drugbank.drug.carriers.carrier.polypeptide.amino-acid-sequence.-format.
+			?carrierPolypeptideAAseqFormatAttr x2rm:hasValue ?carrierPolypeptideAAseqFormat.
+
+			BIND ( REPLACE(UCASE(STR(?carrierPolypeptideAAseqFormat)), " ", "-") AS ?carrierPolypeptideAAseqFormatId)
+			BIND ( REPLACE(LCASE(STR(?carrierPolypeptideAAseqFormat)), " ", "-") AS ?carrierPolypeptideAAseqFormatPredicate)
+			BIND ( iri(concat("http://bio2rdf.org/drugbank_resource:", ?carrierPolypeptideAAseqFormatId)) AS ?carrierPolypeptideAAseqFormatUri )
+			BIND ( iri(concat("http://bio2rdf.org/drugbank_vocabulary:", ?carrierPolypeptideAAseqFormatPredicate,"-sequence")) AS ?carrierPolypeptideAAseqFormatPredicateUri )
+		} OPTIONAL{
+			?carrierPolypeptide x2rm:hasChild ?carrierPolypeptideGeneSeq.
+			?carrierPolypeptideGeneSeq a x2rm:drugbank.drug.carriers.carrier.polypeptide.gene-sequence.
+			?carrierPolypeptideGeneSeq x2rm:hasValue ?carrierPolypeptideGeneSeqValue.
+
+			?carrierPolypeptideGeneSeq  x2rm:hasAttribute ?carrierPolypeptideGeneSeqFormatAttr.
+			?carrierPolypeptideGeneSeqFormatAttr a x2rm:drugbank.drug.carriers.carrier.polypeptide.gene-sequence.-format.
+			?carrierPolypeptideGeneSeqFormatAttr x2rm:hasValue ?carrierPolypeptideGeneSeqFormat.
+
+			BIND ( REPLACE(UCASE(STR(?carrierPolypeptideGeneSeqFormat)), " ", "-") AS ?carrierPolypeptideGeneSeqFormatId)
+			BIND ( REPLACE(LCASE(STR(?carrierPolypeptideGeneSeqFormat)), " ", "-") AS ?carrierPolypeptideGeneSeqFormatPredicate)
+			BIND ( iri(concat("http://bio2rdf.org/drugbank_resource:", ?carrierPolypeptideGeneSeqFormatId)) AS ?carrierPolypeptideGeneSeqFormatUri )
+			BIND ( iri(concat("http://bio2rdf.org/drugbank_vocabulary:", ?carrierPolypeptideGeneSeqFormatPredicate,"-sequence")) AS ?carrierPolypeptideGeneSeqFormatPredicateUri )
+		} OPTIONAL{
+			?carrierPolypeptide x2rm:hasChild ?carrierPolypeptideSynonyms.
+
+			?carrierPolypeptideSynonyms a x2rm:drugbank.drug.carriers.carrier.polypeptide.synonyms.
+
+			    OPTIONAL{
+			    	?carrierPolypeptideSynonyms x2rm:hasChild ?carrierPolypeptideSynonym.
+				?carrierPolypeptideSynonym a x2rm:drugbank.drug.carriers.carrier.polypeptide.synonyms.synonym.
+				?carrierPolypeptideSynonym x2rm:hasValue ?carrierPolypeptideSynonymText.
+			    } # Carrier Polypeptide Synonyms features
+
+			    BIND ( SHA1(STR(?carrierPolypeptideSynonymText)) AS ?carrierPolypeptideSynonymId)
+			    BIND ( iri(concat("http://bio2rdf.org/drugbank_resource:", ?carrierPolypeptideSynonymId)) AS ?carrierPolypeptideSynonymUri )
+		} OPTIONAL{
+			?carrierPolypeptide x2rm:hasChild ?carrierPolypeptideExtIds.
+
+			?carrierPolypeptideExtIds a x2rm:drugbank.drug.carriers.carrier.polypeptide.external-identifiers.
+
+			    OPTIONAL{
+			    	?carrierPolypeptideExtIds x2rm:hasChild ?carrierPolypeptideExtId.
+				?carrierPolypeptideExtId a x2rm:drugbank.drug.carriers.carrier.polypeptide.external-identifiers.external-identifier.
+
+					OPTIONAL{
+						?carrierPolypeptideExtId x2rm:hasChild ?carrierPolypeptideExtIdResource.
+						?carrierPolypeptideExtIdResource a x2rm:drugbank.drug.carriers.carrier.polypeptide.external-identifiers.external-identifier.resource.
+						?carrierPolypeptideExtIdResource x2rm:hasValue ?carrierPolypeptideExtIdResourceValue.
+					} OPTIONAL{
+						?carrierPolypeptideExtId x2rm:hasChild ?carrierPolypeptideExtIdIdentifier.
+						?carrierPolypeptideExtIdIdentifier a x2rm:drugbank.drug.carriers.carrier.polypeptide.external-identifiers.external-identifier.identifier.
+						?carrierPolypeptideExtIdIdentifier x2rm:hasValue ?carrierPolypeptideExtIdIdentifierValue.
+					} # Carrier Polypeptide Ext Id features
+					BIND ( REPLACE(LCASE(STR(?carrierPolypeptideExtIdResourceValue)), " ", "-") AS ?exIdResource)
+					BIND ( concat(?exIdResource, ":", ?carrierPolypeptideExtIdIdentifierValue) AS ?exIdReferenceUri )
+					BIND ( iri(concat("http://bio2rdf.org/drugbank_vocabulary:x-", ?exIdResource)) AS ?exIdPredicate )
+			    } # Carrier Polypeptide Ext Id
+		} OPTIONAL{
+			?carrierPolypeptide x2rm:hasChild ?carrierPolypeptidePfams.
+
+			?carrierPolypeptidePfams a x2rm:drugbank.drug.carriers.carrier.polypeptide.pfams.
+
+			    OPTIONAL{
+			    	?carrierPolypeptidePfams x2rm:hasChild ?carrierPolypeptidePfam.
+				?carrierPolypeptidePfam a x2rm:drugbank.drug.carriers.carrier.polypeptide.pfams.pfam.
+
+					OPTIONAL{
+						?carrierPolypeptidePfam x2rm:hasChild ?carrierPolypeptidePfamIdentifier.
+						?carrierPolypeptidePfamIdentifier a x2rm:drugbank.drug.carriers.carrier.polypeptide.pfams.pfam.identifier.
+						?carrierPolypeptidePfamIdentifier x2rm:hasValue ?carrierPolypeptidePfamIdentifierValue.
+					}# Carrier Polypeptide Pfam features
+					BIND ( iri(concat("http://bio2rdf.org/pfam:", ?carrierPolypeptidePfamIdentifierValue)) AS ?carrierPolypeptidePfamIdentifierUri )
+			    } # Carrier Polypeptide Pfam
+		} OPTIONAL{
+			?carrierPolypeptide x2rm:hasChild ?carrierPolypeptideGoClassifiers.
+
+			?carrierPolypeptideGoClassifiers a x2rm:drugbank.drug.carriers.carrier.polypeptide.go-classifiers.
+
+			    OPTIONAL{
+			    	?carrierPolypeptideGoClassifiers x2rm:hasChild ?carrierPolypeptideGoClassifier.
+				?carrierPolypeptideGoClassifier a x2rm:drugbank.drug.carriers.carrier.polypeptide.go-classifiers.go-classifier.
+
+					OPTIONAL{
+						?carrierPolypeptideGoClassifier x2rm:hasChild ?carrierPolypeptideGoClassifierCategory.
+						?carrierPolypeptideGoClassifierCategory a x2rm:drugbank.drug.carriers.carrier.polypeptide.go-classifiers.go-classifier.category.
+						?carrierPolypeptideGoClassifierCategory x2rm:hasValue ?carrierPolypeptideGoClassifierCategoryValue.
+					} OPTIONAL{
+						?carrierPolypeptideGoClassifier x2rm:hasChild ?carrierPolypeptideGoClassifierDesc.
+						?carrierPolypeptideGoClassifierDesc a x2rm:drugbank.drug.carriers.carrier.polypeptide.go-classifiers.go-classifier.description.
+						?carrierPolypeptideGoClassifierDesc x2rm:hasValue ?carrierPolypeptideGoClassifierDescValue.
+					} # Carrier Polypeptide GO Classifier features
+					BIND ( iri(concat("http://bio2rdf.org/drugbank_vocabulary:go-", ?carrierPolypeptideGoClassifierCategoryValue)) AS ?carrierPolypeptideGoClassifierPredicate )
+			    } # Carrier Polypeptide GO Classifier
+		} # Carrier Polypeptide
+
+
+	BIND ( concat("drugbank:", ?carrierPolypeptideId) AS ?dcId )
+	BIND ( concat(?carrierPolypeptideNameValue, " [drugbank:", ?carrierPolypeptideId, "] ") AS ?label )
+	BIND ( iri(concat("http://bio2rdf.org/drugbank:", ?carrierPolypeptideId)) AS ?uri )	
+  } # graph
+  
+} # where

@@ -1,0 +1,241 @@
+PREFIX x2rm: <http://ids.unimaas.nl/xml2rdf/model#>
+PREFIX x2rd: <http://ids.unimaas.nl/xml2rdf/data/>
+PREFIX d2s: <https://w3id.org/data2services/vocab/>
+PREFIX ido: <http://identifiers.org/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX owl: <http://www.w3.org/2002/07/owl#>
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+PREFIX obo: <http://purl.obolibrary.org/obo/>
+PREFIX dc: <http://purl.org/dc/elements/1.1/>
+PREFIX dcterms: <http://purl.org/dc/terms/>
+PREFIX bl: <https://w3id.org/biolink/vocab/>
+PREFIX drugbank_vocabulary: <http://bio2rdf.org/drugbank_vocabulary:>
+PREFIX bio2rdf_vocabulary: <http://bio2rdf.org/bio2rdf_vocabulary:> 
+
+INSERT 
+{ 
+    GRAPH <https://w3id.org/data2services/graph/drugbank> {  
+
+	?uri	a drugbank_vocabulary:Resource;
+		rdf:type drugbank_vocabulary:Polypeptide;
+		dc:identifier ?dcId;
+		rdfs:label ?label;
+		dc:title ?enzymePolypeptideNameValue;
+		bio2rdf_vocabulary:namespace "drugbank";
+		bio2rdf_vocabulary:identifier ?linkRefIdValue;
+		bio2rdf_vocabulary:uri ?uri;
+
+		drugbank_vocabulary:source ?enzymePolypeptideSource;
+		drugbank_vocabulary:organism ?enzymePolypeptideOrganismValue;
+
+		?enzymePolypeptideGoClassifierPredicate ?enzymePolypeptideGoClassifierDescValue;
+
+		drugbank_vocabulary:x-pfam ?enzymePolypeptidePfamIdentifierUri;
+		drugbank_vocabulary:x-taxonomy ?enzymePolypeptideOrganismTaxonomyUri;
+
+		drugbank_vocabulary:general-function ?enzymePolypeptideGeneralFunctionUri;
+		drugbank_vocabulary:specific-function ?enzymePolypeptideSpecificFunctionUri;
+		drugbank_vocabulary:cellular-location ?enzymePolypeptideCellularLocationUri;
+
+		drugbank_vocabulary:gene-name ?enzymePolypeptideGeneNameValue;
+		drugbank_vocabulary:locus ?enzymePolypeptideLocusValue;
+		drugbank_vocabulary:transmembrane-regions ?enzymePolypeptideTransRegionsValue;
+		drugbank_vocabulary:signal-regions ?enzymePolypeptideSignalRegionsValue;
+		drugbank_vocabulary:theoretical-pi ?enzymePolypeptidePiValue;
+		drugbank_vocabulary:molecular-weight ?enzymePolypeptideMolWValue;
+		drugbank_vocabulary:chromosome-location ?enzymePolypeptideChrLocationValue;
+
+		drugbank_vocabulary:sequence-format ?enzymePolypeptideAAseqFormatUri;
+		?enzymePolypeptideAAseqFormatPredicateUri ?enzymePolypeptideAAseqValue;
+
+		drugbank_vocabulary:sequence-format ?enzymePolypeptideGeneSeqFormatUri;
+		?enzymePolypeptideGeneSeqFormatPredicateUri ?enzymePolypeptideGeneSeqValue;  
+
+		drugbank_vocabulary:synonym ?enzymePolypeptideSynonymUri;
+		?exIdPredicate ?exIdReferenceUri.
+
+    }
+}
+WHERE {
+  
+  GRAPH <https://w3id.org/data2services/graph/xml2rdf> {
+
+	?enzymePolypeptide a x2rm:drugbank.drug.enzymes.enzyme.polypeptide.
+
+	?enzymePolypeptide  x2rm:hasAttribute ?enzymePolypeptideIdAttr.
+	?enzymePolypeptideIdAttr a x2rm:drugbank.drug.enzymes.enzyme.polypeptide.-id.
+	?enzymePolypeptideIdAttr x2rm:hasValue ?enzymePolypeptideId.
+
+	?enzymePolypeptide  x2rm:hasAttribute ?enzymePolypeptideSourceAttr.
+	?enzymePolypeptideSourceAttr a x2rm:drugbank.drug.enzymes.enzyme.polypeptide.-source.
+	?enzymePolypeptideSourceAttr x2rm:hasValue ?enzymePolypeptideSource.
+
+		OPTIONAL{
+			?enzymePolypeptide x2rm:hasChild ?enzymePolypeptideName.
+			?enzymePolypeptideName a x2rm:drugbank.drug.enzymes.enzyme.polypeptide.name.
+			?enzymePolypeptideName x2rm:hasValue ?enzymePolypeptideNameValue.
+		} OPTIONAL{
+			?enzymePolypeptide x2rm:hasChild ?enzymePolypeptideGeneralFunction.
+			?enzymePolypeptideGeneralFunction a x2rm:drugbank.drug.enzymes.enzyme.polypeptide.general-function.
+			?enzymePolypeptideGeneralFunction x2rm:hasValue ?enzymePolypeptideGeneralFunctionValue.
+
+			BIND ( SHA1(?enzymePolypeptideGeneralFunctionValue) AS ?enzymePolypeptideGeneralFunctionId)
+			BIND ( iri(concat("http://bio2rdf.org/drugbank_resource:", ?enzymePolypeptideGeneralFunctionId)) AS ?enzymePolypeptideGeneralFunctionUri )
+		} OPTIONAL{
+			?enzymePolypeptide x2rm:hasChild ?enzymePolypeptideSpecificFunction.
+			?enzymePolypeptideSpecificFunction a x2rm:drugbank.drug.enzymes.enzyme.polypeptide.specific-function.
+			?enzymePolypeptideSpecificFunction x2rm:hasValue ?enzymePolypeptideSpecificFunctionValue.
+
+			BIND ( SHA1(?enzymePolypeptideSpecificFunctionValue) AS ?enzymePolypeptideSpecificFunctionId)
+			BIND ( iri(concat("http://bio2rdf.org/drugbank_resource:", ?enzymePolypeptideSpecificFunctionId)) AS ?enzymePolypeptideSpecificFunctionUri )
+		} OPTIONAL{
+			?enzymePolypeptide x2rm:hasChild ?enzymePolypeptideGeneName.
+			?enzymePolypeptideGeneName a x2rm:drugbank.drug.enzymes.enzyme.polypeptide.gene-name.
+			?enzymePolypeptideGeneName x2rm:hasValue ?enzymePolypeptideGeneNameValue.
+		} OPTIONAL{
+			?enzymePolypeptide x2rm:hasChild ?enzymePolypeptideLocus.
+			?enzymePolypeptideLocus a x2rm:drugbank.drug.enzymes.enzyme.polypeptide.locus.
+			?enzymePolypeptideLocus x2rm:hasValue ?enzymePolypeptideLocusValue.
+		} OPTIONAL{
+			?enzymePolypeptide x2rm:hasChild ?enzymePolypeptideCellularLocation.
+			?enzymePolypeptideCellularLocation a x2rm:drugbank.drug.enzymes.enzyme.polypeptide.cellular-location.
+			?enzymePolypeptideCellularLocation x2rm:hasValue ?enzymePolypeptideCellularLocationValue.
+
+			BIND ( SHA1(?enzymePolypeptideCellularLocationValue) AS ?enzymePolypeptideCellularLocationId)
+			BIND ( iri(concat("http://bio2rdf.org/drugbank_resource:", ?enzymePolypeptideCellularLocationId)) AS ?enzymePolypeptideCellularLocationUri )
+		} OPTIONAL{
+			?enzymePolypeptide x2rm:hasChild ?enzymePolypeptideTransRegions.
+			?enzymePolypeptideTransRegions a x2rm:drugbank.drug.enzymes.enzyme.polypeptide.transmembrane-regions.
+			?enzymePolypeptideTransRegions x2rm:hasValue ?enzymePolypeptideTransRegionsValue.
+		} OPTIONAL{
+			?enzymePolypeptide x2rm:hasChild ?enzymePolypeptideSignalRegions.
+			?enzymePolypeptideSignalRegions a x2rm:drugbank.drug.enzymes.enzyme.polypeptide.signal-regions.
+			?enzymePolypeptideSignalRegions x2rm:hasValue ?enzymePolypeptideSignalRegionsValue.
+		} OPTIONAL{
+			?enzymePolypeptide x2rm:hasChild ?enzymePolypeptidePi.
+			?enzymePolypeptidePi a x2rm:drugbank.drug.enzymes.enzyme.polypeptide.theoretical-pi.
+			?enzymePolypeptidePi x2rm:hasValue ?enzymePolypeptidePiValue.
+		} OPTIONAL{
+			?enzymePolypeptide x2rm:hasChild ?enzymePolypeptideMolW.
+			?enzymePolypeptideMolW a x2rm:drugbank.drug.enzymes.enzyme.polypeptide.molecular-weight.
+			?enzymePolypeptideMolW x2rm:hasValue ?enzymePolypeptideMolWValue.
+		} OPTIONAL{
+			?enzymePolypeptide x2rm:hasChild ?enzymePolypeptideChrLocation.
+			?enzymePolypeptideChrLocation a x2rm:drugbank.drug.enzymes.enzyme.polypeptide.chromosome-location.
+			?enzymePolypeptideChrLocation x2rm:hasValue ?enzymePolypeptideChrLocationValue.
+		} OPTIONAL{
+			?enzymePolypeptide x2rm:hasChild ?enzymePolypeptideOrganism.
+			?enzymePolypeptideOrganism a x2rm:drugbank.drug.enzymes.enzyme.polypeptide.organism.
+			?enzymePolypeptideOrganism x2rm:hasValue ?enzymePolypeptideOrganismValue.
+
+			?enzymePolypeptideOrganism  x2rm:hasAttribute ?enzymePolypeptideOrganismTaxAttr.
+			?enzymePolypeptideOrganismTaxAttr a x2rm:drugbank.drug.enzymes.enzyme.polypeptide.organism.-ncbi-taxonomy-id.
+			?enzymePolypeptideOrganismTaxAttr x2rm:hasValue ?enzymePolypeptideOrganismTaxonomy.
+
+			BIND ( iri(concat("http://bio2rdf.org/taxonomy:", ?enzymePolypeptideOrganismTaxonomy)) AS ?enzymePolypeptideOrganismTaxonomyUri )
+		} OPTIONAL{
+			?enzymePolypeptide x2rm:hasChild ?enzymePolypeptideAAseq.
+			?enzymePolypeptideAAseq a x2rm:drugbank.drug.enzymes.enzyme.polypeptide.amino-acid-sequence.
+			?enzymePolypeptideAAseq x2rm:hasValue ?enzymePolypeptideAAseqValue.
+
+			?enzymePolypeptideAAseq  x2rm:hasAttribute ?enzymePolypeptideAAseqFormatAttr.
+			?enzymePolypeptideAAseqFormatAttr a x2rm:drugbank.drug.enzymes.enzyme.polypeptide.amino-acid-sequence.-format.
+			?enzymePolypeptideAAseqFormatAttr x2rm:hasValue ?enzymePolypeptideAAseqFormat.
+
+			BIND ( REPLACE(UCASE(STR(?enzymePolypeptideAAseqFormat)), " ", "-") AS ?enzymePolypeptideAAseqFormatId)
+			BIND ( REPLACE(LCASE(STR(?enzymePolypeptideAAseqFormat)), " ", "-") AS ?enzymePolypeptideAAseqFormatPredicate)
+			BIND ( iri(concat("http://bio2rdf.org/drugbank_resource:", ?enzymePolypeptideAAseqFormatId)) AS ?enzymePolypeptideAAseqFormatUri )
+			BIND ( iri(concat("http://bio2rdf.org/drugbank_vocabulary:", ?enzymePolypeptideAAseqFormatPredicate,"-sequence")) AS ?enzymePolypeptideAAseqFormatPredicateUri )
+		} OPTIONAL{
+			?enzymePolypeptide x2rm:hasChild ?enzymePolypeptideGeneSeq.
+			?enzymePolypeptideGeneSeq a x2rm:drugbank.drug.enzymes.enzyme.polypeptide.gene-sequence.
+			?enzymePolypeptideGeneSeq x2rm:hasValue ?enzymePolypeptideGeneSeqValue.
+
+			?enzymePolypeptideGeneSeq  x2rm:hasAttribute ?enzymePolypeptideGeneSeqFormatAttr.
+			?enzymePolypeptideGeneSeqFormatAttr a x2rm:drugbank.drug.enzymes.enzyme.polypeptide.gene-sequence.-format.
+			?enzymePolypeptideGeneSeqFormatAttr x2rm:hasValue ?enzymePolypeptideGeneSeqFormat.
+
+			BIND ( REPLACE(UCASE(STR(?enzymePolypeptideGeneSeqFormat)), " ", "-") AS ?enzymePolypeptideGeneSeqFormatId)
+			BIND ( REPLACE(LCASE(STR(?enzymePolypeptideGeneSeqFormat)), " ", "-") AS ?enzymePolypeptideGeneSeqFormatPredicate)
+			BIND ( iri(concat("http://bio2rdf.org/drugbank_resource:", ?enzymePolypeptideGeneSeqFormatId)) AS ?enzymePolypeptideGeneSeqFormatUri )
+			BIND ( iri(concat("http://bio2rdf.org/drugbank_vocabulary:", ?enzymePolypeptideGeneSeqFormatPredicate,"-sequence")) AS ?enzymePolypeptideGeneSeqFormatPredicateUri )
+		} OPTIONAL{
+			?enzymePolypeptide x2rm:hasChild ?enzymePolypeptideSynonyms.
+
+			?enzymePolypeptideSynonyms a x2rm:drugbank.drug.enzymes.enzyme.polypeptide.synonyms.
+
+			    OPTIONAL{
+			    	?enzymePolypeptideSynonyms x2rm:hasChild ?enzymePolypeptideSynonym.
+				?enzymePolypeptideSynonym a x2rm:drugbank.drug.enzymes.enzyme.polypeptide.synonyms.synonym.
+				?enzymePolypeptideSynonym x2rm:hasValue ?enzymePolypeptideSynonymText.
+			    } # Enzyme Polypeptide Synonyms features
+
+			    BIND ( SHA1(STR(?enzymePolypeptideSynonymText)) AS ?enzymePolypeptideSynonymId)
+			    BIND ( iri(concat("http://bio2rdf.org/drugbank_resource:", ?enzymePolypeptideSynonymId)) AS ?enzymePolypeptideSynonymUri )
+		} OPTIONAL{
+			?enzymePolypeptide x2rm:hasChild ?enzymePolypeptideExtIds.
+
+			?enzymePolypeptideExtIds a x2rm:drugbank.drug.enzymes.enzyme.polypeptide.external-identifiers.
+
+			    OPTIONAL{
+			    	?enzymePolypeptideExtIds x2rm:hasChild ?enzymePolypeptideExtId.
+				?enzymePolypeptideExtId a x2rm:drugbank.drug.enzymes.enzyme.polypeptide.external-identifiers.external-identifier.
+
+					OPTIONAL{
+						?enzymePolypeptideExtId x2rm:hasChild ?enzymePolypeptideExtIdResource.
+						?enzymePolypeptideExtIdResource a x2rm:drugbank.drug.enzymes.enzyme.polypeptide.external-identifiers.external-identifier.resource.
+						?enzymePolypeptideExtIdResource x2rm:hasValue ?enzymePolypeptideExtIdResourceValue.
+					} OPTIONAL{
+						?enzymePolypeptideExtId x2rm:hasChild ?enzymePolypeptideExtIdIdentifier.
+						?enzymePolypeptideExtIdIdentifier a x2rm:drugbank.drug.enzymes.enzyme.polypeptide.external-identifiers.external-identifier.identifier.
+						?enzymePolypeptideExtIdIdentifier x2rm:hasValue ?enzymePolypeptideExtIdIdentifierValue.
+					} # Enzyme Polypeptide Ext Id features
+					BIND ( REPLACE(LCASE(STR(?enzymePolypeptideExtIdResourceValue)), " ", "-") AS ?exIdResource)
+					BIND ( concat(?exIdResource, ":", ?enzymePolypeptideExtIdIdentifierValue) AS ?exIdReferenceUri )
+					BIND ( iri(concat("http://bio2rdf.org/drugbank_vocabulary:x-", ?exIdResource)) AS ?exIdPredicate )
+			    } # Enzyme Polypeptide Ext Id
+		} OPTIONAL{
+			?enzymePolypeptide x2rm:hasChild ?enzymePolypeptidePfams.
+
+			?enzymePolypeptidePfams a x2rm:drugbank.drug.enzymes.enzyme.polypeptide.pfams.
+
+			    OPTIONAL{
+			    	?enzymePolypeptidePfams x2rm:hasChild ?enzymePolypeptidePfam.
+				?enzymePolypeptidePfam a x2rm:drugbank.drug.enzymes.enzyme.polypeptide.pfams.pfam.
+
+					OPTIONAL{
+						?enzymePolypeptidePfam x2rm:hasChild ?enzymePolypeptidePfamIdentifier.
+						?enzymePolypeptidePfamIdentifier a x2rm:drugbank.drug.enzymes.enzyme.polypeptide.pfams.pfam.identifier.
+						?enzymePolypeptidePfamIdentifier x2rm:hasValue ?enzymePolypeptidePfamIdentifierValue.
+					}# Enzyme Polypeptide Pfam features
+					BIND ( iri(concat("http://bio2rdf.org/pfam:", ?enzymePolypeptidePfamIdentifierValue)) AS ?enzymePolypeptidePfamIdentifierUri )
+			    } # Enzyme Polypeptide Pfam
+		} OPTIONAL{
+			?enzymePolypeptide x2rm:hasChild ?enzymePolypeptideGoClassifiers.
+
+			?enzymePolypeptideGoClassifiers a x2rm:drugbank.drug.enzymes.enzyme.polypeptide.go-classifiers.
+
+			    OPTIONAL{
+			    	?enzymePolypeptideGoClassifiers x2rm:hasChild ?enzymePolypeptideGoClassifier.
+				?enzymePolypeptideGoClassifier a x2rm:drugbank.drug.enzymes.enzyme.polypeptide.go-classifiers.go-classifier.
+
+					OPTIONAL{
+						?enzymePolypeptideGoClassifier x2rm:hasChild ?enzymePolypeptideGoClassifierCategory.
+						?enzymePolypeptideGoClassifierCategory a x2rm:drugbank.drug.enzymes.enzyme.polypeptide.go-classifiers.go-classifier.category.
+						?enzymePolypeptideGoClassifierCategory x2rm:hasValue ?enzymePolypeptideGoClassifierCategoryValue.
+					} OPTIONAL{
+						?enzymePolypeptideGoClassifier x2rm:hasChild ?enzymePolypeptideGoClassifierDesc.
+						?enzymePolypeptideGoClassifierDesc a x2rm:drugbank.drug.enzymes.enzyme.polypeptide.go-classifiers.go-classifier.description.
+						?enzymePolypeptideGoClassifierDesc x2rm:hasValue ?enzymePolypeptideGoClassifierDescValue.
+					} # Enzyme Polypeptide GO Classifier features
+					BIND ( iri(concat("http://bio2rdf.org/drugbank_vocabulary:go-", ?enzymePolypeptideGoClassifierCategoryValue)) AS ?enzymePolypeptideGoClassifierPredicate )
+			    } # Enzyme Polypeptide GO Classifier
+		} # Enzyme Polypeptide
+
+
+	BIND ( concat("drugbank:", ?enzymePolypeptideId) AS ?dcId )
+	BIND ( concat(?enzymePolypeptideNameValue, " [drugbank:", ?enzymePolypeptideId, "] ") AS ?label )
+	BIND ( iri(concat("http://bio2rdf.org/drugbank:", ?enzymePolypeptideId)) AS ?uri )	
+  } # graph
+  
+} # where

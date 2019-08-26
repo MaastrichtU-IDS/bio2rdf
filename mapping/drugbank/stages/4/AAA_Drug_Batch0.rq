@@ -1,0 +1,116 @@
+PREFIX x2rm: <http://ids.unimaas.nl/xml2rdf/model#>
+PREFIX x2rd: <http://ids.unimaas.nl/xml2rdf/data/>
+PREFIX d2s: <https://w3id.org/data2services/vocab/>
+PREFIX ido: <http://identifiers.org/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX owl: <http://www.w3.org/2002/07/owl#>
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+PREFIX obo: <http://purl.obolibrary.org/obo/>
+PREFIX dc: <http://purl.org/dc/elements/1.1/>
+PREFIX dcterms: <http://purl.org/dc/terms/>
+PREFIX bl: <https://w3id.org/biolink/vocab/>
+PREFIX drugbank_vocabulary: <http://bio2rdf.org/drugbank_vocabulary:>
+PREFIX bio2rdf_vocabulary: <http://bio2rdf.org/bio2rdf_vocabulary:> 
+
+INSERT 
+{ 
+    GRAPH <https://w3id.org/data2services/graph/drugbank> {  
+
+	?uri	a drugbank_vocabulary:Resource;
+		rdf:type drugbank_vocabulary:Drug;
+		rdf:type ?typeUri;
+		dc:identifier ?dcId;
+		rdfs:label ?label;
+		dc:title ?drugName;
+		bio2rdf_vocabulary:namespace "drugbank";
+		bio2rdf_vocabulary:identifier ?drugId;
+		bio2rdf_vocabulary:uri ?uri;
+		owl:sameAs ?identifiersOrgUri;
+		rdfs:seeAlso ?drugbankUri;
+
+		drugbank_vocabulary:alternative-id ?drugAltId;
+		drugbank_vocabulary:x-cas ?casNumber;
+		drugbank_vocabulary:x-unii ?unii;
+		drugbank_vocabulary:description ?drugDescription;
+		drugbank_vocabulary:average-mass ?avgMass;
+		drugbank_vocabulary:monoisotopic-mass ?monoMass;
+	
+    }
+}
+WHERE {
+  
+  GRAPH <https://w3id.org/data2services/graph/xml2rdf> {
+
+    # Get drug primary ID
+    ?drugObj a x2rm:drugbank.drug .
+
+	
+	?drugObj x2rm:hasAttribute ?drugObjTypeAttr.
+	?drugObjTypeAttr a x2rm:drugbank.drug.-type.
+	?drugObjTypeAttr x2rm:hasValue ?drugObjType.
+
+	BIND ( UCASE(REPLACE(STR(?drugObjType), " ", "-")) AS ?typeId)
+	BIND ( iri(concat("http://bio2rdf.org/drugbank_vocabulary:", ?typeId)) AS ?typeUri )
+
+	?drugObj x2rm:hasAttribute ?drugObjCreatedAttr.
+	?drugObjCreatedAttr a x2rm:drugbank.drug.-created.
+	?drugObjCreatedAttr x2rm:hasValue ?drugObjCreated.
+
+	?drugObj x2rm:hasAttribute ?drugObjUpdatedAttr.
+	?drugObjUpdatedAttr a x2rm:drugbank.drug.-updated.
+	?drugObjUpdatedAttr x2rm:hasValue ?drugObjUpdated.
+
+
+        # Get drug primary ID        
+	?drugObj x2rm:hasChild [
+            a x2rm:drugbank.drug.drugbank-id ;
+            x2rm:hasAttribute [ a x2rm:drugbank.drug.drugbank-id.-primary ] ;
+            x2rm:hasValue ?drugId
+        ];
+	
+	BIND ( concat("drugbank:", ?drugId) AS ?dcId )
+	BIND ( iri(concat("http://bio2rdf.org/drugbank:", ?drugId)) AS ?uri )
+	BIND ( iri(concat("http://identifiers.org/drugbank/", ?drugId)) AS ?identifiersOrgUri )
+	BIND ( iri(concat("http://www.drugbank.ca/drugs/", ?drugId)) AS ?drugbankUri )
+
+	OPTIONAL{
+		?drugObj x2rm:hasChild [ 
+		    a x2rm:drugbank.drug.drugbank-id ; 
+		    x2rm:hasValue ?drugAltId 
+		] ;
+	} OPTIONAL{
+		?drugObj x2rm:hasChild [ 
+		    a x2rm:drugbank.drug.cas-number; 
+		    x2rm:hasValue ?casNumber 
+		] ;
+	} OPTIONAL{
+		?drugObj x2rm:hasChild [ 
+		    a x2rm:drugbank.drug.unii; 
+		    x2rm:hasValue ?unii 
+		] ;
+	} OPTIONAL{
+		?drugObj x2rm:hasChild [ 
+		    a x2rm:drugbank.drug.name; 
+		    x2rm:hasValue ?drugName
+		].
+		BIND ( concat(?drugName, " [drugbank:", ?drugId, "] ") AS ?label )
+	} OPTIONAL{
+		?drugObj x2rm:hasChild [ 
+		    a x2rm:drugbank.drug.description; 
+		    x2rm:hasValue ?drugDescription 
+		] ;
+	} OPTIONAL{
+		?drugObj x2rm:hasChild [ 
+		    a x2rm:drugbank.drug.average-mass; 
+		    x2rm:hasValue ?avgMass 
+		] ;
+	} OPTIONAL{
+		?drugObj x2rm:hasChild [ 
+		    a x2rm:drugbank.drug.monoisotopic-mass; 
+		    x2rm:hasValue ?monoMass
+		] ;
+	} 
+
+  } # graph
+  
+} # where

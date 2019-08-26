@@ -1,0 +1,94 @@
+PREFIX x2rm: <http://ids.unimaas.nl/xml2rdf/model#>
+PREFIX x2rd: <http://ids.unimaas.nl/xml2rdf/data/>
+PREFIX d2s: <https://w3id.org/data2services/vocab/>
+PREFIX ido: <http://identifiers.org/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX owl: <http://www.w3.org/2002/07/owl#>
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+PREFIX obo: <http://purl.obolibrary.org/obo/>
+PREFIX dc: <http://purl.org/dc/elements/1.1/>
+PREFIX dcterms: <http://purl.org/dc/terms/>
+PREFIX bl: <https://w3id.org/biolink/vocab/>
+PREFIX drugbank_vocabulary: <http://bio2rdf.org/drugbank_vocabulary:>
+PREFIX bio2rdf_vocabulary: <http://bio2rdf.org/bio2rdf_vocabulary:> 
+
+INSERT 
+{ 
+    GRAPH <https://w3id.org/data2services/graph/drugbank> {  
+
+	?uri	a drugbank_vocabulary:Resource;
+		rdf:type drugbank_vocabulary:Pathway;
+		dc:identifier ?dcId;
+		rdfs:label ?label;
+		dc:title ?pathwayName;
+		bio2rdf_vocabulary:namespace "drugbank_resource";
+		bio2rdf_vocabulary:identifier ?itemId;
+		bio2rdf_vocabulary:uri ?uri;
+
+		drugbank_vocabulary:x-smdb ?pathwaySmpdbId;
+		drugbank_vocabulary:category ?pathwayCategoryUri;
+		drugbank_vocabulary:pathway-drug ?pathwayDrugDBidUri;
+		drugbank_vocabulary:pathway-enzyme ?pathwayEnzymeUniprotUri;
+    }
+}
+WHERE {
+  
+  GRAPH <https://w3id.org/data2services/graph/xml2rdf> {
+
+	?pathway a x2rm:drugbank.drug.pathways.pathway; 
+
+	OPTIONAL{
+		?pathway x2rm:hasChild [
+		    a x2rm:drugbank.drug.pathways.pathway.smpdb-id; 
+		    x2rm:hasValue ?pathwaySmpdbId
+	    	];
+	} OPTIONAL{
+		?pathway x2rm:hasChild [
+		    a x2rm:drugbank.drug.pathways.pathway.name; 
+		    x2rm:hasValue ?pathwayName
+	    	];
+	} OPTIONAL{
+		?pathway x2rm:hasChild [
+		    a x2rm:drugbank.drug.pathways.pathway.category; 
+		    x2rm:hasValue ?pathwayCategory
+	    	];
+	} OPTIONAL{
+		?pathway x2rm:hasChild ?pathwayDrugs.
+			?pathwayDrugs a x2rm:drugbank.drug.pathways.pathway.drugs.
+
+			OPTIONAL{
+
+				?pathwayDrugs x2rm:hasChild ?pathwayDrug.
+				?pathwayDrug a x2rm:drugbank.drug.pathways.pathway.drugs.drug.
+				
+				?pathwayDrug x2rm:hasChild ?pathwayDrugDBid.
+				?pathwayDrugDBid a x2rm:drugbank.drug.pathways.pathway.drugs.drug.drugbank-id.
+				?pathwayDrugDBid x2rm:hasValue ?pathwayDrugDBidValue.
+
+				BIND ( iri(concat("http://bio2rdf.org/drugbank:", ?pathwayDrugDBidValue)) AS ?pathwayDrugDBidUri )
+
+			} # pathway drug	    	
+	} OPTIONAL{
+		?pathway x2rm:hasChild ?pathwayEnzymes.
+			?pathwayEnzymes a x2rm:drugbank.drug.pathways.pathway.enzymes.
+
+			OPTIONAL{
+
+				?pathwayEnzymes x2rm:hasChild ?pathwayEnzyme.
+				?pathwayEnzyme a x2rm:drugbank.drug.pathways.pathway.enzymes.uniprot-id.
+				?pathwayEnzyme x2rm:hasValue ?pathwayEnzymeUniprotId.
+
+				BIND ( iri(concat("http://bio2rdf.org/uniprot:", ?pathwayEnzymeUniprotId)) AS ?pathwayEnzymeUniprotUri )
+			} # Pathway enzyme
+	} # pathway features
+
+	BIND ( SHA1(STR(?pathwayCategory)) AS ?pathwayCategoryId)
+	BIND ( iri(concat("http://bio2rdf.org/drugbank_resource:", ?pathwayCategoryId)) AS ?pathwayCategoryUri )
+
+	BIND ( SHA1(STR(?pathwayName)) AS ?itemId)
+	BIND ( concat("drugbank_resource:", ?itemId) AS ?dcId )
+	BIND ( concat(?pathwayName, " [drugbank_resource:", ?itemId, "] ") AS ?label )
+	BIND ( iri(concat("http://bio2rdf.org/drugbank_resource:", ?itemId)) AS ?uri )
+  } # graph
+  
+} # where

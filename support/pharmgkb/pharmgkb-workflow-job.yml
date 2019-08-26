@@ -1,0 +1,23 @@
+abs_path: /home/apc/Maastricht/bio2rdf-github 
+dataset: pharmgkb
+
+step1_jdbc: "jdbc:drill:drillbit=drill:31010"
+step1_trig_file: mapping.trig
+step1_trig: valueFrom
+step1_data: valueFrom
+step1_baseuri: "https://w3id.org/data2services/"
+step1_graph: "https://w3id.org/data2services/graph/autor2rml"
+
+step2_jdbc: jdbc:drill:drillbit=drill:31010
+step2_rq_file: rdf_output.nq
+step2_text: valueFrom
+
+step3_config: valueFrom
+
+step4_rq: valueFrom
+step4_method: HTTP
+step4_url: http://graphdb:7200
+step4_repo: test
+
+step6_sparql: /data/mapping/pharmgkb
+step6_endpoint: http://graphdb:7200/repositories/pharmgkb/statements

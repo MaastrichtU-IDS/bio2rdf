@@ -1,0 +1,170 @@
+PREFIX x2rm: <http://ids.unimaas.nl/xml2rdf/model#>
+PREFIX x2rd: <http://ids.unimaas.nl/xml2rdf/data/>
+PREFIX d2s: <https://w3id.org/data2services/vocab/>
+PREFIX ido: <http://identifiers.org/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX owl: <http://www.w3.org/2002/07/owl#>
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+PREFIX obo: <http://purl.obolibrary.org/obo/>
+PREFIX dc: <http://purl.org/dc/elements/1.1/>
+PREFIX dcterms: <http://purl.org/dc/terms/>
+PREFIX bl: <https://w3id.org/biolink/vocab/>
+PREFIX drugbank_vocabulary: <http://bio2rdf.org/drugbank_vocabulary:>
+PREFIX bio2rdf_vocabulary: <http://bio2rdf.org/bio2rdf_vocabulary:> 
+
+INSERT 
+{ 
+    GRAPH <https://w3id.org/data2services/graph/drugbank> {  
+
+	?uri	a drugbank_vocabulary:Resource;
+		rdf:type drugbank_vocabulary:Enzyme;
+		dc:identifier ?dcId;
+		rdfs:label ?label;
+		dc:title ?enzymeName;
+		bio2rdf_vocabulary:namespace "drugbank";
+		bio2rdf_vocabulary:identifier ?enzymeId;
+		bio2rdf_vocabulary:uri ?uri;
+
+		drugbank_vocabulary:organism ?enzymeOrganism;
+		drugbank_vocabulary:x-ref ?enzymeRefArticleRefIdUri;
+		drugbank_vocabulary:x-ref ?enzymeRefTextbookRefIdUri;
+		drugbank_vocabulary:x-ref ?enzymeRefLinkRefIdUri;
+		drugbank_vocabulary:x-ref ?enzymeRefAttachmentRefIdUri;
+
+		drugbank_vocabulary:action ?enzymeActionUri;
+		drugbank_vocabulary:known-action ?enzymeKnownActionUri;
+		drugbank_vocabulary:polypeptide ?enzymePolypeptideUri;
+
+    }
+}
+WHERE {
+  
+  GRAPH <https://w3id.org/data2services/graph/xml2rdf> {
+
+	?enzyme a x2rm:drugbank.drug.enzymes.enzyme.
+
+	?enzyme x2rm:hasChild [
+	    a x2rm:drugbank.drug.enzymes.enzyme.id; 
+	    x2rm:hasValue ?enzymeId
+    	].
+
+	?enzyme x2rm:hasChild [
+	    a x2rm:drugbank.drug.enzymes.enzyme.name; 
+	    x2rm:hasValue ?enzymeName
+    	].
+
+	OPTIONAL{
+
+		?enzyme x2rm:hasChild [
+		    a x2rm:drugbank.drug.enzymes.enzyme.organism; 
+		    x2rm:hasValue ?enzymeOrganism
+	    	];
+	} OPTIONAL{
+		?enzyme x2rm:hasChild ?enzymeActions.
+		?enzymeActions a x2rm:drugbank.drug.enzymes.enzyme.actions.
+
+			OPTIONAL{
+
+				?enzymeActions x2rm:hasChild ?enzymeAction.
+				?enzymeAction a x2rm:drugbank.drug.enzymes.enzyme.actions.action.
+				?enzymeAction x2rm:hasValue ?enzymeActionValue.
+
+				BIND ( REPLACE(UCASE(STR(?enzymeActionValue)), " ", "-") AS ?enzymeActionId)
+				BIND ( iri(concat("http://bio2rdf.org/drugbank_resource:", ?enzymeActionId)) AS ?enzymeActionUri )
+			} # Enzyme action
+	} OPTIONAL{
+		?enzyme x2rm:hasChild ?enzymeReferences.
+		?enzymeReferences a x2rm:drugbank.drug.enzymes.enzyme.references.
+			
+			OPTIONAL{
+				?enzymeReferences x2rm:hasChild ?enzymeRefArticles.
+				?enzymeRefArticles a x2rm:drugbank.drug.enzymes.enzyme.references.articles.
+
+				OPTIONAL{
+
+					?enzymeRefArticles x2rm:hasChild ?enzymeRefArticle.
+					?enzymeRefArticle a x2rm:drugbank.drug.enzymes.enzyme.references.articles.article.
+
+					OPTIONAL{
+						?enzymeRefArticle x2rm:hasChild ?enzymeRefArticleRefId.
+						?enzymeRefArticleRefId a x2rm:drugbank.drug.enzymes.enzyme.references.articles.article.ref-id.
+						?enzymeRefArticleRefId x2rm:hasValue ?enzymeRefArticleRefIdValue.
+					} # Enzyme Ref Articles features
+
+					BIND ( iri(concat("http://bio2rdf.org/drugbank:", ?enzymeRefArticleRefIdValue)) AS ?enzymeRefArticleRefIdUri )
+				} # Enzyme Ref Articles
+			} OPTIONAL{
+				?enzymeReferences x2rm:hasChild ?enzymeRefTextbooks.
+				?enzymeRefTextbooks a x2rm:drugbank.drug.enzymes.enzyme.references.textbooks.
+
+				OPTIONAL{
+
+					?enzymeRefTextbooks x2rm:hasChild ?enzymeRefTextbook.
+					?enzymeRefTextbook a x2rm:drugbank.drug.enzymes.enzyme.references.textbooks.textbook.
+
+					OPTIONAL{
+						?enzymeRefTextbook x2rm:hasChild ?enzymeRefTextbookRefId.
+						?enzymeRefTextbookRefId a x2rm:drugbank.drug.enzymes.enzyme.references.textbooks.textbook.ref-id.
+						?enzymeRefTextbookRefId x2rm:hasValue ?enzymeRefTextbookRefIdValue.
+					} # Enzyme Ref Textbooks features
+					BIND ( iri(concat("http://bio2rdf.org/drugbank:", ?enzymeRefTextbookRefIdValue)) AS ?enzymeRefTextbookRefIdUri )
+				} # Enzyme Ref Textbooks
+			} OPTIONAL{
+				?enzymeReferences x2rm:hasChild ?enzymeRefLinks.
+				?enzymeRefLinks a x2rm:drugbank.drug.enzymes.enzyme.references.links.
+
+				OPTIONAL{
+
+					?enzymeRefLinks x2rm:hasChild ?enzymeRefLink.
+					?enzymeRefLink a x2rm:drugbank.drug.enzymes.enzyme.references.links.link.
+
+					OPTIONAL{
+						?enzymeRefLink x2rm:hasChild ?enzymeRefLinkRefId.
+						?enzymeRefLinkRefId a x2rm:drugbank.drug.enzymes.enzyme.references.links.link.ref-id.
+						?enzymeRefLinkRefId x2rm:hasValue ?enzymeRefLinkRefIdValue.
+					} # Enzyme Ref Links features
+					BIND ( iri(concat("http://bio2rdf.org/drugbank:", ?enzymeRefLinkRefIdValue)) AS ?enzymeRefLinkRefIdUri )
+				} # Enzyme Ref Links
+			} OPTIONAL{
+				?enzymeReferences x2rm:hasChild ?enzymeRefAttachments.
+				?enzymeRefAttachments a x2rm:drugbank.drug.enzymes.enzyme.references.attachments.
+
+				OPTIONAL{
+
+					?enzymeRefAttachments x2rm:hasChild ?enzymeRefAttachment.
+					?enzymeRefAttachment a x2rm:drugbank.drug.enzymes.enzyme.references.attachments.attachment.
+
+					OPTIONAL{
+						?enzymeRefAttachment x2rm:hasChild ?enzymeRefAttachmentRefId.
+						?enzymeRefAttachmentRefId a x2rm:drugbank.drug.enzymes.enzyme.references.attachments.attachment.ref-id.
+						?enzymeRefAttachmentRefId x2rm:hasValue ?enzymeRefAttachmentRefIdValue.
+					}# Enzyme Ref Attachments features
+					BIND ( iri(concat("http://bio2rdf.org/drugbank:", ?enzymeRefAttachmentRefIdValue)) AS ?enzymeRefAttachmentRefIdUri )
+				} # Enzyme Ref Attachments
+			} # Enzyme Reference
+	} OPTIONAL{
+		?enzyme x2rm:hasChild ?enzymeKnownAction.
+		?enzymeKnownAction a x2rm:drugbank.drug.enzymes.enzyme.known-action.
+		?enzymeKnownAction x2rm:hasValue ?enzymeKnownActionValue.
+
+		BIND ( REPLACE(UCASE(STR(?enzymeKnownActionValue)), " ", "-") AS ?enzymeKnownActionId)
+		BIND ( iri(concat("http://bio2rdf.org/drugbank_resource:", ?enzymeKnownActionId)) AS ?enzymeKnownActionUri )
+	} OPTIONAL{
+		?enzyme x2rm:hasChild ?enzymePolypeptide.
+		?enzymePolypeptide a x2rm:drugbank.drug.enzymes.enzyme.polypeptide.
+
+		?enzymePolypeptide  x2rm:hasAttribute ?enzymePolypeptideIdAttr.
+		?enzymePolypeptideIdAttr a x2rm:drugbank.drug.enzymes.enzyme.polypeptide.-id.
+		?enzymePolypeptideIdAttr x2rm:hasValue ?enzymePolypeptideId.
+
+		BIND ( iri(concat("drugbank:", ?enzymePolypeptideId) ) AS ?enzymePPId )
+		BIND ( iri(concat("http://bio2rdf.org/drugbank:", ?enzymePolypeptideId)) AS ?enzymePolypeptideUri )
+	} # Enzyme features
+
+
+	BIND ( concat("drugbank:", ?enzymeId) AS ?dcId )
+	BIND ( concat(?enzymeName, " [drugbank:", ?enzymeId, "] ") AS ?label )
+	BIND ( iri(concat("http://bio2rdf.org/drugbank:", ?enzymeId)) AS ?uri )	
+  } # graph
+  
+} # where

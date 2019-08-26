@@ -1,0 +1,175 @@
+PREFIX x2rm: <http://ids.unimaas.nl/xml2rdf/model#>
+PREFIX x2rd: <http://ids.unimaas.nl/xml2rdf/data/>
+PREFIX d2s: <https://w3id.org/data2services/vocab/>
+PREFIX ido: <http://identifiers.org/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX owl: <http://www.w3.org/2002/07/owl#>
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+PREFIX obo: <http://purl.obolibrary.org/obo/>
+PREFIX dc: <http://purl.org/dc/elements/1.1/>
+PREFIX dcterms: <http://purl.org/dc/terms/>
+PREFIX bl: <https://w3id.org/biolink/vocab/>
+PREFIX drugbank_vocabulary: <http://bio2rdf.org/drugbank_vocabulary:>
+PREFIX bio2rdf_vocabulary: <http://bio2rdf.org/bio2rdf_vocabulary:> 
+
+INSERT 
+{ 
+    GRAPH <https://w3id.org/data2services/graph/drugbank> {  
+
+	?uri	a drugbank_vocabulary:Resource;
+		rdf:type drugbank_vocabulary:Drug;
+
+		drugbank_vocabulary:sequence-format ?sequenceFormatUri;
+		?sequenceFormatPredicateUri ?sequenceText;
+		drugbank_vocabulary:calculated-property ?calcPropertyUri;
+		drugbank_vocabulary:experimental-property ?expPropertyUri;
+		rdfs:seeAlso ?externalLinkUrl;
+		?exIdPredicate ?exIdReferenceUri;
+		
+    }
+}
+WHERE {
+  
+  GRAPH <https://w3id.org/data2services/graph/xml2rdf> {
+
+    # Get drug primary ID
+    ?drugObj a x2rm:drugbank.drug .
+
+        # Get drug primary ID        
+	?drugObj x2rm:hasChild [
+            a x2rm:drugbank.drug.drugbank-id ;
+            x2rm:hasAttribute [ a x2rm:drugbank.drug.drugbank-id.-primary ] ;
+            x2rm:hasValue ?drugId
+        ];
+	
+	BIND ( iri(concat("http://bio2rdf.org/drugbank:", ?drugId)) AS ?uri )
+
+	OPTIONAL{
+		?drugObj x2rm:hasChild ?sequences.
+
+		?sequences a x2rm:drugbank.drug.sequences.
+
+		    OPTIONAL{
+		    	?sequences x2rm:hasChild ?sequence.
+			?sequence a x2rm:drugbank.drug.sequences.sequence.
+			
+			?sequence x2rm:hasValue ?sequenceText.
+			?sequence  x2rm:hasAttribute ?sequenceFormatAttr.
+			?sequenceFormatAttr x2rm:hasValue ?sequenceFormat.
+
+			BIND ( REPLACE(UCASE(STR(?sequenceFormat)), " ", "-") AS ?sequenceFormatId)
+			BIND ( REPLACE(LCASE(STR(?sequenceFormat)), " ", "-") AS ?sequenceFormatPredicate)
+			BIND ( iri(concat("http://bio2rdf.org/drugbank_resource:", ?sequenceFormatId)) AS ?sequenceFormatUri )
+			BIND ( iri(concat("http://bio2rdf.org/drugbank_vocabulary:", ?sequenceFormatPredicate,"-sequence")) AS ?sequenceFormatPredicateUri )
+		    } # sequence
+	} OPTIONAL{
+		?drugObj x2rm:hasChild ?calculatedProperties.
+
+		?calculatedProperties a x2rm:drugbank.drug.calculated-properties.
+
+		    OPTIONAL{
+		    	?calculatedProperties x2rm:hasChild ?property.
+			?property a x2rm:drugbank.drug.calculated-properties.property.
+			
+			OPTIONAL{
+				?property x2rm:hasChild [
+				    a x2rm:drugbank.drug.calculated-properties.property.kind; 
+				    x2rm:hasValue ?propertyKind
+			    	];
+			} OPTIONAL{
+				?property x2rm:hasChild [
+				    a x2rm:drugbank.drug.calculated-properties.property.value; 
+				    x2rm:hasValue ?propertyValue
+			    	];
+			} OPTIONAL{
+				?property x2rm:hasChild [
+				    a x2rm:drugbank.drug.calculated-properties.property.source; 
+				    x2rm:hasValue ?propertySource
+			    	];
+			} # property features
+
+			BIND ( REPLACE(LCASE(STR(?propertyKind)), " ", "-") AS ?calcPropertyNorm)
+			BIND ( concat("calculated-property","-",?drugId,"-",?calcPropertyNorm) AS ?calcPropertyId)
+			BIND ( iri(concat("http://bio2rdf.org/drugbank_resource:", ?calcPropertyId)) AS ?calcPropertyUri )
+		    } # property
+	} OPTIONAL{
+		?drugObj x2rm:hasChild ?experimentalProperties.
+
+		?experimentalProperties a x2rm:drugbank.drug.experimental-properties. 
+
+		    OPTIONAL{
+		    	?experimentalProperties x2rm:hasChild ?exProperty.
+			?exProperty a x2rm:drugbank.drug.experimental-properties.property.
+			
+			OPTIONAL{
+				?exProperty x2rm:hasChild [
+				    a x2rm:drugbank.drug.experimental-properties.property.kind; 
+				    x2rm:hasValue ?exPropertyKind
+			    	];
+			} OPTIONAL{
+				?exProperty x2rm:hasChild [
+				    a x2rm:drugbank.drug.experimental-properties.property.value; 
+				    x2rm:hasValue ?exPropertyValue
+			    	];
+			} OPTIONAL{
+				?exProperty x2rm:hasChild [
+				    a x2rm:drugbank.drug.experimental-properties.property.source; 
+				    x2rm:hasValue ?exPropertySource
+			    	];
+			} # experimental property features
+
+			BIND ( REPLACE(LCASE(STR(?exPropertyKind)), " ", "-") AS ?expPropertyNorm)
+			BIND ( concat("experimental-property","-",?drugId,"-",?expPropertyNorm) AS ?expPropertyId)
+			BIND ( iri(concat("http://bio2rdf.org/drugbank_resource:", ?expPropertyId)) AS ?expPropertyUri )
+		    } # experimental property
+	} OPTIONAL{
+		?drugObj x2rm:hasChild ?externalIdentifiers.
+
+		?externalIdentifiers a x2rm:drugbank.drug.external-identifiers.
+
+		    OPTIONAL{
+		    	?externalIdentifiers x2rm:hasChild ?externalIdentifier.
+			?externalIdentifier a x2rm:drugbank.external-identifiers.external-identifier.
+			
+			OPTIONAL{
+				?externalIdentifier x2rm:hasChild [
+				    a x2rm:drugbank.drug.external-identifiers.external-identifier.resource; 
+				    x2rm:hasValue ?externalIdentifierResource
+			    	];
+			} OPTIONAL{
+				?externalIdentifiers x2rm:hasChild [
+				    a x2rm:drugbank.drug.external-identifiers.external-identifier.identifier; 
+				    x2rm:hasValue ?externalIdentifierIdentifier
+			    	];
+			} # Ext ID features
+			BIND ( REPLACE(LCASE(STR(?externalIdentifierResource)), " ", "-") AS ?exIdResource)
+			BIND ( concat(?exIdResource, ":", ?externalIdentifierIdentifier) AS ?exIdReferenceUri )
+			BIND ( iri(concat("http://bio2rdf.org/drugbank_vocabulary:x-", ?exIdResource)) AS ?exIdPredicate )
+		    } # Ext ID
+	} OPTIONAL{
+		?drugObj x2rm:hasChild ?externalLinks.
+
+		?externalLinks a x2rm:drugbank.drug.external-links.
+
+		    OPTIONAL{
+		    	?externalLinks x2rm:hasChild ?externalLink.
+			?externalLink a x2rm:drugbank.external-links.external-link.
+			
+			OPTIONAL{
+				?externalLink x2rm:hasChild [
+				    a x2rm:drugbank.drug.external-links.external-link.resource; 
+				    x2rm:hasValue ?externalLinkResource
+			    	];
+			} OPTIONAL{
+				?externalLink x2rm:hasChild [
+				    a x2rm:drugbank.drug.external-links.external-link.url; 
+				    x2rm:hasValue ?externalLinkUrl
+			    	];
+			} # Ext Link features
+			FILTER(REGEX(?externalLinkUrl, "http")).
+		    } # Ext Link
+
+	} 
+  } # graph
+  
+} # where

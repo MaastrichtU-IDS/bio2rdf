@@ -1,0 +1,83 @@
+PREFIX x2rm: <http://ids.unimaas.nl/xml2rdf/model#>
+PREFIX x2rd: <http://ids.unimaas.nl/xml2rdf/data/>
+PREFIX d2s: <https://w3id.org/data2services/vocab/>
+PREFIX ido: <http://identifiers.org/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX owl: <http://www.w3.org/2002/07/owl#>
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+PREFIX obo: <http://purl.obolibrary.org/obo/>
+PREFIX dc: <http://purl.org/dc/elements/1.1/>
+PREFIX dcterms: <http://purl.org/dc/terms/>
+PREFIX bl: <https://w3id.org/biolink/vocab/>
+PREFIX drugbank_vocabulary: <http://bio2rdf.org/drugbank_vocabulary:>
+PREFIX bio2rdf_vocabulary: <http://bio2rdf.org/bio2rdf_vocabulary:> 
+
+INSERT 
+{ 
+    GRAPH <https://w3id.org/data2services/graph/drugbank> {  
+
+	?uri	a drugbank_vocabulary:Resource;
+		rdf:type drugbank_vocabulary:Drug;
+
+		drugbank_vocabulary:product ?productUri;
+		drugbank_vocabulary:international-brands ?intBrandUri;
+		
+    }
+}
+WHERE {
+  
+  GRAPH <https://w3id.org/data2services/graph/xml2rdf> {
+
+    # Get drug primary ID
+    ?drugObj a x2rm:drugbank.drug .
+
+        # Get drug primary ID        
+	?drugObj x2rm:hasChild [
+            a x2rm:drugbank.drug.drugbank-id ;
+            x2rm:hasAttribute [ a x2rm:drugbank.drug.drugbank-id.-primary ] ;
+            x2rm:hasValue ?drugId
+        ];
+	
+	BIND ( iri(concat("http://bio2rdf.org/drugbank:", ?drugId)) AS ?uri )
+
+	OPTIONAL{
+		?drugObj x2rm:hasChild ?products.
+
+		?products a x2rm:drugbank.drug.products; 
+
+		    OPTIONAL{
+		    	?products x2rm:hasChild ?product.
+			?product a x2rm:drugbank.drug.products.product.
+			
+			OPTIONAL{
+				?product x2rm:hasChild [
+				    a x2rm:drugbank.drug.products.product.name; 
+				    x2rm:hasValue ?productName
+			    	].
+			} 
+			BIND ( SHA1(STR(?productName)) AS ?productId)
+			BIND ( iri(concat("http://bio2rdf.org/drugbank_resource:", ?productId)) AS ?productUri )
+		    } # product
+	} OPTIONAL{
+		?drugObj x2rm:hasChild ?intBrands.
+
+		?intBrands a x2rm:drugbank.drug.international-brands; 
+
+		    OPTIONAL{
+		    	?intBrands x2rm:hasChild ?intBrand.
+			?intBrand a x2rm:drugbank.drug.international-brands.international-brand.
+			
+			OPTIONAL{
+				?intBrand x2rm:hasChild [
+				    a x2rm:drugbank.drug.international-brands.international-brand.name; 
+				    x2rm:hasValue ?intBrandName
+			    	];
+			} # international brand features
+			BIND ( SHA1(STR(?intBrandName)) AS ?intBrandId)
+			BIND ( iri(concat("http://bio2rdf.org/drugbank_resource:", ?intBrandId)) AS ?intBrandUri )
+
+		    } # international brand
+	}
+  } # graph
+  
+} # where

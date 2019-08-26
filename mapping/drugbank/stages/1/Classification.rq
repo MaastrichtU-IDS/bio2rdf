@@ -1,0 +1,130 @@
+PREFIX x2rm: <http://ids.unimaas.nl/xml2rdf/model#>
+PREFIX x2rd: <http://ids.unimaas.nl/xml2rdf/data/>
+PREFIX d2s: <https://w3id.org/data2services/vocab/>
+PREFIX ido: <http://identifiers.org/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX owl: <http://www.w3.org/2002/07/owl#>
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+PREFIX obo: <http://purl.obolibrary.org/obo/>
+PREFIX dc: <http://purl.org/dc/elements/1.1/>
+PREFIX dcterms: <http://purl.org/dc/terms/>
+PREFIX bl: <https://w3id.org/biolink/vocab/>
+PREFIX drugbank_vocabulary: <http://bio2rdf.org/drugbank_vocabulary:>
+PREFIX bio2rdf_vocabulary: <http://bio2rdf.org/bio2rdf_vocabulary:> 
+
+INSERT 
+{ 
+    GRAPH <https://w3id.org/data2services/graph/drugbank> {  
+
+	?directParentUri a drugbank_vocabulary:Resource;
+			 rdf:type drugbank_vocabulary:Drug-Classification-Category;
+			 rdf:type drugbank_vocabulary:Direct-Parent;
+			 dc:identifier ?directParentIDdcId;
+			 rdfs:label ?directParentLabel;
+			 dc:title ?classDirectParent;
+			 bio2rdf_vocabulary:namespace "drugbank_resource";
+			 bio2rdf_vocabulary:identifier ?directParentId;
+			 bio2rdf_vocabulary:uri ?directParentUri.
+
+	?kingdomUri a drugbank_vocabulary:Resource;
+			 rdf:type drugbank_vocabulary:Drug-Classification-Category;
+			 rdf:type drugbank_vocabulary:Kingdom;
+			 dc:identifier ?kingdomIDdcId;
+			 rdfs:label ?kingdomLabel;
+			 dc:title ?classKingdom;
+			 bio2rdf_vocabulary:namespace "drugbank_resource";
+			 bio2rdf_vocabulary:identifier ?kingdomId;
+			 bio2rdf_vocabulary:uri ?kingdomUri.  
+
+	?superclassUri a drugbank_vocabulary:Resource;
+			 rdf:type drugbank_vocabulary:Drug-Classification-Category;
+			 rdf:type drugbank_vocabulary:Superclass;
+			 dc:identifier ?superclassIDdcId;
+			 rdfs:label ?superclassLabel;
+			 dc:title ?classSuperclass;
+			 bio2rdf_vocabulary:namespace "drugbank_resource";
+			 bio2rdf_vocabulary:identifier ?superclassId;
+			 bio2rdf_vocabulary:uri ?superclassUri. 
+
+	?classUri a drugbank_vocabulary:Resource;
+			 rdf:type drugbank_vocabulary:Drug-Classification-Category;
+			 rdf:type drugbank_vocabulary:Class;
+			 dc:identifier ?classIDdcId;
+			 rdfs:label ?classLabel;
+			 dc:title ?classClass;
+			 bio2rdf_vocabulary:namespace "drugbank_resource";
+			 bio2rdf_vocabulary:identifier ?classId;
+			 bio2rdf_vocabulary:uri ?classUri. 
+
+	?subclassUri a drugbank_vocabulary:Resource;
+			 rdf:type drugbank_vocabulary:Drug-Classification-Category;
+			 rdf:type drugbank_vocabulary:Subclass;
+			 dc:identifier ?subclassIDdcId;
+			 rdfs:label ?subclassLabel;
+			 dc:title ?classSubclass;
+			 bio2rdf_vocabulary:namespace "drugbank_resource";
+			 bio2rdf_vocabulary:identifier ?subclassId;
+			 bio2rdf_vocabulary:uri ?subclassUri.  
+    }
+}
+WHERE {
+  
+  GRAPH <https://w3id.org/data2services/graph/xml2rdf> {
+
+    ?classification a x2rm:drugbank.drug.classification; 
+		    
+	    OPTIONAL{
+		    ?classification x2rm:hasChild [
+			a x2rm:drugbank.drug.classification.direct-parent; 
+			x2rm:hasValue ?classDirectParent
+		    ].
+
+		    BIND ( SHA1(STR(?classDirectParent)) AS ?directParentId)
+		    BIND ( concat("drugbank_resource:", ?directParentId) AS ?directParentIDdcId )
+		    BIND ( concat(?classDirectParent, " [drugbank_resource:", ?directParentId, "] ") AS ?directParentLabel )
+		    BIND ( iri(concat("http://bio2rdf.org/drugbank_resource:", ?directParentId)) AS ?directParenturi )
+	    } OPTIONAL{
+		    ?classification x2rm:hasChild [
+			a x2rm:drugbank.drug.classification.kingdom; 
+			x2rm:hasValue ?classKingdom
+		    ].
+
+		    BIND ( SHA1(STR(?classKingdom)) AS ?kingdomId)
+		    BIND ( concat("drugbank_resource:", ?kingdomId) AS ?kingdomIDdcId )
+		    BIND ( concat(?classKingdom, " [drugbank_resource:", ?kingdomId, "] ") AS ?kingdomLabel )
+		    BIND ( iri(concat("http://bio2rdf.org/drugbank_resource:", ?kingdomId)) AS ?kingdomUri )
+	    } OPTIONAL{
+		    ?classification x2rm:hasChild [
+			a x2rm:drugbank.drug.classification.superclass; 
+			x2rm:hasValue ?classSuperclass
+		    ].
+
+		    BIND ( SHA1(STR(?classSuperclass)) AS ?superclassId)
+		    BIND ( concat("drugbank_resource:", ?superclassId) AS ?superclassIDdcId )
+		    BIND ( concat(?classSuperclass, " [drugbank_resource:", ?superclassId, "] ") AS ?superclassLabel )
+		    BIND ( iri(concat("http://bio2rdf.org/drugbank_resource:", ?superclassId)) AS ?superclassUri )
+	    } OPTIONAL{
+		    ?classification x2rm:hasChild [
+			a x2rm:drugbank.drug.classification.class; 
+			x2rm:hasValue ?classClass
+		    ].
+
+		    BIND ( SHA1(STR(?classClass)) AS ?classId)
+		    BIND ( concat("drugbank_resource:", ?classId) AS ?classIDdcId )
+		    BIND ( concat(?classClass, " [drugbank_resource:", ?classId, "] ") AS ?classLabel )
+		    BIND ( iri(concat("http://bio2rdf.org/drugbank_resource:", ?classId)) AS ?classUri )
+	    } OPTIONAL{
+		    ?classification x2rm:hasChild [
+			a x2rm:drugbank.drug.classification.subclass; 
+			x2rm:hasValue ?classSubclass
+		    ].
+
+		    BIND ( SHA1(STR(?classSubclass)) AS ?subclassId)
+		    BIND ( concat("drugbank_resource:", ?subclassId) AS ?subclassIDdcId )
+		    BIND ( concat(?classSubclass, " [drugbank_resource:", ?subclassId, "] ") AS ?subclassLabel )
+		    BIND ( iri(concat("http://bio2rdf.org/drugbank_resource:", ?subclassId)) AS ?subclassUri )
+	    }
+
+  } # graph
+  
+} # where
