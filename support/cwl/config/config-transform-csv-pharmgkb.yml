@@ -9,7 +9,7 @@ sparql_base_uri: "https://w3id.org/data2services/"
 #autor2rml_column_header: "test1,test2,test3,test5"
 
 # RdfUpload params
-sparql_triplestore_url: http://localhost:7200
+sparql_triplestore_url: http://graphdb:7200
 sparql_triplestore_repository: pharmgkb
 
 # Split params

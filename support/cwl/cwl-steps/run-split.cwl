@@ -54,7 +54,7 @@ inputs:
       position: 7
       prefix: --split-delimiter
   split_quote:
-    type: string
+    type: string?
     inputBinding:
       position: 8
       prefix: --split-quote
