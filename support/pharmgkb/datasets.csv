@@ -1,2 +1,0 @@
-Dataset,BaseURI,Files
-pharmgkb,https://api.pharmgkb.org/v1/download/file/data/,"relationships.zip,annotations.zip,clinicalVariants.zip,genes.zip,variants.zip,phenotypes.zip,drugs.zip,chemicals.zip"

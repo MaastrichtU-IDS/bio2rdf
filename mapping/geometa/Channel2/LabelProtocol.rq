@@ -1,0 +1,46 @@
+PREFIX rr: <http://www.w3.org/ns/r2rml#> 
+PREFIX dc: <http://purl.org/dc/elements/1.1/> 
+PREFIX dbo: <http://dbpedia.org/ontology/> 
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> 
+PREFIX owl: <http://www.w3.org/2002/07/owl#> 
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#> 
+PREFIX rml: <http://semweb.mmlab.be/ns/rml#> 
+PREFIX ql: <http://semweb.mmlab.be/ns/ql#> 
+PREFIX d2rq: <http://www.wiwiss.fu-berlin.de/suhl/bizer/D2RQ/0.1#> 
+PREFIX geo_vocabulary: <http://bio2rdf.org/geo_vocabulary:> 
+PREFIX bio2rdf_vocabulary: <http://bio2rdf.org/bio2rdf_vocabulary:> 
+PREFIX d2sgeneric: <https://w3id.org/data2services/model/>
+
+INSERT
+{
+	GRAPH <https://w3id.org/data2services/graph/geo>{
+		
+		?uri	a geo_vocabulary:Resource;
+			rdf:type geo_vocabulary:Label-Protocol;
+			dc:identifier ?geoId;
+			rdfs:label ?label;
+			dc:title ?object;
+			bio2rdf_vocabulary:namespace "geo";
+			bio2rdf_vocabulary:identifier ?id;
+			bio2rdf_vocabulary:uri ?uri;
+			
+	}
+}
+WHERE {
+    GRAPH <https://w3id.org/data2services/graph/autor2rml> {
+		
+		?s d2sgeneric:label_protocol_ch2 ?object .
+		
+		?s dc:isPartOf <http://bio2rdf.org/geo:Channel2>.
+
+		BIND (MD5(?object) AS ?id)
+
+		BIND (concat("geo:",?id) AS ?geoId)
+
+		BIND ( concat(?object , " [geo:", ?id, "] ") AS ?label )
+		 
+		BIND(iri(concat("http://bio2rdf.org/geo_resource:",MD5(?object))) AS ?uri)
+		
+	}
+}		
+

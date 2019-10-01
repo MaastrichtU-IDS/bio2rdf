@@ -43,7 +43,7 @@ INSERT
 }
 WHERE {
    		
-	?s rdf:type <https://w3id.org/data2services/data/input/pharmgkb/relationships.tsv>.
+	?s rdf:type <https://w3id.org/data2services/data/input/pharmgkb/relationships/relationships.tsv>.
 
 	?s d2sgeneric:Entity1_id ?e1.
 	?s d2sgeneric:Entity1_name ?e1_name.
@@ -72,7 +72,8 @@ WHERE {
 	} OPTIONAL {
 	 ?s d2sgeneric:Pd ?pd.
 	} OPTIONAL {
- 	 ?s d2sgeneric:Pmids ?pmids .
+ 	 ?s d2sgeneric:Pmids ?pmidsR .
+	 BIND ( iri(concat("http://bio2rdf.org/pubmed:", ?pmidsR)) AS ?pmids )
 	}
 		
 	BIND ( iri(concat("http://bio2rdf.org/pharmgkb:", ?accessionID)) AS ?uri )

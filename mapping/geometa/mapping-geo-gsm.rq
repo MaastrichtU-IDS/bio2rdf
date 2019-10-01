@@ -1,0 +1,174 @@
+PREFIX rr: <http://www.w3.org/ns/r2rml#> 
+PREFIX dc: <http://purl.org/dc/elements/1.1/> 
+PREFIX dbo: <http://dbpedia.org/ontology/> 
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> 
+PREFIX owl: <http://www.w3.org/2002/07/owl#> 
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#> 
+PREFIX rml: <http://semweb.mmlab.be/ns/rml#> 
+PREFIX ql: <http://semweb.mmlab.be/ns/ql#> 
+PREFIX d2rq: <http://www.wiwiss.fu-berlin.de/suhl/bizer/D2RQ/0.1#> 
+PREFIX geo_vocabulary: <http://bio2rdf.org/drugbank_vocabulary:> 
+PREFIX bio2rdf_vocabulary: <http://bio2rdf.org/bio2rdf_vocabulary:> 
+PREFIX d2sgeneric: <https://w3id.org/data2services/model/>
+
+INSERT
+{
+	GRAPH <https://w3id.org/data2services/graph/geo>{
+		
+		?uri	a geo_vocabulary:Resource;
+			rdf:type geo_vocabulary:Sample;
+			dc:identifier ?geoID;
+			rdfs:label ?label;
+			dc:title ?title;
+			bio2rdf_vocabulary:namespace "geo";
+			bio2rdf_vocabulary:identifier ?ID;
+			bio2rdf_vocabulary:uri ?uri;
+			
+			geo_vocabulary:description ?description;
+			geo_vocabulary:status ?status_uri;
+			geo_vocabulary:type ?type_uri;
+			geo_vocabulary:referenced-by ?gpl_uri;
+			geo_vocabulary:included-in ?series_id_uri;
+
+			geo_vocabulary:source-name ?source_name_ch1_uri;
+			geo_vocabulary:organism ?organism_ch1_uri;
+			geo_vocabulary:molecule ?molecule_ch1_uri;
+			geo_vocabulary:sample-label ?label_ch1_uri;
+			geo_vocabulary:treatment-protocol ?treatment_protocol_ch1_uri;
+			geo_vocabulary:extraction-protocol ?extract_protocol_ch1_uri;
+			geo_vocabulary:label-protocol ?label_protocol_ch1_uri;
+
+			geo_vocabulary:source-name ?source_name_ch2_uri;
+			geo_vocabulary:organism ?organism_ch2_uri;
+			geo_vocabulary:molecule ?molecule_ch2_uri;
+			geo_vocabulary:sample-label ?label_ch2_uri;
+			geo_vocabulary:treatment-protocol ?treatment_protocol_ch2_uri;
+			geo_vocabulary:extraction-protocol ?extract_protocol_ch2_uri;
+			geo_vocabulary:label-protocol ?label_protocol_ch2_uri;
+
+			geo_vocabulary:hybridization-protocol ?hyb_protocol_uri;
+			geo_vocabulary:last-update-date ?update_date;
+			geo_vocabulary:submission-date ?submission_date;
+
+	}
+}
+WHERE {
+    GRAPH <https://w3id.org/data2services/graph/autor2rml> {
+		
+		?s rdf:type <https://w3id.org/data2services/gsm>.
+
+		?s d2sgeneric:gse ?ID .
+		
+		BIND ( iri(concat("geo:", ?ID) ) AS ?geoID )
+		
+		BIND ( iri(concat("http://bio2rdf.org/geo:", ?ID)) AS ?uri )
+		
+		OPTIONAL { 
+         ?s d2sgeneric:title ?title .
+		 BIND ( concat(?title, " [geo:", ?ID, "] ") AS ?label )
+			
+		} OPTIONAL {
+         ?s d2sgeneric:description ?description .
+			
+		} OPTIONAL {
+         ?s d2sgeneric:status ?status .
+		 
+		 BIND(iri(concat("http://bio2rdf.org/geo_resource:",MD5(?status))) AS ?status_uri)
+			
+		} OPTIONAL {
+         ?s d2sgeneric:type ?type .
+		 
+		 BIND(iri(concat("http://bio2rdf.org/geo_resource:",MD5(?type))) AS ?type_uri)
+			
+		} OPTIONAL {
+         ?s d2sgeneric:gpl ?gpl_id .
+
+		 BIND(iri(concat("http://bio2rdf.org/geo:",?gpl_id)) AS ?gpl_uri)
+
+		} OPTIONAL {
+         ?s d2sgeneric:series_id ?series_id .
+
+		 BIND(iri(concat("http://bio2rdf.org/geo:",?series_id)) AS ?series_id_uri)
+
+		}  OPTIONAL {
+         ?s d2sgeneric:source_name_ch1 ?source_name_ch1 .
+
+		 BIND(iri(concat("http://bio2rdf.org/geo_resource:",MD5(?source_name_ch1))) AS ?source_name_ch1_uri)
+		}  OPTIONAL {
+         ?s d2sgeneric:organism_ch1 ?organism_ch1 .
+		 
+		 BIND(iri(concat("http://bio2rdf.org/geo_resource:",MD5(?organism_ch1))) AS ?organism_ch1_uri)
+			
+		} OPTIONAL {
+         ?s d2sgeneric:molecule_ch1 ?molecule_ch1 .
+
+		 BIND(iri(concat("http://bio2rdf.org/geo_resource:",MD5(?molecule_ch1))) AS ?molecule_ch1_uri)
+
+		} OPTIONAL {
+         ?s d2sgeneric:label_ch1 ?label_ch1 .
+
+		 BIND(iri(concat("http://bio2rdf.org/geo_resource:",MD5(?label_ch1))) AS ?label_ch1_uri)
+
+		} OPTIONAL {
+         ?s d2sgeneric:treatment_protocol_ch1 ?treatment_protocol_ch1 .
+
+		 BIND(iri(concat("http://bio2rdf.org/geo_resource:",MD5(?treatment_protocol_ch1))) AS ?treatment_protocol_ch1_uri)
+
+		} OPTIONAL {
+         ?s d2sgeneric:extract_protocol_ch1 ?extract_protocol_ch1 .
+
+		 BIND(iri(concat("http://bio2rdf.org/geo_resource:",MD5(?extract_protocol_ch1))) AS ?extract_protocol_ch1_uri)
+
+		} OPTIONAL {
+         ?s d2sgeneric:label_protocol_ch1 ?label_protocol_ch1 .
+
+		 BIND(iri(concat("http://bio2rdf.org/geo_resource:",MD5(?label_protocol_ch1))) AS ?label_protocol_ch1_uri)
+
+		}  OPTIONAL {
+         ?s d2sgeneric:source_name_ch2 ?source_name_ch2 .
+
+		 BIND(iri(concat("http://bio2rdf.org/geo_resource:",MD5(?source_name_ch2))) AS ?source_name_ch2_uri)
+		}  OPTIONAL {
+         ?s d2sgeneric:organism_ch2 ?organism_ch2 .
+		 
+		 BIND(iri(concat("http://bio2rdf.org/geo_resource:",MD5(?organism_ch2))) AS ?organism_ch2_uri)
+			
+		} OPTIONAL {
+         ?s d2sgeneric:molecule_ch2 ?molecule_ch2 .
+
+		 BIND(iri(concat("http://bio2rdf.org/geo_resource:",MD5(?molecule_ch2))) AS ?molecule_ch2_uri)
+
+		} OPTIONAL {
+         ?s d2sgeneric:label_ch2 ?label_ch2 .
+
+		 BIND(iri(concat("http://bio2rdf.org/geo_resource:",MD5(?label_ch2))) AS ?label_ch2_uri)
+
+		} OPTIONAL {
+         ?s d2sgeneric:treatment_protocol_ch2 ?treatment_protocol_ch2 .
+
+		 BIND(iri(concat("http://bio2rdf.org/geo_resource:",MD5(?treatment_protocol_ch2))) AS ?treatment_protocol_ch2_uri)
+
+		} OPTIONAL {
+         ?s d2sgeneric:extract_protocol_ch2 ?extract_protocol_ch2 .
+
+		 BIND(iri(concat("http://bio2rdf.org/geo_resource:",MD5(?extract_protocol_ch2))) AS ?extract_protocol_ch2_uri)
+
+		} OPTIONAL {
+         ?s d2sgeneric:label_protocol_ch2 ?label_protocol_ch2 .
+
+		 BIND(iri(concat("http://bio2rdf.org/geo_resource:",MD5(?label_protocol_ch2))) AS ?label_protocol_ch2_uri)
+
+		} OPTIONAL {
+         ?s d2sgeneric:hyb_protocol ?hyb_protocol .
+
+		 BIND(iri(concat("http://bio2rdf.org/geo_resource:",MD5(?hyb_protocol))) AS ?hyb_protocol_uri)
+
+		} OPTIONAL {
+         ?s d2sgeneric:last_update_date ?update_date .
+			
+		}  OPTIONAL {
+         ?s d2sgeneric:submission_date ?submission_date .
+			
+		} 
+	}
+}		

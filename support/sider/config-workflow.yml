@@ -1,0 +1,17 @@
+working_directory: /media/apc/DATA1/Maastricht/bio2rdf-github
+
+dataset: sider
+
+# R2RML params
+input_data_jdbc: "jdbc:drill:drillbit=drill:31010"
+sparql_tmp_graph_uri: "https://w3id.org/data2services/graph/autor2rml/sider"
+sparql_base_uri: "https://w3id.org/data2services/"
+#autor2rml_column_header: "test1,test2,test3,test5"
+
+# RdfUpload params
+sparql_triplestore_url: http://graphdb:7200
+sparql_triplestore_repository: sider
+
+
+sparql_transform_queries_path: /data/mapping/sider/transform
+sparql_insert_metadata_path: /data/mapping/sider/metadata

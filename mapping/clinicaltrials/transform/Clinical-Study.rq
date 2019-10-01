@@ -1,0 +1,428 @@
+PREFIX rr: <http://www.w3.org/ns/r2rml#> 
+PREFIX dc: <http://purl.org/dc/elements/1.1/> 
+PREFIX dbo: <http://dbpedia.org/ontology/> 
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> 
+PREFIX owl: <http://www.w3.org/2002/07/owl#> 
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#> 
+PREFIX rml: <http://semweb.mmlab.be/ns/rml#> 
+PREFIX ql: <http://semweb.mmlab.be/ns/ql#> 
+PREFIX d2rq: <http://www.wiwiss.fu-berlin.de/suhl/bizer/D2RQ/0.1#> 
+PREFIX clinicaltrials_vocabulary: <http://bio2rdf.org/clinicaltrials_vocabulary:> 
+PREFIX bio2rdf_vocabulary: <http://bio2rdf.org/bio2rdf_vocabulary:> 
+PREFIX x2rm: <http://ids.unimaas.nl/xml2rdf/model#>
+
+INSERT
+{
+	GRAPH <https://w3id.org/data2services/graph/clinicaltrials>{
+		
+		?uri	a clinicaltrials_vocabulary:Resource;
+			rdf:type clinicaltrials_vocabulary:Clinical-Study;
+			dc:identifier ?nctId;
+			rdfs:label ?label;
+			dc:title ?title;
+			bio2rdf_vocabulary:namespace "clinicaltrials";
+			bio2rdf_vocabulary:identifier ?id;
+			bio2rdf_vocabulary:uri ?uri;
+
+			clinicaltrials_vocabulary:nct-id ?id;
+			clinicaltrials_vocabulary:org-study-id ?org_study_id;
+			clinicaltrials_vocabulary:secondary-id ?secondary_id;
+			clinicaltrials_vocabulary:brief-title ?title;
+			clinicaltrials_vocabulary:official-title ?official_title;
+			clinicaltrials_vocabulary:brief-summary ?brief_summary_text;
+			clinicaltrials_vocabulary:detailed-description ?detailed_description_text;
+			clinicaltrials_vocabulary:acronym ?acronym;
+			clinicaltrials_vocabulary:download-date ?download_date;
+			clinicaltrials_vocabulary:url ?url;
+			clinicaltrials_vocabulary:lead-sponsor ?lead_agency_uri;
+			clinicaltrials_vocabulary:collaborator ?collaborator_agency_uri;
+			clinicaltrials_vocabulary:source ?source;
+			clinicaltrials_vocabulary:oversight ?oversight_info_uri;
+			clinicaltrials_vocabulary:overall-status ?overall_status_uri;
+			clinicaltrials_vocabulary:why-stopped ?why_stopped;
+			clinicaltrials_vocabulary:start-date ?start_date;
+			clinicaltrials_vocabulary:end-date ?end_date;
+			clinicaltrials_vocabulary:completion-date ?completion_date;
+			clinicaltrials_vocabulary:primary-completion-date ?primary_completion_date;
+			clinicaltrials_vocabulary:verification-date ?verification_date;
+			clinicaltrials_vocabulary:lastchanged-date ?lastchanged_date;
+			clinicaltrials_vocabulary:firstreceived-date ?firstreceived_date;
+			clinicaltrials_vocabulary:firstreceived-results-date ?firstreceived_results_date;
+			clinicaltrials_vocabulary:phase ?phase_uri;
+			clinicaltrials_vocabulary:study-type ?study_type_uri;
+			clinicaltrials_vocabulary:study-design ?study_design_uri;
+			clinicaltrials_vocabulary:target-duration ?target_duration;
+			clinicaltrials_vocabulary:primary-outcome ?primary_outcome_uri;
+			clinicaltrials_vocabulary:secondary-outcome ?secondary_outcome_uri;
+			clinicaltrials_vocabulary:other-outcome ?other_outcome_uri;
+			clinicaltrials_vocabulary:number-of-arms ?number_of_arms;
+			clinicaltrials_vocabulary:number-of-groups ?number_of_groups;
+			clinicaltrials_vocabulary:enrollment ?enrollment;
+			clinicaltrials_vocabulary:condition ?condition_uri;
+			clinicaltrials_vocabulary:arm-group ?arm_group_uri;
+			clinicaltrials_vocabulary:intervention ?intervention_uri;
+			clinicaltrials_vocabulary:eligibility ?eligibility_uri;
+			clinicaltrials_vocabulary:biospec-retention ?biospec_retention;
+			clinicaltrials_vocabulary:biospec-descr ?biospec_descr_uri;
+			clinicaltrials_vocabulary:overall-official ?overall_official_uri;
+			clinicaltrials_vocabulary:overall-contact ?overall_contact_uri;
+			clinicaltrials_vocabulary:overall-contact-backup ?overall_contact_backup_uri;
+			clinicaltrials_vocabulary:location ?location_uri;
+			clinicaltrials_vocabulary:country ?country_uri;
+			clinicaltrials_vocabulary:country ?rcountry_uri;
+			clinicaltrials_vocabulary:reference ?reference_uri;
+			clinicaltrials_vocabulary:result-reference ?rreference_uri;
+			clinicaltrials_vocabulary:responsible_party ?responsible_party_uri;
+			clinicaltrials_vocabulary:keyword ?keyword;
+			clinicaltrials_vocabulary:condition-mesh ?mesh_uri;
+			clinicaltrials_vocabulary:clinical-result ?clinical_result_uri;
+			clinicaltrials_vocabulary:baseline ?baseline_uri;
+			clinicaltrials_vocabulary:outcome ?outcome_list_uri;
+			clinicaltrials_vocabulary:reported-events ?reported_events_uri;
+			
+	}
+}
+WHERE {
+    GRAPH <https://w3id.org/data2services/graph/xml2rdf> {
+		
+		?s rdf:type x2rm:clinical_study.
+
+		?s x2rm:child:id_info ?id_info.
+		
+
+		?id_info  x2rm:child:nct_id  [
+			  x2rm:hasValue ?id.
+		];	
+
+		?s x2rm:child:brief_title [
+    			x2rm:hasValue ?title.
+		];
+
+		?id_info  x2rm:child:org_study_id [
+			  x2rm:hasValue ?org_study_id.
+		];
+
+		OPTIONAL{
+			?id_info  x2rm:child:secondary_id [
+				  x2rm:hasValue ?secondary_id.
+			];
+		} OPTIONAL{
+			?id_info  x2rm:child:nct_alias [
+				  x2rm:hasValue ?nct_alias.
+			];
+		} OPTIONAL{
+			?s  x2rm:child:official_title [
+				  x2rm:hasValue ?official_title.
+			];
+		} OPTIONAL{
+			?s x2rm:child:brief_summary ?brief_summary.
+			?brief_summary  x2rm:child:textblock [
+				  x2rm:hasValue ?brief_summary_text.
+			];
+		} OPTIONAL{
+			?s x2rm:child:detailed_description ?detailed_description.
+			?detailed_description  x2rm:child:textblock [
+				  x2rm:hasValue ?detailed_description_text.
+			];
+		} OPTIONAL{
+			?s  x2rm:child:acronym [
+				  x2rm:hasValue ?acronym.
+			];
+		} OPTIONAL{
+			?s x2rm:child:required_header ?required_header.
+			?required_header  x2rm:child:download_date [
+				  x2rm:hasValue ?download_date.
+			];
+		} OPTIONAL{
+			?s x2rm:child:required_header ?required_header.
+			?required_header  x2rm:child:url [
+				  x2rm:hasValue ?url.
+			];
+		} OPTIONAL{
+			?s x2rm:child:sponsors ?sponsers.
+			?sponsers x2rm:child:lead_sponsor ?sponsor.
+			
+			OPTIONAL{
+				?sponsor  x2rm:child:agency_class [
+					  x2rm:hasValue ?agency_class
+				];
+				BIND(iri(concat("http://bio2rdf.org/clinicaltrials_resource:",MD5(?agency_class))) AS ?lead_agency_class_uri)
+			} OPTIONAL {
+				?sponsor  x2rm:child:agency [
+					  x2rm:hasValue ?agency
+				];
+				BIND(iri(concat("http://bio2rdf.org/clinicaltrials_resource:",MD5(?agency))) AS ?lead_agency_uri)
+			}
+		} OPTIONAL{
+			?s x2rm:child:sponsors ?sponsers.
+			?sponsers x2rm:child:collaborator ?sponsor.
+			
+			OPTIONAL{
+				?sponsor  x2rm:child:agency_class [
+					  x2rm:hasValue ?agency_class
+				];
+				BIND(iri(concat("http://bio2rdf.org/clinicaltrials_resource:",MD5(?agency_class))) AS ?collaborator_agency_class_uri)
+			} OPTIONAL {
+				?sponsor  x2rm:child:agency [
+					  x2rm:hasValue ?agency
+				];
+				BIND(iri(concat("http://bio2rdf.org/clinicaltrials_resource:",MD5(?agency))) AS ?collaborator_agency_uri)
+			}
+		} OPTIONAL{
+			?s  x2rm:child:source [
+				  x2rm:hasValue ?sourceR.
+			];
+			BIND(iri(concat("http://bio2rdf.org/clinicaltrials_resource:",MD5(?sourceR)) AS ?source)
+		} OPTIONAL{
+			?s  x2rm:child:oversight_info [
+				  x2rm:hasValue ?oversight_info.
+			];
+			BIND(iri(concat("http://bio2rdf.org/clinicaltrials_resource:",MD5(?oversight_info))) AS ?oversight_info_uri)
+		} OPTIONAL{
+			?s  x2rm:child:overall_status [
+				  x2rm:hasValue ?overall_status.
+			];
+			BIND(iri(concat("http://bio2rdf.org/clinicaltrials_resource:",MD5(?overall_status))) AS ?overall_status_uri)
+		} OPTIONAL{
+			?s  x2rm:child:why_stopped [
+				  x2rm:hasValue ?why_stopped.
+			];
+		} OPTIONAL{
+			?s  x2rm:child:start_date [
+				  x2rm:hasValue ?start_date.
+			];
+		} OPTIONAL{
+			?s  x2rm:child:end_date [
+				  x2rm:hasValue ?end_date.
+			];
+		} OPTIONAL{
+			?s  x2rm:child:completion_date [
+				  x2rm:hasValue ?completion_date.
+			];
+		} OPTIONAL{
+			?s  x2rm:child:primary_completion_date [
+				  x2rm:hasValue ?primary_completion_date.
+			];
+		} OPTIONAL{
+			?s  x2rm:child:verification_date [
+				  x2rm:hasValue ?verification_date.
+			];
+		} OPTIONAL{
+			?s  x2rm:child:lastchanged_date [
+				  x2rm:hasValue ?lastchanged_date.
+			];
+		} OPTIONAL{
+			?s  x2rm:child:firstreceived_date [
+				  x2rm:hasValue ?firstreceived_date.
+			];
+		} OPTIONAL{
+			?s  x2rm:child:firstreceived_results_date [
+				  x2rm:hasValue ?firstreceived_results_date.
+			];
+		} OPTIONAL{
+			?s  x2rm:child:phase [
+				  x2rm:hasValue ?phase.
+			];
+			BIND(iri(concat("http://bio2rdf.org/clinicaltrials_resource:",MD5(?phase))) AS ?phase_uri)
+		} OPTIONAL{
+			?s  x2rm:child:study_type [
+				  x2rm:hasValue ?study_type.
+			];
+			BIND(iri(concat("http://bio2rdf.org/clinicaltrials_resource:",MD5(?study_type))) AS ?study_type_uri)
+		} OPTIONAL{
+			?s  x2rm:child:study_design_info ?study
+
+			?study  x2rm:hasValue ?study_design_id.
+
+			BIND(iri(concat("http://bio2rdf.org/clinicaltrials_resource:",?study_design_id)) AS ?study_design_uri)
+		} OPTIONAL{
+			?s  x2rm:child:target_duration [
+				  x2rm:hasValue ?target_duration.
+			];
+		} OPTIONAL{
+			?s x2rm:child:primary_outcome ?primary_outcome.
+
+			?primary_outcome  x2rm:hasValue ?primary_outcome_id.
+
+			BIND(iri(concat("http://bio2rdf.org/clinicaltrials_resource:",?primary_outcome_id)) AS ?primary_outcome_uri)	
+		} OPTIONAL{
+			?s x2rm:child:secondary_outcome ?secondary_outcome.
+
+			?secondary_outcome x2rm:hasValue ?secondary_outcome_id.
+
+			BIND(iri(concat("http://bio2rdf.org/clinicaltrials_resource:",?secondary_outcome_id)) AS ?secondary_outcome_uri)	
+		} OPTIONAL{
+			?s x2rm:child:other_outcome ?other_outcome.
+
+			?other_outcome  x2rm:hasValue ?other_outcome_id.
+
+			BIND(iri(concat("http://bio2rdf.org/clinicaltrials_resource:",?other_outcome_id)) AS ?other_outcome_uri)	
+		} OPTIONAL{
+			?s  x2rm:child:number_of_arms [
+				  x2rm:hasValue ?number_of_arms.
+			];
+		} OPTIONAL{
+			?s  x2rm:child:number_of_groups [
+				  x2rm:hasValue ?number_of_groups.
+			];
+		} OPTIONAL{
+			?s  x2rm:child:enrollment [
+				  x2rm:hasValue ?enrollment.
+			];
+		} OPTIONAL{
+			?s  x2rm:child:condition [
+				  x2rm:hasValue ?condition.
+			];
+			BIND(iri(concat("http://bio2rdf.org/clinicaltrials_resource:",MD5(?condition))) AS ?condition_uri)
+		} OPTIONAL{
+			?s x2rm:child:arm_group ?arm_group.
+			?arm_group  x2rm:child:arm_group_label [
+				  x2rm:hasValue ?arm_group_label.
+			];
+			BIND(iri(concat("http://bio2rdf.org/clinicaltrials:",?id,"/arm-group/",MD5(?arm_group_label))) AS ?arm_group_uri)
+		} OPTIONAL{
+			?s x2rm:child:intervention ?intervention.
+			?intervention  x2rm:child:intervention_name [
+				  x2rm:hasValue ?intervention_name.
+			];
+			BIND(iri(concat("http://bio2rdf.org/clinicaltrials_resource:",,MD5(?intervention_name))) AS ?intervention_uri)
+		} OPTIONAL{
+			?s x2rm:child:eligibility ?eligibility.
+			
+			BIND(iri(concat("http://bio2rdf.org/clinicaltrials_resource:",,MD5(?eligibility))) AS ?eligibility_uri)
+		} OPTIONAL{
+			?s  x2rm:child:biospec_retention [
+				  x2rm:hasValue ?biospec_retention.
+			];
+
+		} OPTIONAL{
+			?s  x2rm:child:biospec_descr [
+				  x2rm:hasValue ?biospec_descr.
+			];
+
+		} OPTIONAL{
+			?s  x2rm:child:overall_official [
+				  x2rm:hasValue ?overall_official.
+			];
+			BIND(iri(concat("http://bio2rdf.org/clinicaltrials_resource:",?overall_official)) AS ?overall_official_uri)
+		} OPTIONAL{
+			?s  x2rm:child:overall_contact [
+				  x2rm:hasValue ?overall_contact.
+			];
+			BIND(iri(concat("http://bio2rdf.org/clinicaltrials_resource:",?overall_contact)) AS ?overall_contact_uri)
+		} OPTIONAL{
+			?s  x2rm:child:overall_contact_backup [
+				  x2rm:hasValue ?overall_contact_backup.
+			];
+			BIND(iri(concat("http://bio2rdf.org/clinicaltrials_resource:",?overall_contact_backup)) AS ?overall_contact_backup_uri)
+		} OPTIONAL{
+			?s  x2rm:child:location ?location.
+			?location  x2rm:child:facility ?facility.
+
+			?facility  x2rm:child:name [
+				  x2rm:hasValue ?facility_name.
+			];
+			
+			BIND(iri(concat("http://bio2rdf.org/clinicaltrials_resource:",,MD5(?facility_name))) AS ?location_uri)
+		} OPTIONAL{
+			?s  x2rm:child:location_countries ?location_countries.
+
+			?location_countries  x2rm:child:country [
+				  x2rm:hasValue ?country.
+			];
+			
+			BIND(iri(concat("http://bio2rdf.org/clinicaltrials_resource:",,MD5(?country))) AS ?country_uri)
+		} OPTIONAL{
+			?s  x2rm:child:removed_countries ?removed_countries.
+
+			?removed_countries  x2rm:child:country [
+				  x2rm:hasValue ?rcountry.
+			];
+			
+			BIND(iri(concat("http://bio2rdf.org/clinicaltrials_resource:",,MD5(?rcountry))) AS ?rcountry_uri)
+		} OPTIONAL{
+			?s  x2rm:child:reference ?reference.
+
+			?reference  x2rm:child:PMID [
+				  x2rm:hasValue ?PMID.
+			];
+			
+			BIND(iri(concat("http://bio2rdf.org/pubmed:",?PMID)) AS ?pubmed_uri)
+		} OPTIONAL{
+			?s  x2rm:child:result_reference ?result_reference.
+
+			?result_reference  x2rm:child:PMID [
+				  x2rm:hasValue ?rPMID.
+			];
+			
+			BIND(iri(concat("http://bio2rdf.org/pubmed:",?rPMID)) AS ?rpubmed_uri)
+		} OPTIONAL{
+			?s  x2rm:child:responsible_party ?responsible_party.
+
+			?responsible_party  x2rm:child:responsible_party_type [
+				  x2rm:hasValue ?rPMID.
+			];
+			
+			BIND(iri(concat("http://bio2rdf.org/clinicaltrials_resource:",MD5(?responsible_party))) AS ?responsible_party_uri)
+		} OPTIONAL{
+			
+			?s  x2rm:child:keyword [
+				  x2rm:hasValue ?keyword.
+			];	
+		} OPTIONAL{
+
+			?responsible_party  x2rm:child:mesh_term [
+				  x2rm:hasValue ?mesh_term.
+			];
+			
+			BIND(iri(concat("http://bio2rdf.org/clinicaltrials_resource:",MD5(?mesh_term))) AS ?mesh_term_uri)
+		} OPTIONAL{
+			
+			?s  x2rm:child:is_fda_regulated [
+				  x2rm:hasValue ?is_fda_regulated.
+			];	
+		} OPTIONAL{
+			
+			?s  x2rm:child:is_section_801 [
+				  x2rm:hasValue ?is_section_801.
+			];	
+		} OPTIONAL{
+			
+			?s  x2rm:child:has_expanded_access [
+				  x2rm:hasValue ?has_expanded_access.
+			];	
+		} OPTIONAL{
+
+			?s  x2rm:child:clinical_results [
+				  x2rm:hasValue ?clinical_results.
+			];
+			
+			BIND(iri(concat("http://bio2rdf.org/clinicaltrials_resource:",MD5(?clinical_results))) AS ?clinical_results_uri)
+		} OPTIONAL{
+
+			BIND(iri(concat("http://bio2rdf.org/clinicaltrials:",?id,"/baseline")) AS ?baseline_uri)
+		} OPTIONAL{
+
+			?s  x2rm:child:outcome_list [
+				  x2rm:hasValue ?outcome_list.
+			];
+			
+			BIND(iri(concat("http://bio2rdf.org/clinicaltrials:",?id,?outcome_list)) AS ?outcome_list_uri)
+		} OPTIONAL{
+
+			?s  x2rm:child:reported_events [
+				  x2rm:hasValue ?reported_events.
+			];
+			
+			BIND(iri(concat("http://bio2rdf.org/clinicaltrials_resource:",?reported_events)) AS ?reported_events_uri)
+		}
+
+		BIND (concat("clinicaltrials:",?id) AS ?nctId)
+
+		BIND ( concat(?title , " [clinicaltrials:", ?id, "] ") AS ?label )
+		 
+		BIND(iri(concat("http://bio2rdf.org/clinicaltrials:",?id)) AS ?uri)
+		
+	}
+}		
+

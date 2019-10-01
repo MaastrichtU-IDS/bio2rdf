@@ -45,9 +45,9 @@ INSERT
 	}
 }
 WHERE {
-    GRAPH <https://w3id.org/data2services/graph/autor2rml> {
+    GRAPH <https://w3id.org/data2services/graph/autor2rml/pharmgkb> {
 
-		?s rdf:type <https://w3id.org/data2services/data/input/pharmgkb/clinical_ann_metadata.tsv>.
+		?s rdf:type <https://w3id.org/data2services/data/input/pharmgkb/annotations/clinical_ann_metadata.tsv>.
 		
 		?s d2sgeneric:ClinicalAnnotationId ?accessionID .
 		
@@ -64,7 +64,8 @@ WHERE {
 		} OPTIONAL {
          	 ?s d2sgeneric:ClinicalAnnotationTypes ?clinical_annotation_type .
 		} OPTIONAL {
-         	 ?s d2sgeneric:GenotypePhenotypeIds ?geno_pheno_mapping .
+         	 ?s d2sgeneric:GenotypePhenotypeIds ?geno_pheno_mappingR .
+		 BIND ( iri(concat("http://bio2rdf.org/pharmgkb:", ?geno_pheno_mappingR)) AS ?geno_pheno_mapping )
 		} OPTIONAL {
          	 ?s d2sgeneric:AnnotationText  ?annotation_text .
 		} OPTIONAL {
@@ -72,7 +73,8 @@ WHERE {
 		} OPTIONAL {
          	 ?s d2sgeneric:VariantAnnotationsIds ?variant_annotation_id .
 		} OPTIONAL {
-         	 ?s d2sgeneric:Pmids ?pmids .
+         	 ?s d2sgeneric:Pmids ?pmidsR .
+		 BIND ( iri(concat("http://bio2rdf.org/pubmed:", ?pmidsR)) AS ?pmids )
 		} OPTIONAL {
          	 ?s d2sgeneric:EvidenceCount ?evidence_count .
 		} OPTIONAL {

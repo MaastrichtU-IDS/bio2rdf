@@ -1,0 +1,215 @@
+working_directory: /media/apc/DATA1/Maastricht/bio2rdf-github
+
+dataset: pharmgkb
+
+# R2RML params
+input_data_jdbc: "jdbc:drill:drillbit=drill:31010"
+sparql_tmp_graph_uri: "https://w3id.org/data2services/graph/autor2rml/pharmgkb"
+sparql_base_uri: "https://w3id.org/data2services/"
+#autor2rml_column_header: "test1,test2,test3,test5"
+
+# RdfUpload params
+sparql_triplestore_url: http://graphdb:7200
+sparql_triplestore_repository: pharmgkb
+
+sparql_transform_queries_path: /data/mapping/pharmgkb/transform
+sparql_insert_metadata_path: /data/mapping/pharmgkb/metadata
+
+
+# Split params
+split_property_0: https://w3id.org/data2services/model/Pmids
+split_class_0: https://w3id.org/data2services/data/input/pharmgkb/relationships/relationships.tsv
+split_delimiter_0: ";"
+
+split_property_1: https://w3id.org/data2services/model/GenericNames
+split_class_1: https://w3id.org/data2services/data/input/pharmgkb/chemicals/chemicals.tsv
+split_delimiter_1: ','
+
+split_property_2: https://w3id.org/data2services/model/TradeNames
+split_class_2: https://w3id.org/data2services/data/input/pharmgkb/chemicals/chemicals.tsv
+split_delimiter_2: ','
+
+split_property_3: https://w3id.org/data2services/model/BrandMixtures
+split_class_3: https://w3id.org/data2services/data/input/pharmgkb/chemicals/chemicals.tsv
+split_delimiter_3: ','
+
+split_property_4: https://w3id.org/data2services/model/AtcIdentifiers
+split_class_4: https://w3id.org/data2services/data/input/pharmgkb/chemicals/chemicals.tsv
+split_delimiter_4: ','
+
+split_property_5: https://w3id.org/data2services/model/PubchemCompoundIdentifiers
+split_class_5: https://w3id.org/data2services/data/input/pharmgkb/chemicals/chemicals.tsv
+split_delimiter_5: ','
+
+split_property_6: https://w3id.org/data2services/model/CrossReferences
+split_class_6: https://w3id.org/data2services/data/input/pharmgkb/chemicals/chemicals.tsv
+split_delimiter_6: ','
+
+split_property_7: https://w3id.org/data2services/model/ExternalVocabulary
+split_class_7: https://w3id.org/data2services/data/input/pharmgkb/chemicals/chemicals.tsv
+split_delimiter_7: ','
+
+
+split_property_8: https://w3id.org/data2services/model/GenericNames
+split_class_8: https://w3id.org/data2services/data/input/pharmgkb/drugs/drugs.tsv
+split_delimiter_8: ','
+
+split_property_9: https://w3id.org/data2services/model/TradeNames
+split_class_9: https://w3id.org/data2services/data/input/pharmgkb/drugs/drugs.tsv
+split_delimiter_9: ','
+
+split_property_10: https://w3id.org/data2services/model/BrandMixtures
+split_class_10: https://w3id.org/data2services/data/input/pharmgkb/drugs/drugs.tsv
+split_delimiter_10: ','
+
+split_property_11: https://w3id.org/data2services/model/AtcIdentifiers
+split_class_11: https://w3id.org/data2services/data/input/pharmgkb/drugs/drugs.tsv
+split_delimiter_11: ','
+
+split_property_12: https://w3id.org/data2services/model/PubchemCompoundIdentifiers
+split_class_12: https://w3id.org/data2services/data/input/pharmgkb/drugs/drugs.tsv
+split_delimiter_12: ','
+
+split_property_13: https://w3id.org/data2services/model/CrossReferences
+split_class_13: https://w3id.org/data2services/data/input/pharmgkb/drugs/drugs.tsv
+split_delimiter_13: ','
+
+split_property_14: https://w3id.org/data2services/model/ExternalVocabulary
+split_class_14: https://w3id.org/data2services/data/input/pharmgkb/drugs/drugs.tsv
+split_delimiter_14: ','
+
+
+
+split_property_15: https://w3id.org/data2services/model/GeneIds
+split_class_15: https://w3id.org/data2services/data/input/pharmgkb/variants/variants.tsv
+split_delimiter_15: ','
+
+split_property_16: https://w3id.org/data2services/model/GeneSymbols
+split_class_16: https://w3id.org/data2services/data/input/pharmgkb/variants/variants.tsv
+split_delimiter_16: ','
+
+split_property_17: https://w3id.org/data2services/model/Synonyms
+split_class_17: https://w3id.org/data2services/data/input/pharmgkb/variants/variants.tsv
+split_delimiter_17: ','
+
+
+split_property_18: https://w3id.org/data2services/model/AlternateNames
+split_class_18: https://w3id.org/data2services/data/input/pharmgkb/phenotypes/phenotypes.tsv
+split_delimiter_18: ','
+
+split_property_19: https://w3id.org/data2services/model/CrossReferences
+split_class_19: https://w3id.org/data2services/data/input/pharmgkb/phenotypes/phenotypes.tsv
+split_delimiter_19: ','
+
+split_property_20: https://w3id.org/data2services/model/ExternalVocabulary
+split_class_20: https://w3id.org/data2services/data/input/pharmgkb/phenotypes/phenotypes.tsv
+split_delimiter_20: ','
+
+
+
+split_property_21: https://w3id.org/data2services/model/Ensembl.id
+split_class_21: https://w3id.org/data2services/data/input/pharmgkb/genes/genes.tsv
+split_delimiter_21: ','
+
+split_property_22: https://w3id.org/data2services/model/Alternate.names
+split_class_22: https://w3id.org/data2services/data/input/pharmgkb/genes/genes.tsv
+split_delimiter_22: ','
+
+split_property_23: https://w3id.org/data2services/model/Alternate.symbols
+split_class_23: https://w3id.org/data2services/data/input/pharmgkb/genes/genes.tsv
+split_delimiter_23: ','
+
+split_property_24: https://w3id.org/data2services/model/Cross.references
+split_class_24: https://w3id.org/data2services/data/input/pharmgkb/genes/genes.tsv
+split_delimiter_24: ','
+
+
+
+split_property_25: https://w3id.org/data2services/model/Location
+split_class_25: https://w3id.org/data2services/data/input/pharmgkb/annotations/clinical_ann_metadata.tsv
+split_delimiter_25: ','
+
+split_property_26: https://w3id.org/data2services/model/Gene
+split_class_26: https://w3id.org/data2services/data/input/pharmgkb/annotations/clinical_ann_metadata.tsv
+split_delimiter_26: ','
+
+split_property_27: https://w3id.org/data2services/model/ClinicalAnnotationTypes
+split_class_27: https://w3id.org/data2services/data/input/pharmgkb/annotations/clinical_ann_metadata.tsv
+split_delimiter_27: ','
+
+split_property_28: https://w3id.org/data2services/model/GenotypePhenotypeIds
+split_class_28: https://w3id.org/data2services/data/input/pharmgkb/annotations/clinical_ann_metadata.tsv
+split_delimiter_28: ','
+
+split_property_29: https://w3id.org/data2services/model/VariantAnnotations
+split_class_29: https://w3id.org/data2services/data/input/pharmgkb/annotations/clinical_ann_metadata.tsv
+split_delimiter_29: ','
+
+split_property_30: https://w3id.org/data2services/model/Pmids
+split_class_30: https://w3id.org/data2services/data/input/pharmgkb/annotations/clinical_ann_metadata.tsv
+split_delimiter_30: ','
+
+split_property_31: https://w3id.org/data2services/model/RelatedChemicals
+split_class_31: https://w3id.org/data2services/data/input/pharmgkb/annotations/clinical_ann_metadata.tsv
+split_delimiter_31: ','
+
+split_property_32: https://w3id.org/data2services/model/RelatedDiseases
+split_class_32: https://w3id.org/data2services/data/input/pharmgkb/annotations/clinical_ann_metadata.tsv
+split_delimiter_32: ','
+
+
+
+split_property_33: https://w3id.org/data2services/model/Variant
+split_class_33: https://w3id.org/data2services/data/input/pharmgkb/annotations/var_drug_ann.tsv
+split_delimiter_33: ','
+
+split_property_34: https://w3id.org/data2services/model/Gene
+split_class_34: https://w3id.org/data2services/data/input/pharmgkb/annotations/var_drug_ann.tsv
+split_delimiter_34: ','
+
+split_property_35: https://w3id.org/data2services/model/Chemical
+split_class_35: https://w3id.org/data2services/data/input/pharmgkb/annotations/var_drug_ann.tsv
+split_delimiter_35: ','
+
+split_property_36: https://w3id.org/data2services/model/PhenotypeCategory
+split_class_36: https://w3id.org/data2services/data/input/pharmgkb/annotations/var_drug_ann.tsv
+split_delimiter_36: ','
+
+
+split_property_37: https://w3id.org/data2services/model/Variant
+split_class_37: https://w3id.org/data2services/data/input/pharmgkb/annotations/var_fa_ann.tsv
+split_delimiter_37: ','
+
+split_property_38: https://w3id.org/data2services/model/Gene
+split_class_38: https://w3id.org/data2services/data/input/pharmgkb/annotations/var_fa_ann.tsv
+split_delimiter_38: ','
+
+split_property_39: https://w3id.org/data2services/model/Chemical
+split_class_39: https://w3id.org/data2services/data/input/pharmgkb/annotations/var_fa_ann.tsv
+split_delimiter_39: ','
+
+split_property_40: https://w3id.org/data2services/model/PhenotypeCategory
+split_class_40: https://w3id.org/data2services/data/input/pharmgkb/annotations/var_fa_ann.tsv
+split_delimiter_40: ','
+
+
+
+split_property_41: https://w3id.org/data2services/model/Variant
+split_class_41: https://w3id.org/data2services/data/input/pharmgkb/annotations/var_pheno_ann.tsv
+split_delimiter_41: ','
+
+split_property_42: https://w3id.org/data2services/model/Gene
+split_class_42: https://w3id.org/data2services/data/input/pharmgkb/annotations/var_pheno_ann.tsv
+split_delimiter_42: ','
+
+split_property_43: https://w3id.org/data2services/model/Chemical
+split_class_43: https://w3id.org/data2services/data/input/pharmgkb/annotations/var_pheno_ann.tsv
+split_delimiter_43: ','
+
+split_property_44: https://w3id.org/data2services/model/PhenotypeCategory
+split_class_44: https://w3id.org/data2services/data/input/pharmgkb/annotations/var_pheno_ann.tsv
+split_delimiter_44: ','
+
+
+
+

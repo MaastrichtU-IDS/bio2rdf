@@ -1,9 +1,17 @@
 graphdb
 graphdb-import
+virtuoso
 *.tsv
 *.csv
 *.xml
+*.pdf
+*.doc
+*.docx
+*.odt
+*.txt
 *.nq
 *.properties
 *.trig
 input/*
+output/*
+data2services-cwl-workflows

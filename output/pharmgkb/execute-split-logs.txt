@@ -1,5 +1,0 @@
-Split buffer size: 1000000
-SELECT ?s ?p ?toSplit ?g WHERE {    GRAPH ?g {    	?s a <https://w3id.org/data2services/data/input/pharmgkb/relationships.tsv> ;      ?p ?toSplit .    	FILTER(?p = <https://w3id.org/data2services/model/Pmids>).FILTER(regex(?toSplit, ';'))    } }
-
-
-DELETE { GRAPH ?g {?s ?p ?o.} }WHERE {GRAPH ?g {?s a <https://w3id.org/data2services/data/input/pharmgkb/relationships.tsv> ;?p ?o .FILTER(?p = <https://w3id.org/data2services/model/Pmids>).FILTER(regex(?o, ';'))} } 

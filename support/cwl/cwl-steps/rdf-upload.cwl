@@ -10,7 +10,7 @@ baseCommand: [docker, run]
 
 arguments: [ "--rm", "--link","graphdb:graphdb", "-v" , "$(inputs.working_directory):/data", "-v", "$(runtime.outdir):/tmp", 
 "-v", "$(inputs.nquads_file.path):/tmp/$(inputs.nquads_file.basename)", 
-"vemonet/rdf-upload", "-if", "/tmp/$(inputs.nquads_file.basename)"]
+"vemonet/rdf-upload:bio2rdf5", "-if", "/tmp/$(inputs.nquads_file.basename)"]
 
 inputs:
   

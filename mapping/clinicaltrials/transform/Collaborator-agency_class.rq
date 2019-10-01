@@ -1,0 +1,51 @@
+PREFIX rr: <http://www.w3.org/ns/r2rml#> 
+PREFIX dc: <http://purl.org/dc/elements/1.1/> 
+PREFIX dbo: <http://dbpedia.org/ontology/> 
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> 
+PREFIX owl: <http://www.w3.org/2002/07/owl#> 
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#> 
+PREFIX rml: <http://semweb.mmlab.be/ns/rml#> 
+PREFIX ql: <http://semweb.mmlab.be/ns/ql#> 
+PREFIX d2rq: <http://www.wiwiss.fu-berlin.de/suhl/bizer/D2RQ/0.1#> 
+PREFIX clinicaltrials_vocabulary: <http://bio2rdf.org/clinicaltrials_vocabulary:> 
+PREFIX bio2rdf_vocabulary: <http://bio2rdf.org/bio2rdf_vocabulary:> 
+PREFIX x2rm: <http://ids.unimaas.nl/xml2rdf/model#>
+
+INSERT
+{
+	GRAPH <https://w3id.org/data2services/graph/clinicaltrials>{
+		
+		?uri	a clinicaltrials_vocabulary:Resource;
+			rdf:type clinicaltrials_vocabulary:Organization;
+			dc:identifier ?entId;
+			rdfs:label ?label;
+			dc:title ?title;
+			bio2rdf_vocabulary:namespace "clinicaltrials";
+			bio2rdf_vocabulary:identifier ?id;
+			bio2rdf_vocabulary:uri ?uri;
+		
+	}
+}
+WHERE {
+    GRAPH <https://w3id.org/data2services/graph/xml2rdf> {
+		
+		?s rdf:type x2rm:clinical_study.
+
+		?s x2rm:child:sponsors ?sponsers.
+		?sponsers x2rm:child:collaborator ?sponsor.
+		
+		?sponsor  x2rm:child:agency_class [
+		  x2rm:hasValue ?agency_class
+		];
+		
+		BIND (MD5(?agency_class) AS ?id)
+
+		BIND (concat("clinicaltrials_resource:",?id) AS ?entId)
+
+		BIND ( concat(?agency_class , " [clinicaltrials_resource:", ?id, "] ") AS ?label )
+ 
+		BIND(iri(concat("http://bio2rdf.org/clinicaltrials_resource:",?id)) AS ?uri)	
+		
+	}
+}		
+

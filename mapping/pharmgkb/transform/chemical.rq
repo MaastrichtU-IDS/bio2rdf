@@ -33,7 +33,7 @@ INSERT
 			pharmgkb_vocabulary:smiles ?smiles;
 			pharmgkb_vocabulary:x-atc ?atc;
 			pharmgkb_vocabulary:x-pubchemcompound ?pubchem;
-			pharmgkb_vocabulary:generic_name ?genericName;
+			pharmgkb_vocabulary:generic-name ?genericName;
 			pharmgkb_vocabulary:trade_name ?trade_name;
 			pharmgkb_vocabulary:brand_mixture ?brand_mixture; 
 			pharmgkb_vocabulary:x-rxnorm ?rxnorm;
@@ -43,9 +43,9 @@ INSERT
 	}
 }
 WHERE {
-    GRAPH <https://w3id.org/data2services/graph/autor2rml> {
+    GRAPH <https://w3id.org/data2services/graph/autor2rml/pharmgkb> {
 		
-		?s rdf:type <https://w3id.org/data2services/data/input/pharmgkb/chemicals.tsv>.
+		?s rdf:type <https://w3id.org/data2services/data/input/pharmgkb/chemicals/chemicals.tsv>.
 
 		?s d2sgeneric:PharmgkbAccessionId ?accessionID .
 		
@@ -74,11 +74,13 @@ WHERE {
 		 ?s d2sgeneric:SMILES ?smiles .
 		
 		} OPTIONAL {
-		 ?s d2sgeneric:AtcIdentifiers ?atc .
+		 ?s d2sgeneric:AtcIdentifiers ?atcR .
+		 BIND ( iri(concat("http://bio2rdf.org/atc:", ?atcR)) AS ?atc )
 			
 		} OPTIONAL {
-		 ?s d2sgeneric:PubchemCompoundIdentifiers ?pubchem .
-	
+		 ?s d2sgeneric:PubchemCompoundIdentifiers ?pubchemR .
+		 BIND ( iri(concat("http://bio2rdf.org/pubchem:", ?pubchemR)) AS ?pubchem )
+		
 		} OPTIONAL {
          	 ?s d2sgeneric:GenericNames ?genericName .
 			

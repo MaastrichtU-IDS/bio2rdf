@@ -9,7 +9,7 @@ label: Data2Services CWL workflow, Ammar Ammar <ammar257ammar@gmail.com>
 baseCommand: [docker, run]
 
 arguments: [ "--rm", "--link","graphdb:graphdb", "-v" , "$(inputs.working_directory):/data", "-v", "$(runtime.outdir):/tmp", 
-"vemonet/data2services-sparql-operations" ]
+"aammar/data2services-sparql-operations" ]
 
 inputs:
 

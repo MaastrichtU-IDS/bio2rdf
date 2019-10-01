@@ -27,10 +27,10 @@ INSERT
 			bio2rdf_vocabulary:namespace "pharmgkb";
 			bio2rdf_vocabulary:identifier ?accessionID;
 			bio2rdf_vocabulary:uri ?uri;
-			pharmgkb_vocabulary:generic_name ?genericName;
-			pharmgkb_vocabulary:trade_name ?trade_name;
-			pharmgkb_vocabulary:brand_mixture ?brand_mixture; 
-			pharmgkb_vocabulary:drug_class ?drug_class;
+			pharmgkb_vocabulary:generic-name ?genericName;
+			pharmgkb_vocabulary:trade-name ?trade_name;
+			pharmgkb_vocabulary:brand-mixture ?brand_mixture; 
+			pharmgkb_vocabulary:drug-class ?drug_class;
 			pharmgkb_vocabulary:cpic-dosing-guideline ?dosing;
 			pharmgkb_vocabulary:x-atc ?atc;
 			pharmgkb_vocabulary:x-pubchemcompound ?pubchem;
@@ -44,7 +44,7 @@ INSERT
 WHERE {
     GRAPH <https://w3id.org/data2services/graph/autor2rml> {
 		
-		?s rdf:type <https://w3id.org/data2services/data/input/pharmgkb/drugs.tsv>.
+		?s rdf:type <https://w3id.org/data2services/data/input/pharmgkb/drugs/drugs.tsv>.
 
 		?s d2sgeneric:PharmgkbAccessionId ?accessionID .
 		
@@ -70,11 +70,12 @@ WHERE {
 		 ?s d2sgeneric:DosingGuideline ?dosing .
 			
 		} OPTIONAL {
-		 ?s d2sgeneric:AtcIdentifiers ?atc .
+		 ?s d2sgeneric:AtcIdentifiers ?atcR .
+		 BIND ( iri(concat("http://bio2rdf.org/atc:", ?atcR)) AS ?atc )
 			
 		} OPTIONAL {
-		 ?s d2sgeneric:PubchemCompoundIdentifiers ?pubchem .
-			
+		 ?s d2sgeneric:PubchemCompoundIdentifiers ?pubchemR .
+		 BIND ( iri(concat("http://bio2rdf.org/pubchem:", ?pubchemR)) AS ?pubchem )
 		} OPTIONAL {
 		 ?s d2sgeneric:Inchi ?inchi .
 		 

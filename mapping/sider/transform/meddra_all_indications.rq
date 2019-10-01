@@ -1,0 +1,65 @@
+PREFIX rr: <http://www.w3.org/ns/r2rml#> 
+PREFIX dc: <http://purl.org/dc/elements/1.1/> 
+PREFIX dbo: <http://dbpedia.org/ontology/> 
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> 
+PREFIX owl: <http://www.w3.org/2002/07/owl#> 
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#> 
+PREFIX rml: <http://semweb.mmlab.be/ns/rml#> 
+PREFIX ql: <http://semweb.mmlab.be/ns/ql#> 
+PREFIX d2rq: <http://www.wiwiss.fu-berlin.de/suhl/bizer/D2RQ/0.1#> 
+PREFIX sider_vocabulary: <http://bio2rdf.org/sider_vocabulary:> 
+PREFIX bio2rdf_vocabulary: <http://bio2rdf.org/bio2rdf_vocabulary:> 
+PREFIX d2sgeneric: <https://w3id.org/data2services/model/>
+
+INSERT
+{
+	GRAPH <https://w3id.org/data2services/graph/sider>{
+		
+		?uri	a sider_vocabulary:Resource;
+			rdf:type sider_vocabulary:Drug-Indication-Association;
+			dc:identifier ?siderId;
+			rdfs:label ?label;
+			dc:title ?title;
+			bio2rdf_vocabulary:namespace "sider";
+			bio2rdf_vocabulary:identifier ?id;
+			bio2rdf_vocabulary:uri ?uri;
+
+			sider_vocabulary:drug ?stitchId;
+			sider_vocabulary:indication ?meddraId;
+			sider_vocabulary:provenance ?provenance.
+			
+	}
+}
+WHERE {
+    GRAPH <https://w3id.org/data2services/graph/autor2rml> {
+		
+		?s rdf:type <https://w3id.org/data2services/data/input/sider/meddra_all_indications.tsv>.
+
+		?s d2sgeneric:Col1 ?stitch .
+		
+		BIND ( iri(concat("http://bio2rdf.org/stitch:", ?stitch) ) AS ?stitchId )
+
+		?s d2sgeneric:Col2 ?meddra .
+		
+		BIND ( iri(concat("http://bio2rdf.org/umls:", ?meddra) ) AS ?meddraId )
+
+		BIND (MD5(concat("i",?stitch,?meddra)) AS ?id)
+
+		BIND (concat("sider:",?id) AS ?siderId)
+		
+
+		BIND (concat(?stitch, "-", ?meddra, " indication") AS ?title)
+
+		BIND ( concat(?title , " [sider:", ?id, "] ") AS ?label )
+
+
+		?s d2sgeneric:Col3 ?provenance .
+
+		BIND ( iri(concat("http://bio2rdf.org/sider:", ?id)) AS ?uri )
+
+		?s d2sgeneric:Col5 ?type
+		FILTER( ?type = "LLT")
+		
+	}
+}		
+

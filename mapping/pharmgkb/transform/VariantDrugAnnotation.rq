@@ -59,7 +59,8 @@ WHERE {
 		} OPTIONAL {
          	 ?s d2sgeneric:Chemical ?chemical .
 		} OPTIONAL {
-         	 ?s d2sgeneric:Pmid ?pmids .
+         	 ?s d2sgeneric:Pmid ?pmidsR .
+		 BIND ( iri(concat("http://bio2rdf.org/pubmed:", ?pmidsR)) AS ?pmids )
 		} OPTIONAL {
          	 ?s d2sgeneric:PhenotypeCategory ?phenotype_cat .
 		} OPTIONAL {
@@ -74,9 +75,9 @@ WHERE {
 			
 		BIND ( iri(concat("http://bio2rdf.org/pharmgkb:", ?accessionID)) AS ?uri ).
 
-		FILTER ( ?entity_type IN (<https://w3id.org/data2services/data/input/pharmgkb/var_drug_ann.tsv>, 
-					<https://w3id.org/data2services/data/input/pharmgkb/var_fa_ann.tsv>,
-					<https://w3id.org/data2services/data/input/pharmgkb/var_pheno_ann.tsv>) ).
+		FILTER ( ?entity_type IN (<https://w3id.org/data2services/data/input/pharmgkb/annotations/var_drug_ann.tsv>, 
+					<https://w3id.org/data2services/data/input/pharmgkb/annotations/var_fa_ann.tsv>,
+					<https://w3id.org/data2services/data/input/pharmgkb/annotations/var_pheno_ann.tsv>) ).
 		
 	}
 }	

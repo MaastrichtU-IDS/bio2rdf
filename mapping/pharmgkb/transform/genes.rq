@@ -48,7 +48,7 @@ INSERT
 WHERE {
     GRAPH <https://w3id.org/data2services/graph/autor2rml> {
 		
-		?s rdf:type <https://w3id.org/data2services/data/input/pharmgkb/genes.tsv>.
+		?s rdf:type <https://w3id.org/data2services/data/input/pharmgkb/genes/genes.tsv>.
 
 		?s d2sgeneric:Pharmgkb.accession.id ?accessionID .
 		
@@ -65,7 +65,8 @@ WHERE {
          	 ?s d2sgeneric:Hgnc.id ?hgncsym .
 		 BIND ( iri(concat("http://bio2rdf.org/hgnc:",?hgncsym)) AS ?hgnc )
 		} OPTIONAL {
-         	 ?s d2sgeneric:Ensembl.id ?ensembl .
+         	 ?s d2sgeneric:Ensembl.id ?ensemblR .
+		 BIND ( iri(concat("http://bio2rdf.org/ensembl:",?ensemblR)) AS ?ensembl )
 		} OPTIONAL {
          	 ?s d2sgeneric:Symbol ?symbol .
 		} OPTIONAL {

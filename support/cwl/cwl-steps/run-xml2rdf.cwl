@@ -8,7 +8,7 @@ label: Data2Services CWL workflow, Ammar Ammar <ammar257ammar@gmail.com>
 baseCommand: [docker, run]
 
 arguments: [ "--rm", "-v" , "$(inputs.working_directory):/data", "-v", "$(runtime.outdir):/tmp", 
-"vemonet/xml2rdf", "-i", "/data/input/$(inputs.dataset)/*.xml", "-o", "/tmp/rdf_output.nq"]
+"vemonet/xml2rdf:bio2rdf5", "-i", "/data/input/$(inputs.dataset)/*.xml", "-o", "/tmp/rdf_output.nq"]
 
 requirements:
   EnvVarRequirement:
