@@ -63,7 +63,7 @@ INSERT
 			clinicaltrials_vocabulary:intervention ?intervention_uri;
 			clinicaltrials_vocabulary:eligibility ?eligibility_uri;
 			clinicaltrials_vocabulary:biospec-retention ?biospec_retention;
-			clinicaltrials_vocabulary:biospec-descr ?biospec_descr_uri;
+			clinicaltrials_vocabulary:biospec-descr ?biospec_descr;
 			clinicaltrials_vocabulary:overall-official ?overall_official_uri;
 			clinicaltrials_vocabulary:overall-contact ?overall_contact_uri;
 			clinicaltrials_vocabulary:overall-contact-backup ?overall_contact_backup_uri;
@@ -72,13 +72,12 @@ INSERT
 			clinicaltrials_vocabulary:country ?rcountry_uri;
 			clinicaltrials_vocabulary:reference ?reference_uri;
 			clinicaltrials_vocabulary:result-reference ?rreference_uri;
-			clinicaltrials_vocabulary:responsible_party ?responsible_party_uri;
+			clinicaltrials_vocabulary:responsible-party ?responsible_party_uri;
 			clinicaltrials_vocabulary:keyword ?keyword;
 			clinicaltrials_vocabulary:condition-mesh ?mesh_uri;
 			clinicaltrials_vocabulary:clinical-result ?clinical_result_uri;
 			clinicaltrials_vocabulary:baseline ?baseline_uri;
 			clinicaltrials_vocabulary:outcome ?outcome_list_uri;
-			clinicaltrials_vocabulary:reported-events ?reported_events_uri;
 			
 	}
 }
@@ -232,7 +231,7 @@ WHERE {
 		} OPTIONAL{
 			?s  x2rm:child:study_design_info ?study
 
-			?study  x2rm:hasValue ?study_design_id.
+			BIND (STRAFTER(str(?study) , "http://ids.unimaas.nl/xml2rdf/data/") AS ?study_design_id)
 
 			BIND(iri(concat("http://bio2rdf.org/clinicaltrials_resource:",?study_design_id)) AS ?study_design_uri)
 		} OPTIONAL{
@@ -242,19 +241,19 @@ WHERE {
 		} OPTIONAL{
 			?s x2rm:child:primary_outcome ?primary_outcome.
 
-			?primary_outcome  x2rm:hasValue ?primary_outcome_id.
+			BIND (STRAFTER(str(?primary_outcome) , "http://ids.unimaas.nl/xml2rdf/data/") AS ?primary_outcome_id)
 
 			BIND(iri(concat("http://bio2rdf.org/clinicaltrials_resource:",?primary_outcome_id)) AS ?primary_outcome_uri)	
 		} OPTIONAL{
 			?s x2rm:child:secondary_outcome ?secondary_outcome.
-
-			?secondary_outcome x2rm:hasValue ?secondary_outcome_id.
+			
+			BIND (STRAFTER(str(?secondary_outcome) , "http://ids.unimaas.nl/xml2rdf/data/") AS ?secondary_outcome_id)
 
 			BIND(iri(concat("http://bio2rdf.org/clinicaltrials_resource:",?secondary_outcome_id)) AS ?secondary_outcome_uri)	
 		} OPTIONAL{
 			?s x2rm:child:other_outcome ?other_outcome.
 
-			?other_outcome  x2rm:hasValue ?other_outcome_id.
+			BIND (STRAFTER(str(?other_outcome) , "http://ids.unimaas.nl/xml2rdf/data/") AS ?other_outcome_id)
 
 			BIND(iri(concat("http://bio2rdf.org/clinicaltrials_resource:",?other_outcome_id)) AS ?other_outcome_uri)	
 		} OPTIONAL{
@@ -301,19 +300,22 @@ WHERE {
 			];
 
 		} OPTIONAL{
-			?s  x2rm:child:overall_official [
-				  x2rm:hasValue ?overall_official.
-			];
+			?s  x2rm:child:overall_official ?overall_officialr.
+			
+			BIND (STRAFTER(str(?overall_officialr) , "http://ids.unimaas.nl/xml2rdf/data/") AS ?overall_official)
+			
 			BIND(iri(concat("http://bio2rdf.org/clinicaltrials_resource:",?overall_official)) AS ?overall_official_uri)
 		} OPTIONAL{
-			?s  x2rm:child:overall_contact [
-				  x2rm:hasValue ?overall_contact.
-			];
+			?s  x2rm:child:overall_contact ?overall_contactr.
+			
+			BIND (STRAFTER(str(?overall_contactr) , "http://ids.unimaas.nl/xml2rdf/data/") AS ?overall_contact)
+
 			BIND(iri(concat("http://bio2rdf.org/clinicaltrials_resource:",?overall_contact)) AS ?overall_contact_uri)
 		} OPTIONAL{
-			?s  x2rm:child:overall_contact_backup [
-				  x2rm:hasValue ?overall_contact_backup.
-			];
+			?s  x2rm:child:overall_contact_backup ?overall_contact_backupr.
+
+			BIND (STRAFTER(str(?overall_contact_backupr) , "http://ids.unimaas.nl/xml2rdf/data/") AS ?overall_contact_backup)
+
 			BIND(iri(concat("http://bio2rdf.org/clinicaltrials_resource:",?overall_contact_backup)) AS ?overall_contact_backup_uri)
 		} OPTIONAL{
 			?s  x2rm:child:location ?location.
@@ -344,26 +346,26 @@ WHERE {
 			?s  x2rm:child:reference ?reference.
 
 			?reference  x2rm:child:PMID [
-				  x2rm:hasValue ?PMID.
-			];
+				  x2rm:hasValue ?PMID
+			].
 			
-			BIND(iri(concat("http://bio2rdf.org/pubmed:",?PMID)) AS ?pubmed_uri)
+			BIND(iri(concat("http://bio2rdf.org/pubmed:",?PMID)) AS ?reference_uri)
 		} OPTIONAL{
 			?s  x2rm:child:result_reference ?result_reference.
 
 			?result_reference  x2rm:child:PMID [
-				  x2rm:hasValue ?rPMID.
-			];
+				  x2rm:hasValue ?rPMID
+			].
 			
-			BIND(iri(concat("http://bio2rdf.org/pubmed:",?rPMID)) AS ?rpubmed_uri)
+			BIND(iri(concat("http://bio2rdf.org/pubmed:",?rPMID)) AS ?rreference_uri)
 		} OPTIONAL{
 			?s  x2rm:child:responsible_party ?responsible_party.
 
 			?responsible_party  x2rm:child:responsible_party_type [
-				  x2rm:hasValue ?rPMID.
+				  x2rm:hasValue ?responsible_party_type.
 			];
 			
-			BIND(iri(concat("http://bio2rdf.org/clinicaltrials_resource:",MD5(?responsible_party))) AS ?responsible_party_uri)
+			BIND(iri(concat("http://bio2rdf.org/clinicaltrials_resource:",MD5(?responsible_party_type))) AS ?responsible_party_uri)
 		} OPTIONAL{
 			
 			?s  x2rm:child:keyword [
@@ -371,7 +373,9 @@ WHERE {
 			];	
 		} OPTIONAL{
 
-			?responsible_party  x2rm:child:mesh_term [
+			?s  x2rm:child:condition_browse ?condition_browse.
+
+			?condition_browse  x2rm:child:mesh_term [
 				  x2rm:hasValue ?mesh_term.
 			];
 			
@@ -385,7 +389,8 @@ WHERE {
 			
 			?s  x2rm:child:is_section_801 [
 				  x2rm:hasValue ?is_section_801.
-			];	
+			];
+	
 		} OPTIONAL{
 			
 			?s  x2rm:child:has_expanded_access [
@@ -393,28 +398,23 @@ WHERE {
 			];	
 		} OPTIONAL{
 
-			?s  x2rm:child:clinical_results [
-				  x2rm:hasValue ?clinical_results.
-			];
+			?s x2rm:child:clinical_results ?clinical_results.
+
+			BIND (STRAFTER(str(?clincal_results) , "http://ids.unimaas.nl/xml2rdf/data/") AS ?clinical_results_id)
 			
-			BIND(iri(concat("http://bio2rdf.org/clinicaltrials_resource:",MD5(?clinical_results))) AS ?clinical_results_uri)
+			BIND(iri(concat("http://bio2rdf.org/clinicaltrials_resource:",?clinical_results_id)) AS ?clinical_results_uri)
 		} OPTIONAL{
 
 			BIND(iri(concat("http://bio2rdf.org/clinicaltrials:",?id,"/baseline")) AS ?baseline_uri)
 		} OPTIONAL{
 
-			?s  x2rm:child:outcome_list [
-				  x2rm:hasValue ?outcome_list.
-			];
-			
-			BIND(iri(concat("http://bio2rdf.org/clinicaltrials:",?id,?outcome_list)) AS ?outcome_list_uri)
-		} OPTIONAL{
+			?s  x2rm:child:outcome_list ?outcome_list.
 
-			?s  x2rm:child:reported_events [
-				  x2rm:hasValue ?reported_events.
-			];
+			?outcome_list  x2rm:child:outcome ?outcomer.
 			
-			BIND(iri(concat("http://bio2rdf.org/clinicaltrials_resource:",?reported_events)) AS ?reported_events_uri)
+			BIND (STRAFTER(str(?outcomer) , "http://ids.unimaas.nl/xml2rdf/data/") AS ?outcome)
+			
+			BIND(iri(concat("http://bio2rdf.org/clinicaltrials_resource:",?outcome)) AS ?outcome_list_uri)
 		}
 
 		BIND (concat("clinicaltrials:",?id) AS ?nctId)

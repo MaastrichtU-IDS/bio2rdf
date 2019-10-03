@@ -16,18 +16,13 @@ INSERT
 	GRAPH <https://w3id.org/data2services/graph/clinicaltrials>{
 		
 		?uri	a clinicaltrials_vocabulary:Resource;
-			rdf:type clinicaltrials_vocabulary:Secondary-Outcome;
+			rdf:type clinicaltrials_vocabulary:Country;
 			dc:identifier ?entId;
 			rdfs:label ?label;
 			dc:title ?title;
 			bio2rdf_vocabulary:namespace "clinicaltrials";
 			bio2rdf_vocabulary:identifier ?id;
 			bio2rdf_vocabulary:uri ?uri;
-
-			clinicaltrials_vocabulary:measure  ?measure;
-			clinicaltrials_vocabulary:time-frame  ?time_frame;
-			clinicaltrials_vocabulary:safety-issue  ?safety_issue;
-			dc:description  ?description;
 		
 	}
 }
@@ -35,31 +30,19 @@ WHERE {
     GRAPH <https://w3id.org/data2services/graph/xml2rdf> {
 		
 		?s rdf:type x2rm:clinical_study.
+			
+		?s  x2rm:child:location_countries ?location_countries.
 
-		?s x2rm:child:secondary_outcome ?secondary_outcome.
-
-		?secondary_outcome  x2rm:child:measure [
-			  x2rm:hasValue ?measure
-		].
-
-		?secondary_outcome  x2rm:child:time_frame [
-			  x2rm:hasValue ?time_frame
-		].
-
-		?secondary_outcome  x2rm:child:saftey_issue [
-			  x2rm:hasValue ?saftey_issue
-		].
-
-		?secondary_outcome  x2rm:child:description [
-			  x2rm:hasValue ?description
-		].
+		?location_countries  x2rm:child:country [
+			  x2rm:hasValue ?country.
+		];
 		
-		BIND (STRAFTER(str(?secondary_outcome) , "http://ids.unimaas.nl/xml2rdf/data/") AS ?id)
+		BIND (MD5(?country) AS ?id)
 
 		BIND (concat("clinicaltrials_resource:",?id) AS ?entId)
 
-		BIND ( concat(?measure, " ", ?time_frame , " [clinicaltrials_resource:", ?id, "] ") AS ?label )
-
+		BIND ( concat(?country , " [clinicaltrials_resource:", ?id, "] ") AS ?label )
+ 
 		BIND(iri(concat("http://bio2rdf.org/clinicaltrials_resource:",?id)) AS ?uri)	
 		
 	}

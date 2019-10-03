@@ -43,9 +43,6 @@ WHERE {
 
 		?s x2rm:child:overall_contact ?overall_contact.
 
-		?overall_contact  x2rm:hasValue ?overall_contact_id.
-
-
 		?overall_contact  x2rm:child:first_name [
 			  x2rm:hasValue ?first_name
 		].
@@ -82,7 +79,7 @@ WHERE {
 			  x2rm:hasValue ?affiliation
 		].
 		
-		BIND (?overall_contact_id AS ?id)
+		BIND (STRAFTER(str(?overall_contact) , "http://ids.unimaas.nl/xml2rdf/data/") AS ?id)
 
 		BIND (concat("clinicaltrials_resource:",?id) AS ?entId)
 

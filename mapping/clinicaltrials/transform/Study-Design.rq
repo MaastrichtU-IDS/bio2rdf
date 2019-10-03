@@ -44,8 +44,6 @@ WHERE {
 		].
 
 		?s  x2rm:child:study_design_info ?study.
-
-		?study  x2rm:hasValue ?study_design_id.
 		
 		?study  x2rm:child:allocation [
 			  x2rm:hasValue ?allocation
@@ -63,7 +61,7 @@ WHERE {
 			  x2rm:hasValue ?masking
 		].
 		
-		BIND (?study_design_id AS ?id)
+		BIND (STRAFTER(str(?study) , "http://ids.unimaas.nl/xml2rdf/data/") AS ?id)
 
 		BIND (concat("clinicaltrials_resource:",?id) AS ?entId)
 

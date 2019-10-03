@@ -38,8 +38,6 @@ WHERE {
 
 		?s x2rm:child:primary_outcome ?primary_outcome.
 
-		?primary_outcome  x2rm:hasValue ?primary_outcome_id.
-
 		?primary_outcome  x2rm:child:measure [
 			  x2rm:hasValue ?measure
 		].
@@ -56,7 +54,7 @@ WHERE {
 			  x2rm:hasValue ?description
 		].
 		
-		BIND (?primary_outcome_id AS ?id)
+		BIND (STRAFTER(str(?primary_outcome) , "http://ids.unimaas.nl/xml2rdf/data/") AS ?id)
 
 		BIND (concat("clinicaltrials_resource:",?id) AS ?entId)
 

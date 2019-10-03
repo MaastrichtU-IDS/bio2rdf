@@ -1,0 +1,120 @@
+PREFIX rr: <http://www.w3.org/ns/r2rml#> 
+PREFIX dc: <http://purl.org/dc/elements/1.1/> 
+PREFIX dbo: <http://dbpedia.org/ontology/> 
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> 
+PREFIX owl: <http://www.w3.org/2002/07/owl#> 
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#> 
+PREFIX rml: <http://semweb.mmlab.be/ns/rml#> 
+PREFIX ql: <http://semweb.mmlab.be/ns/ql#> 
+PREFIX d2rq: <http://www.wiwiss.fu-berlin.de/suhl/bizer/D2RQ/0.1#> 
+PREFIX clinicaltrials_vocabulary: <http://bio2rdf.org/clinicaltrials_vocabulary:> 
+PREFIX bio2rdf_vocabulary: <http://bio2rdf.org/bio2rdf_vocabulary:> 
+PREFIX x2rm: <http://ids.unimaas.nl/xml2rdf/model#>
+
+INSERT
+{
+	GRAPH <https://w3id.org/data2services/graph/clinicaltrials>{
+		
+		?uri	a clinicaltrials_vocabulary:Resource;
+			rdf:type clinicaltrials_vocabulary:Outcome;
+			dc:identifier ?entId;
+			rdfs:label ?label;
+			dc:title ?title;
+			bio2rdf_vocabulary:namespace "clinicaltrials";
+			bio2rdf_vocabulary:identifier ?id;
+			bio2rdf_vocabulary:uri ?uri;
+
+			clinicaltrials_vocabulary:title  ?title;
+			clinicaltrials_vocabulary:time-frame  ?time_frame;
+			clinicaltrials_vocabulary:safety-issue  ?safety_issue;
+			clinicaltrials_vocabulary:posting-date  ?posting_date;
+			clinicaltrials_vocabulary:population  ?population;
+
+			clinicaltrials_vocabulary:group  ?group_uri;
+			clinicaltrials_vocabulary:measure  ?measure_uri;
+			clinicaltrials_vocabulary:analysis  ?analysis_uri;
+	}
+}
+WHERE {
+    GRAPH <https://w3id.org/data2services/graph/xml2rdf> {
+		
+		?s rdf:type x2rm:clinical_study.
+
+		?s x2rm:child:id_info ?id_info.
+		
+
+		?id_info  x2rm:child:nct_id  [
+			  x2rm:hasValue ?study_id.
+		];
+
+		?s x2rm:child:outcome_list ?outcome_list.
+
+		?outcome_list x2rm:child:outcome ?outcome.
+
+		OPTIONAL{
+			?outcome  x2rm:child:title [
+				  x2rm:hasValue ?title
+			].
+		}
+
+		?outcome  x2rm:child:time_frame [
+			  x2rm:hasValue ?time_frame
+		].
+
+		?outcome  x2rm:child:saftey_issue [
+			  x2rm:hasValue ?saftey_issue
+		].
+
+		?outcome  x2rm:child:posting_date [
+			  x2rm:hasValue ?posting_date
+		].
+
+		?outcome  x2rm:child:population [
+			  x2rm:hasValue ?population
+		].
+
+		OPTIONAL{
+		
+			?outcome  x2rm:child:group_list ?group_list.
+
+			?group_list  x2rm:child:group ?group.
+
+			BIND (STRAFTER(str(?group) , "http://ids.unimaas.nl/xml2rdf/data/") AS ?group_id)
+
+			BIND(iri(concat("http://bio2rdf.org/clinicaltrials_resource:",?group_id)) AS ?group_uri)
+		}
+
+		OPTIONAL{
+		
+			?outcome  x2rm:child:measure_list ?measure_list.
+
+			?measure_list  x2rm:child:measure ?measure.
+
+			BIND (STRAFTER(str(?measure) , "http://ids.unimaas.nl/xml2rdf/data/") AS ?measure_id)
+
+			BIND(iri(concat("http://bio2rdf.org/clinicaltrials_resource:",?measure_id)) AS ?measure_uri)
+		}
+
+		OPTIONAL{
+		
+			?outcome  x2rm:child:analysis_list ?analysis_list.
+
+			?analysis_list  x2rm:child:analysis ?analysis.
+
+			BIND (STRAFTER(str(?analysis) , "http://ids.unimaas.nl/xml2rdf/data/") AS ?analysis_id)
+
+			BIND(iri(concat("http://bio2rdf.org/clinicaltrials_resource:",?analysis_id)) AS ?analysis_uri)
+
+		}
+		
+		BIND (STRAFTER(str(?outcome) , "http://ids.unimaas.nl/xml2rdf/data/") AS ?id)
+
+		BIND (concat("clinicaltrials_resource:",?id) AS ?entId)
+
+		BIND ( concat("Outcome for study ", ?study_id , " [clinicaltrials_resource:", ?id, "] ") AS ?label )
+
+		BIND(iri(concat("http://bio2rdf.org/clinicaltrials_resource:",?id)) AS ?uri)	
+		
+	}
+}		
+

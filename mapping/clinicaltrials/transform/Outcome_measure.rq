@@ -16,50 +16,54 @@ INSERT
 	GRAPH <https://w3id.org/data2services/graph/clinicaltrials>{
 		
 		?uri	a clinicaltrials_vocabulary:Resource;
-			rdf:type clinicaltrials_vocabulary:Secondary-Outcome;
+			rdf:type clinicaltrials_vocabulary:Measure;
 			dc:identifier ?entId;
 			rdfs:label ?label;
-			dc:title ?title;
+			dc:title ?measure_title;
 			bio2rdf_vocabulary:namespace "clinicaltrials";
 			bio2rdf_vocabulary:identifier ?id;
 			bio2rdf_vocabulary:uri ?uri;
 
-			clinicaltrials_vocabulary:measure  ?measure;
-			clinicaltrials_vocabulary:time-frame  ?time_frame;
-			clinicaltrials_vocabulary:safety-issue  ?safety_issue;
-			dc:description  ?description;
+			clinicaltrials_vocabulary:title ?measure_title;
+			clinicaltrials_vocabulary:units ?measure_units;
+			clinicaltrials_vocabulary:param ?measure_param;
+			clinicaltrials_vocabulary:dispersion ?measure_dispersion;
 		
 	}
 }
 WHERE {
     GRAPH <https://w3id.org/data2services/graph/xml2rdf> {
+
+		?s x2rm:child:outcome_list ?outcome_list.
+
+		?outcome_list x2rm:child:outcome ?outcome.
 		
-		?s rdf:type x2rm:clinical_study.
+		?outcome  x2rm:child:measure_list ?measure_list.
 
-		?s x2rm:child:secondary_outcome ?secondary_outcome.
+		?measure_list  x2rm:child:measure ?measure.
 
-		?secondary_outcome  x2rm:child:measure [
-			  x2rm:hasValue ?measure
+		?measure  x2rm:child:title [
+		  x2rm:hasValue ?measure_title
 		].
 
-		?secondary_outcome  x2rm:child:time_frame [
-			  x2rm:hasValue ?time_frame
+		?measure  x2rm:child:units [
+		  x2rm:hasValue ?measure_units
 		].
 
-		?secondary_outcome  x2rm:child:saftey_issue [
-			  x2rm:hasValue ?saftey_issue
+		?measure  x2rm:child:param [
+		  x2rm:hasValue ?measure_param
 		].
 
-		?secondary_outcome  x2rm:child:description [
-			  x2rm:hasValue ?description
+		?measure  x2rm:child:dispersion [
+		  x2rm:hasValue ?measure_dispersion
 		].
-		
-		BIND (STRAFTER(str(?secondary_outcome) , "http://ids.unimaas.nl/xml2rdf/data/") AS ?id)
+	
+		BIND (STRAFTER(str(?measure) , "http://ids.unimaas.nl/xml2rdf/data/") AS ?id)
 
 		BIND (concat("clinicaltrials_resource:",?id) AS ?entId)
 
-		BIND ( concat(?measure, " ", ?time_frame , " [clinicaltrials_resource:", ?id, "] ") AS ?label )
-
+		BIND ( concat(?measure_title , " [clinicaltrials_resource:", ?id, "] ") AS ?label )
+ 
 		BIND(iri(concat("http://bio2rdf.org/clinicaltrials_resource:",?id)) AS ?uri)	
 		
 	}
