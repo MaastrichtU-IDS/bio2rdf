@@ -8,7 +8,6 @@ virtuoso
 *.doc
 *.docx
 *.odt
-*.txt
 *.nq
 *.properties
 *.trig
