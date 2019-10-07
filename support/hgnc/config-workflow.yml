@@ -12,6 +12,7 @@ sparql_base_uri: "https://w3id.org/data2services/"
 sparql_triplestore_url: http://graphdb:7200
 sparql_triplestore_repository: hgnc
 
+sparql_final_graph_uri: https://w3id.org/data2services/graph/hgnc
 
 sparql_transform_queries_path: /data/mapping/hgnc/transform
 sparql_insert_metadata_path: /data/mapping/hgnc/metadata

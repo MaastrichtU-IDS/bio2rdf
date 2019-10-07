@@ -438,5 +438,6 @@ steps:
       sparql_queries_path: sparql_compute_hcls_path
       sparql_triplestore_url: sparql_triplestore_url
       sparql_triplestore_repository: sparql_triplestore_repository
+      sparql_input_graph_uri: sparql_final_graph_uri
       previous_step_results: step7-execute-transform-queries/execute_sparql_query_logs
     out: [execute_sparql_query_logs]
