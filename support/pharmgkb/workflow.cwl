@@ -945,3 +945,13 @@ steps:
       previous_step_results_44: step744-split/execute_split_logs
     out: [execute_sparql_query_logs]
 
+  step9-compute-hcls-stats:
+    run: ../cwl/cwl-steps/execute-sparql-mapping.cwl
+    in:
+      working_directory: working_directory
+      dataset: dataset
+      sparql_queries_path: sparql_compute_hcls_path
+      sparql_triplestore_url: sparql_triplestore_url
+      sparql_triplestore_repository: sparql_triplestore_repository
+      previous_step_results: step8-execute-transform-queries/execute_sparql_query_logs
+    out: [execute_sparql_query_logs]
