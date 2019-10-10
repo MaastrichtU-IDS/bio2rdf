@@ -34,7 +34,7 @@ INSERT
 	}
 }
 WHERE {
-    GRAPH <https://w3id.org/data2services/graph/autor2rml> {
+    GRAPH <https://w3id.org/data2services/graph/autor2rml/pharmgkb> {
 		
 		?s rdf:type <https://w3id.org/data2services/data/input/pharmgkb/phenotypes/phenotypes.tsv>.
 		?s d2sgeneric:PharmgkbAccessionId ?accessionID .

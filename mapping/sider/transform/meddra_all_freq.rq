@@ -34,7 +34,7 @@ INSERT
 	}
 }
 WHERE {
-    GRAPH <https://w3id.org/data2services/graph/autor2rml> {
+    GRAPH <https://w3id.org/data2services/graph/autor2rml/sider> {
 		
 		?s rdf:type <https://w3id.org/data2services/data/input/sider/meddra_freq.tsv>.
 

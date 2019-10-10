@@ -12,5 +12,7 @@ virtuoso
 *.properties
 *.trig
 input/*
+!input/README.md
 output/*
+!output/README.md
 data2services-cwl-workflows

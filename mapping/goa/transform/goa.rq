@@ -39,7 +39,7 @@ INSERT
 	}
 }
 WHERE {
-    GRAPH <https://w3id.org/data2services/graph/autor2rml> {
+    GRAPH <https://w3id.org/data2services/graph/autor2rml/goa> {
 		
 		?s rdf:type <https://w3id.org/data2services/data/input/goa/goa_human.tsv>.
 
