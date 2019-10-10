@@ -8,6 +8,17 @@ The [Common Workflow Language](https://www.commonwl.org/) is used to describe wo
 
 ---
 
+## Define absolute path and dataset folder as environment variables
+
+In terminal type:
+
+```shell
+export ABS_PATH=/path/to/your/bio2rdf/folder
+
+export DATASET=dataset_name
+```
+The folders of the dataset in input, output, mapping, support folders should be the same as the dataset name variable.
+
 ## Start services
 
 [Apache Drill](https://github.com/amalic/apache-drill) and [GraphDB](https://github.com/MaastrichtU-IDS/graphdb/) services must be running before executing CWL workflows.
