@@ -41,8 +41,7 @@ INSERT  {
 
         <https://bio2rdf.org/bio2rdf_resource:data2services> a dct:Agent ;
             foaf:name "Data2Services Pipeline" ;
-            foaf:page <https://github.com/MaastrichtU-IDS/data2services-pipeline> ;
-        .
+            foaf:page <https://github.com/MaastrichtU-IDS/data2services-pipeline> .
 
 
         <http:/bio2rdf.org/drugbank_resource:version/5>
@@ -62,8 +61,7 @@ INSERT  {
             
             dct:creator <https://github.com/MaastrichtU-IDS/data2services-pipeline> ;
             dct:issued  ?now;
-            dct:publisher <https://github.com/MaastrichtU-IDS/data2services-pipeline> ;
-		.
+            dct:publisher <https://github.com/MaastrichtU-IDS/data2services-pipeline> .
   
 	 ### RDF Distribution description (Complete)
         <http:/bio2rdf.org/drugbank_resource:version/5/rdf/data>
@@ -86,8 +84,7 @@ INSERT  {
 			dcat:mediaType "application/n-quads";
             dcat:accessURL <http://bio2rdf.org/drugbank/version/5/index.html> ;
             dcat:downloadURL <http://bio2rdf.org/drugbank/version/5/data/drugbank.nq.tgz> ; 
-            void:dataDump <http://bio2rdf.org/drugbank/version/5/data/drugbank.nq.tgz> ;
-		.
+            void:dataDump <http://bio2rdf.org/drugbank/version/5/data/drugbank.nq.tgz> .
 		        
         ### Distribution (non-RDF) description (Complete)
         <http://bio2rdf.org/drugbank/source>
@@ -105,8 +102,7 @@ INSERT  {
             dct:language <http://lexvo.org/id/iso639-3/eng>; 
 
             dct:format "application/xml" ; 
-            dcat:downloadURL <https://www.drugbank.ca/releases/5-1-1/downloads/all-full-database> ;  
-        .
+            dcat:downloadURL <https://www.drugbank.ca/releases/5-1-1/downloads/all-full-database> .
 
        
     }

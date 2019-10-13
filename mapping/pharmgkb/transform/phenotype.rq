@@ -30,7 +30,7 @@ INSERT
 			bio2rdf_vocabulary:uri ?uri;
 			pharmgkb_vocabulary:alternative-name ?alternate_name;
 			pharmgkb_vocabulary:x-ref ?cross_references;
-			pharmgkb_vocabulary:x-ref ?external_vocab;
+			pharmgkb_vocabulary:x-ref ?external_vocab .
 	}
 }
 WHERE {

@@ -12,6 +12,7 @@ sparql_base_uri: "https://w3id.org/data2services/"
 sparql_triplestore_url: http://graphdb:7200
 sparql_triplestore_repository: goa
 
+sparql_input_graph_uri: https://w3id.org/data2services/graph/goa
 
 sparql_transform_queries_path: /data/mapping/goa/transform
 sparql_insert_metadata_path: /data/mapping/goa/metadata

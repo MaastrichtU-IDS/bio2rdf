@@ -32,7 +32,7 @@ INSERT
 			clinicaltrials_vocabulary:phone-ext  ?phone_ext;
 			clinicaltrials_vocabulary:email  ?email;
 			clinicaltrials_vocabulary:role  ?role;
-			clinicaltrials_vocabulary:affiliation  ?affiliation;
+			clinicaltrials_vocabulary:affiliation  ?affiliation .
 		
 	}
 }

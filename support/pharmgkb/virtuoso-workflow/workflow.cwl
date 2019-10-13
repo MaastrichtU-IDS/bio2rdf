@@ -17,7 +17,11 @@ inputs:
   sparql_tmp_graph_uri: string
 
   sparql_triplestore_url: string
-  sparql_triplestore_repository: string
+
+  triple_store_username: string
+  triple_store_password: string
+
+  sparql_input_graph_uri: string
 
   sparql_transform_queries_path: string
   sparql_insert_metadata_path: string
@@ -249,14 +253,14 @@ outputs:
 steps:
 
   step1-d2s-download:
-    run: ../cwl/cwl-steps/d2s-download.cwl
+    run: ../../cwl/cwl-steps/d2s-download.cwl
     in:
       working_directory: working_directory
       dataset: dataset
     out: [download_dataset_logs]
 
   step2-autor2rml:
-    run: ../cwl/cwl-steps/autor2rml.cwl
+    run: ../../cwl/cwl-steps/autor2rml.cwl
     in:
       working_directory: working_directory
       dataset: dataset
@@ -267,7 +271,7 @@ steps:
     out: [r2rml_trig_file_output]
 
   step3-generate-r2rml-config:
-    run: ../cwl/cwl-steps/generate-r2rml-config.cwl
+    run: ../../cwl/cwl-steps/generate-r2rml-config.cwl
     in:
       dataset: dataset
       input_data_jdbc: input_data_jdbc
@@ -275,7 +279,7 @@ steps:
     out: [r2rml_config_file_output]
 
   step4-r2rml:
-    run: ../cwl/cwl-steps/run-r2rml.cwl
+    run: ../../cwl/cwl-steps/run-r2rml.cwl
     in:
       working_directory: working_directory
       dataset: dataset
@@ -285,33 +289,34 @@ steps:
 
 
   step5-rdf-upload:
-    run: ../cwl/cwl-steps/rdf-upload.cwl
+    run: ../../cwl/cwl-steps/rdf-upload.cwl
     in:
       working_directory: working_directory
       dataset: dataset
       nquads_file: step4-r2rml/nquads_file_output
       sparql_triplestore_url: sparql_triplestore_url
-      sparql_triplestore_repository: sparql_triplestore_repository
+      triple_store_password: triple_store_password
+      triple_store_username: triple_store_username
     out: [rdf_upload_logs]
 
   step6-insert-metadata:
-    run: ../cwl/cwl-steps/execute-sparql-mapping.cwl
+    run: ../../cwl/cwl-steps/execute-sparql-mapping.cwl
     in:
       working_directory: working_directory
       dataset: dataset
       sparql_queries_path: sparql_insert_metadata_path
       sparql_triplestore_url: sparql_triplestore_url
-      sparql_triplestore_repository: sparql_triplestore_repository
+
       previous_step_results: step5-rdf-upload/rdf_upload_logs
     out: [execute_sparql_query_logs]
 
   step700-split:
-    run: ../cwl/cwl-steps/run-split.cwl
+    run: ../../cwl/cwl-steps/run-split.cwl
     in:
       working_directory: working_directory
       dataset: dataset
       sparql_triplestore_url: sparql_triplestore_url
-      sparql_triplestore_repository: sparql_triplestore_repository
+
       split_property:  split_property_0
       split_class: split_class_0
       split_delimiter: split_delimiter_0
@@ -319,12 +324,12 @@ steps:
     out: [execute_split_logs]
 
   step701-split:
-    run: ../cwl/cwl-steps/run-split.cwl
+    run: ../../cwl/cwl-steps/run-split.cwl
     in:
       working_directory: working_directory
       dataset: dataset
       sparql_triplestore_url: sparql_triplestore_url
-      sparql_triplestore_repository: sparql_triplestore_repository
+
       split_property: split_property_1
       split_class: split_class_1
       split_delimiter: split_delimiter_1
@@ -332,12 +337,12 @@ steps:
     out: [execute_split_logs]
 
   step702-split:
-    run: ../cwl/cwl-steps/run-split.cwl
+    run: ../../cwl/cwl-steps/run-split.cwl
     in:
       working_directory: working_directory
       dataset: dataset
       sparql_triplestore_url: sparql_triplestore_url
-      sparql_triplestore_repository: sparql_triplestore_repository
+
       split_property: split_property_2
       split_class: split_class_2
       split_delimiter: split_delimiter_2
@@ -345,12 +350,12 @@ steps:
     out: [execute_split_logs]
 
   step703-split:
-    run: ../cwl/cwl-steps/run-split.cwl
+    run: ../../cwl/cwl-steps/run-split.cwl
     in:
       working_directory: working_directory
       dataset: dataset
       sparql_triplestore_url: sparql_triplestore_url
-      sparql_triplestore_repository: sparql_triplestore_repository
+
       split_property: split_property_3
       split_class: split_class_3
       split_delimiter: split_delimiter_3
@@ -358,12 +363,12 @@ steps:
     out: [execute_split_logs]
 
   step704-split:
-    run: ../cwl/cwl-steps/run-split.cwl
+    run: ../../cwl/cwl-steps/run-split.cwl
     in:
       working_directory: working_directory
       dataset: dataset
       sparql_triplestore_url: sparql_triplestore_url
-      sparql_triplestore_repository: sparql_triplestore_repository
+
       split_property: split_property_4
       split_class: split_class_4
       split_delimiter: split_delimiter_4
@@ -371,12 +376,12 @@ steps:
     out: [execute_split_logs]
 
   step705-split:
-    run: ../cwl/cwl-steps/run-split.cwl
+    run: ../../cwl/cwl-steps/run-split.cwl
     in:
       working_directory: working_directory
       dataset: dataset
       sparql_triplestore_url: sparql_triplestore_url
-      sparql_triplestore_repository: sparql_triplestore_repository
+
       split_property: split_property_5
       split_class: split_class_5
       split_delimiter: split_delimiter_5
@@ -384,12 +389,12 @@ steps:
     out: [execute_split_logs]
 
   step706-split:
-    run: ../cwl/cwl-steps/run-split.cwl
+    run: ../../cwl/cwl-steps/run-split.cwl
     in:
       working_directory: working_directory
       dataset: dataset
       sparql_triplestore_url: sparql_triplestore_url
-      sparql_triplestore_repository: sparql_triplestore_repository
+
       split_property: split_property_6
       split_class: split_class_6
       split_delimiter: split_delimiter_6
@@ -397,12 +402,12 @@ steps:
     out: [execute_split_logs]
 
   step707-split:
-    run: ../cwl/cwl-steps/run-split.cwl
+    run: ../../cwl/cwl-steps/run-split.cwl
     in:
       working_directory: working_directory
       dataset: dataset
       sparql_triplestore_url: sparql_triplestore_url
-      sparql_triplestore_repository: sparql_triplestore_repository
+
       split_property: split_property_7
       split_class: split_class_7
       split_delimiter: split_delimiter_7
@@ -410,12 +415,12 @@ steps:
     out: [execute_split_logs]
 
   step708-split:
-    run: ../cwl/cwl-steps/run-split.cwl
+    run: ../../cwl/cwl-steps/run-split.cwl
     in:
       working_directory: working_directory
       dataset: dataset
       sparql_triplestore_url: sparql_triplestore_url
-      sparql_triplestore_repository: sparql_triplestore_repository
+
       split_property: split_property_8
       split_class: split_class_8
       split_delimiter: split_delimiter_8
@@ -423,12 +428,12 @@ steps:
     out: [execute_split_logs]
 
   step709-split:
-    run: ../cwl/cwl-steps/run-split.cwl
+    run: ../../cwl/cwl-steps/run-split.cwl
     in:
       working_directory: working_directory
       dataset: dataset
       sparql_triplestore_url: sparql_triplestore_url
-      sparql_triplestore_repository: sparql_triplestore_repository
+
       split_property: split_property_9
       split_class: split_class_9
       split_delimiter: split_delimiter_9
@@ -436,12 +441,12 @@ steps:
     out: [execute_split_logs]
 
   step710-split:
-    run: ../cwl/cwl-steps/run-split.cwl
+    run: ../../cwl/cwl-steps/run-split.cwl
     in:
       working_directory: working_directory
       dataset: dataset
       sparql_triplestore_url: sparql_triplestore_url
-      sparql_triplestore_repository: sparql_triplestore_repository
+
       split_property: split_property_10
       split_class: split_class_10
       split_delimiter: split_delimiter_10
@@ -449,12 +454,12 @@ steps:
     out: [execute_split_logs]
 
   step711-split:
-    run: ../cwl/cwl-steps/run-split.cwl
+    run: ../../cwl/cwl-steps/run-split.cwl
     in:
       working_directory: working_directory
       dataset: dataset
       sparql_triplestore_url: sparql_triplestore_url
-      sparql_triplestore_repository: sparql_triplestore_repository
+
       split_property: split_property_11
       split_class: split_class_11
       split_delimiter: split_delimiter_11
@@ -462,12 +467,12 @@ steps:
     out: [execute_split_logs]
 
   step712-split:
-    run: ../cwl/cwl-steps/run-split.cwl
+    run: ../../cwl/cwl-steps/run-split.cwl
     in:
       working_directory: working_directory
       dataset: dataset
       sparql_triplestore_url: sparql_triplestore_url
-      sparql_triplestore_repository: sparql_triplestore_repository
+
       split_property: split_property_12
       split_class: split_class_12
       split_delimiter: split_delimiter_12
@@ -475,12 +480,12 @@ steps:
     out: [execute_split_logs]
 
   step713-split:
-    run: ../cwl/cwl-steps/run-split.cwl
+    run: ../../cwl/cwl-steps/run-split.cwl
     in:
       working_directory: working_directory
       dataset: dataset
       sparql_triplestore_url: sparql_triplestore_url
-      sparql_triplestore_repository: sparql_triplestore_repository
+
       split_property: split_property_13
       split_class: split_class_13
       split_delimiter: split_delimiter_13
@@ -488,12 +493,12 @@ steps:
     out: [execute_split_logs]
 
   step714-split:
-    run: ../cwl/cwl-steps/run-split.cwl
+    run: ../../cwl/cwl-steps/run-split.cwl
     in:
       working_directory: working_directory
       dataset: dataset
       sparql_triplestore_url: sparql_triplestore_url
-      sparql_triplestore_repository: sparql_triplestore_repository
+
       split_property: split_property_14
       split_class: split_class_14
       split_delimiter: split_delimiter_14
@@ -501,12 +506,12 @@ steps:
     out: [execute_split_logs]
 
   step715-split:
-    run: ../cwl/cwl-steps/run-split.cwl
+    run: ../../cwl/cwl-steps/run-split.cwl
     in:
       working_directory: working_directory
       dataset: dataset
       sparql_triplestore_url: sparql_triplestore_url
-      sparql_triplestore_repository: sparql_triplestore_repository
+
       split_property: split_property_15
       split_class: split_class_15
       split_delimiter: split_delimiter_15
@@ -514,12 +519,12 @@ steps:
     out: [execute_split_logs]
 
   step716-split:
-    run: ../cwl/cwl-steps/run-split.cwl
+    run: ../../cwl/cwl-steps/run-split.cwl
     in:
       working_directory: working_directory
       dataset: dataset
       sparql_triplestore_url: sparql_triplestore_url
-      sparql_triplestore_repository: sparql_triplestore_repository
+
       split_property: split_property_16
       split_class: split_class_16
       split_delimiter: split_delimiter_16
@@ -527,12 +532,12 @@ steps:
     out: [execute_split_logs]
 
   step717-split:
-    run: ../cwl/cwl-steps/run-split.cwl
+    run: ../../cwl/cwl-steps/run-split.cwl
     in:
       working_directory: working_directory
       dataset: dataset
       sparql_triplestore_url: sparql_triplestore_url
-      sparql_triplestore_repository: sparql_triplestore_repository
+
       split_property: split_property_17
       split_class: split_class_17
       split_delimiter: split_delimiter_17
@@ -540,12 +545,12 @@ steps:
     out: [execute_split_logs]
 
   step718-split:
-    run: ../cwl/cwl-steps/run-split.cwl
+    run: ../../cwl/cwl-steps/run-split.cwl
     in:
       working_directory: working_directory
       dataset: dataset
       sparql_triplestore_url: sparql_triplestore_url
-      sparql_triplestore_repository: sparql_triplestore_repository
+
       split_property: split_property_18
       split_class: split_class_18
       split_delimiter: split_delimiter_18
@@ -553,12 +558,12 @@ steps:
     out: [execute_split_logs]
 
   step719-split:
-    run: ../cwl/cwl-steps/run-split.cwl
+    run: ../../cwl/cwl-steps/run-split.cwl
     in:
       working_directory: working_directory
       dataset: dataset
       sparql_triplestore_url: sparql_triplestore_url
-      sparql_triplestore_repository: sparql_triplestore_repository
+
       split_property: split_property_19
       split_class: split_class_19
       split_delimiter: split_delimiter_19
@@ -566,12 +571,12 @@ steps:
     out: [execute_split_logs]
 
   step720-split:
-    run: ../cwl/cwl-steps/run-split.cwl
+    run: ../../cwl/cwl-steps/run-split.cwl
     in:
       working_directory: working_directory
       dataset: dataset
       sparql_triplestore_url: sparql_triplestore_url
-      sparql_triplestore_repository: sparql_triplestore_repository
+
       split_property: split_property_20
       split_class: split_class_20
       split_delimiter: split_delimiter_20
@@ -579,12 +584,12 @@ steps:
     out: [execute_split_logs]
 
   step721-split:
-    run: ../cwl/cwl-steps/run-split.cwl
+    run: ../../cwl/cwl-steps/run-split.cwl
     in:
       working_directory: working_directory
       dataset: dataset
       sparql_triplestore_url: sparql_triplestore_url
-      sparql_triplestore_repository: sparql_triplestore_repository
+
       split_property: split_property_21
       split_class: split_class_21
       split_delimiter: split_delimiter_21
@@ -592,12 +597,12 @@ steps:
     out: [execute_split_logs]
 
   step722-split:
-    run: ../cwl/cwl-steps/run-split.cwl
+    run: ../../cwl/cwl-steps/run-split.cwl
     in:
       working_directory: working_directory
       dataset: dataset
       sparql_triplestore_url: sparql_triplestore_url
-      sparql_triplestore_repository: sparql_triplestore_repository
+
       split_property: split_property_22
       split_class: split_class_22
       split_delimiter: split_delimiter_22
@@ -605,12 +610,12 @@ steps:
     out: [execute_split_logs]
 
   step723-split:
-    run: ../cwl/cwl-steps/run-split.cwl
+    run: ../../cwl/cwl-steps/run-split.cwl
     in:
       working_directory: working_directory
       dataset: dataset
       sparql_triplestore_url: sparql_triplestore_url
-      sparql_triplestore_repository: sparql_triplestore_repository
+
       split_property: split_property_23
       split_class: split_class_23
       split_delimiter: split_delimiter_23
@@ -618,12 +623,12 @@ steps:
     out: [execute_split_logs]
 
   step724-split:
-    run: ../cwl/cwl-steps/run-split.cwl
+    run: ../../cwl/cwl-steps/run-split.cwl
     in:
       working_directory: working_directory
       dataset: dataset
       sparql_triplestore_url: sparql_triplestore_url
-      sparql_triplestore_repository: sparql_triplestore_repository
+
       split_property: split_property_24
       split_class: split_class_24
       split_delimiter: split_delimiter_24
@@ -631,12 +636,12 @@ steps:
     out: [execute_split_logs]
 
   step725-split:
-    run: ../cwl/cwl-steps/run-split.cwl
+    run: ../../cwl/cwl-steps/run-split.cwl
     in:
       working_directory: working_directory
       dataset: dataset
       sparql_triplestore_url: sparql_triplestore_url
-      sparql_triplestore_repository: sparql_triplestore_repository
+
       split_property: split_property_25
       split_class: split_class_25
       split_delimiter: split_delimiter_25
@@ -644,12 +649,12 @@ steps:
     out: [execute_split_logs]
 
   step726-split:
-    run: ../cwl/cwl-steps/run-split.cwl
+    run: ../../cwl/cwl-steps/run-split.cwl
     in:
       working_directory: working_directory
       dataset: dataset
       sparql_triplestore_url: sparql_triplestore_url
-      sparql_triplestore_repository: sparql_triplestore_repository
+
       split_property: split_property_26
       split_class: split_class_26
       split_delimiter: split_delimiter_26
@@ -657,12 +662,12 @@ steps:
     out: [execute_split_logs]
 
   step727-split:
-    run: ../cwl/cwl-steps/run-split.cwl
+    run: ../../cwl/cwl-steps/run-split.cwl
     in:
       working_directory: working_directory
       dataset: dataset
       sparql_triplestore_url: sparql_triplestore_url
-      sparql_triplestore_repository: sparql_triplestore_repository
+
       split_property: split_property_27
       split_class: split_class_27
       split_delimiter: split_delimiter_27
@@ -670,12 +675,12 @@ steps:
     out: [execute_split_logs]
 
   step728-split:
-    run: ../cwl/cwl-steps/run-split.cwl
+    run: ../../cwl/cwl-steps/run-split.cwl
     in:
       working_directory: working_directory
       dataset: dataset
       sparql_triplestore_url: sparql_triplestore_url
-      sparql_triplestore_repository: sparql_triplestore_repository
+
       split_property: split_property_28
       split_class: split_class_28
       split_delimiter: split_delimiter_28
@@ -683,12 +688,12 @@ steps:
     out: [execute_split_logs]
 
   step729-split:
-    run: ../cwl/cwl-steps/run-split.cwl
+    run: ../../cwl/cwl-steps/run-split.cwl
     in:
       working_directory: working_directory
       dataset: dataset
       sparql_triplestore_url: sparql_triplestore_url
-      sparql_triplestore_repository: sparql_triplestore_repository
+
       split_property: split_property_29
       split_class: split_class_29
       split_delimiter: split_delimiter_29
@@ -696,12 +701,12 @@ steps:
     out: [execute_split_logs]
 
   step730-split:
-    run: ../cwl/cwl-steps/run-split.cwl
+    run: ../../cwl/cwl-steps/run-split.cwl
     in:
       working_directory: working_directory
       dataset: dataset
       sparql_triplestore_url: sparql_triplestore_url
-      sparql_triplestore_repository: sparql_triplestore_repository
+
       split_property: split_property_30
       split_class: split_class_30
       split_delimiter: split_delimiter_30
@@ -709,12 +714,12 @@ steps:
     out: [execute_split_logs]
 
   step731-split:
-    run: ../cwl/cwl-steps/run-split.cwl
+    run: ../../cwl/cwl-steps/run-split.cwl
     in:
       working_directory: working_directory
       dataset: dataset
       sparql_triplestore_url: sparql_triplestore_url
-      sparql_triplestore_repository: sparql_triplestore_repository
+
       split_property: split_property_31
       split_class: split_class_31
       split_delimiter: split_delimiter_31
@@ -722,12 +727,12 @@ steps:
     out: [execute_split_logs]
 
   step732-split:
-    run: ../cwl/cwl-steps/run-split.cwl
+    run: ../../cwl/cwl-steps/run-split.cwl
     in:
       working_directory: working_directory
       dataset: dataset
       sparql_triplestore_url: sparql_triplestore_url
-      sparql_triplestore_repository: sparql_triplestore_repository
+
       split_property: split_property_32
       split_class: split_class_32
       split_delimiter: split_delimiter_32
@@ -735,12 +740,12 @@ steps:
     out: [execute_split_logs]
 
   step733-split:
-    run: ../cwl/cwl-steps/run-split.cwl
+    run: ../../cwl/cwl-steps/run-split.cwl
     in:
       working_directory: working_directory
       dataset: dataset
       sparql_triplestore_url: sparql_triplestore_url
-      sparql_triplestore_repository: sparql_triplestore_repository
+
       split_property: split_property_33
       split_class: split_class_33
       split_delimiter: split_delimiter_33
@@ -748,12 +753,12 @@ steps:
     out: [execute_split_logs]
 
   step734-split:
-    run: ../cwl/cwl-steps/run-split.cwl
+    run: ../../cwl/cwl-steps/run-split.cwl
     in:
       working_directory: working_directory
       dataset: dataset
       sparql_triplestore_url: sparql_triplestore_url
-      sparql_triplestore_repository: sparql_triplestore_repository
+
       split_property: split_property_34
       split_class: split_class_34
       split_delimiter: split_delimiter_34
@@ -761,12 +766,12 @@ steps:
     out: [execute_split_logs]
 
   step735-split:
-    run: ../cwl/cwl-steps/run-split.cwl
+    run: ../../cwl/cwl-steps/run-split.cwl
     in:
       working_directory: working_directory
       dataset: dataset
       sparql_triplestore_url: sparql_triplestore_url
-      sparql_triplestore_repository: sparql_triplestore_repository
+
       split_property: split_property_35
       split_class: split_class_35
       split_delimiter: split_delimiter_35
@@ -774,12 +779,12 @@ steps:
     out: [execute_split_logs]
 
   step736-split:
-    run: ../cwl/cwl-steps/run-split.cwl
+    run: ../../cwl/cwl-steps/run-split.cwl
     in:
       working_directory: working_directory
       dataset: dataset
       sparql_triplestore_url: sparql_triplestore_url
-      sparql_triplestore_repository: sparql_triplestore_repository
+
       split_property: split_property_36
       split_class: split_class_36
       split_delimiter: split_delimiter_36
@@ -787,12 +792,12 @@ steps:
     out: [execute_split_logs]
 
   step737-split:
-    run: ../cwl/cwl-steps/run-split.cwl
+    run: ../../cwl/cwl-steps/run-split.cwl
     in:
       working_directory: working_directory
       dataset: dataset
       sparql_triplestore_url: sparql_triplestore_url
-      sparql_triplestore_repository: sparql_triplestore_repository
+
       split_property: split_property_37
       split_class: split_class_37
       split_delimiter: split_delimiter_37
@@ -800,12 +805,12 @@ steps:
     out: [execute_split_logs]
 
   step738-split:
-    run: ../cwl/cwl-steps/run-split.cwl
+    run: ../../cwl/cwl-steps/run-split.cwl
     in:
       working_directory: working_directory
       dataset: dataset
       sparql_triplestore_url: sparql_triplestore_url
-      sparql_triplestore_repository: sparql_triplestore_repository
+
       split_property: split_property_38
       split_class: split_class_38
       split_delimiter: split_delimiter_38
@@ -813,12 +818,12 @@ steps:
     out: [execute_split_logs]
 
   step739-split:
-    run: ../cwl/cwl-steps/run-split.cwl
+    run: ../../cwl/cwl-steps/run-split.cwl
     in:
       working_directory: working_directory
       dataset: dataset
       sparql_triplestore_url: sparql_triplestore_url
-      sparql_triplestore_repository: sparql_triplestore_repository
+
       split_property: split_property_39
       split_class: split_class_39
       split_delimiter: split_delimiter_39
@@ -826,12 +831,12 @@ steps:
     out: [execute_split_logs]
 
   step740-split:
-    run: ../cwl/cwl-steps/run-split.cwl
+    run: ../../cwl/cwl-steps/run-split.cwl
     in:
       working_directory: working_directory
       dataset: dataset
       sparql_triplestore_url: sparql_triplestore_url
-      sparql_triplestore_repository: sparql_triplestore_repository
+
       split_property: split_property_40
       split_class: split_class_40
       split_delimiter: split_delimiter_40
@@ -839,12 +844,12 @@ steps:
     out: [execute_split_logs]
 
   step741-split:
-    run: ../cwl/cwl-steps/run-split.cwl
+    run: ../../cwl/cwl-steps/run-split.cwl
     in:
       working_directory: working_directory
       dataset: dataset
       sparql_triplestore_url: sparql_triplestore_url
-      sparql_triplestore_repository: sparql_triplestore_repository
+
       split_property: split_property_41
       split_class: split_class_41
       split_delimiter: split_delimiter_41
@@ -852,12 +857,12 @@ steps:
     out: [execute_split_logs]
 
   step742-split:
-    run: ../cwl/cwl-steps/run-split.cwl
+    run: ../../cwl/cwl-steps/run-split.cwl
     in:
       working_directory: working_directory
       dataset: dataset
       sparql_triplestore_url: sparql_triplestore_url
-      sparql_triplestore_repository: sparql_triplestore_repository
+
       split_property: split_property_42
       split_class: split_class_42
       split_delimiter: split_delimiter_42
@@ -865,12 +870,12 @@ steps:
     out: [execute_split_logs]
 
   step743-split:
-    run: ../cwl/cwl-steps/run-split.cwl
+    run: ../../cwl/cwl-steps/run-split.cwl
     in:
       working_directory: working_directory
       dataset: dataset
       sparql_triplestore_url: sparql_triplestore_url
-      sparql_triplestore_repository: sparql_triplestore_repository
+
       split_property: split_property_43
       split_class: split_class_43
       split_delimiter: split_delimiter_43
@@ -878,12 +883,12 @@ steps:
     out: [execute_split_logs]
 
   step744-split:
-    run: ../cwl/cwl-steps/run-split.cwl
+    run: ../../cwl/cwl-steps/run-split.cwl
     in:
       working_directory: working_directory
       dataset: dataset
       sparql_triplestore_url: sparql_triplestore_url
-      sparql_triplestore_repository: sparql_triplestore_repository
+
       split_property: split_property_44
       split_class: split_class_44
       split_delimiter: split_delimiter_44
@@ -891,13 +896,13 @@ steps:
     out: [execute_split_logs]
 
   step8-execute-transform-queries:
-    run: ../cwl/cwl-steps/execute-sparql-mapping.cwl
+    run: ../../cwl/cwl-steps/execute-sparql-mapping.cwl
     in:
       working_directory: working_directory
       dataset: dataset
       sparql_queries_path: sparql_transform_queries_path
       sparql_triplestore_url: sparql_triplestore_url
-      sparql_triplestore_repository: sparql_triplestore_repository
+
       previous_step_results_0: step700-split/execute_split_logs
       previous_step_results_1: step701-split/execute_split_logs
       previous_step_results_2: step702-split/execute_split_logs
@@ -946,12 +951,13 @@ steps:
     out: [execute_sparql_query_logs]
 
   step9-compute-hcls-stats:
-    run: ../cwl/cwl-steps/execute-sparql-mapping.cwl
+    run: ../../cwl/cwl-steps/execute-sparql-mapping.cwl
     in:
       working_directory: working_directory
       dataset: dataset
       sparql_queries_path: sparql_compute_hcls_path
       sparql_triplestore_url: sparql_triplestore_url
-      sparql_triplestore_repository: sparql_triplestore_repository
+
+      sparql_input_graph_uri : sparql_input_graph_uri
       previous_step_results: step8-execute-transform-queries/execute_sparql_query_logs
     out: [execute_sparql_query_logs]

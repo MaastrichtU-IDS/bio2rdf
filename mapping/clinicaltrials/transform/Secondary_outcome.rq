@@ -27,7 +27,7 @@ INSERT
 			clinicaltrials_vocabulary:measure  ?measure;
 			clinicaltrials_vocabulary:time-frame  ?time_frame;
 			clinicaltrials_vocabulary:safety-issue  ?safety_issue;
-			dc:description  ?description;
+			dc:description  ?description .
 		
 	}
 }

@@ -14,6 +14,8 @@ sparql_base_uri: "https://w3id.org/data2services/"
 sparql_triplestore_url: http://graphdb:7200
 sparql_triplestore_repository: clinicaltrials
 
+sparql_input_graph_uri: https://w3id.org/data2services/graph/clinicaltrials
+
 sparql_transform_queries_path: /data/mapping/clinicaltrials/transform
 sparql_insert_metadata_path: /data/mapping/clinicaltrials/metadata
 

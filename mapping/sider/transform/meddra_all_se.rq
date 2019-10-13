@@ -25,7 +25,7 @@ INSERT
 			bio2rdf_vocabulary:uri ?uri;
 
 			sider_vocabulary:drug ?stitchId;
-			sider_vocabulary:effect ?meddraId;		
+			sider_vocabulary:effect ?meddraId .		
 	}
 }
 WHERE {

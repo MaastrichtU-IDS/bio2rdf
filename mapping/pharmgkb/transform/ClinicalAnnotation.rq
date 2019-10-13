@@ -41,7 +41,7 @@ INSERT
 			pharmgkb_vocabulary:chemical ?chemical;
 			pharmgkb_vocabulary:disease ?disease;
 			pharmgkb_vocabulary:race ?race;
-			pharmgkb_vocabulary:chromosome ?chr;
+			pharmgkb_vocabulary:chromosome ?chr .
 	}
 }
 WHERE {

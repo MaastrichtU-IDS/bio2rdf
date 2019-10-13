@@ -20,7 +20,11 @@ inputs:
   sparql_tmp_graph_uri: string
 
   sparql_triplestore_url: string
-  sparql_triplestore_repository: string
+
+  triple_store_username: string
+  triple_store_password: string
+
+  sparql_input_graph_uri: string
 
   sparql_transform_queries_path: string
   sparql_insert_metadata_path: string
@@ -56,7 +60,7 @@ outputs:
 steps:
 
   step1-d2s-download:
-    run: ../cwl/cwl-steps/d2s-download.cwl
+    run: ../../cwl/cwl-steps/d2s-download.cwl
     in:
       working_directory: working_directory
       dataset: dataset
@@ -65,7 +69,7 @@ steps:
     out: [download_dataset_logs]
 
   step2-xml2rdf:
-    run: ../cwl/cwl-steps/run-xml2rdf.cwl
+    run: ../../cwl/cwl-steps/run-xml2rdf.cwl
     in:
       working_directory: working_directory
       dataset: dataset
@@ -74,45 +78,46 @@ steps:
     out: [xml2rdf_file_output,nquads_file_output]
 
   step3-rdf-upload:
-    run: ../cwl/cwl-steps/rdf-upload.cwl
+    run: ../../cwl/cwl-steps/rdf-upload.cwl
     in:
       working_directory: working_directory
       dataset: dataset
       nquads_file: step2-xml2rdf/nquads_file_output
       sparql_triplestore_url: sparql_triplestore_url
-      sparql_triplestore_repository: sparql_triplestore_repository
+
     out: [rdf_upload_logs]
 
   step4-insert-metadata:
-    run: ../cwl/cwl-steps/execute-sparql-mapping.cwl
+    run: ../../cwl/cwl-steps/execute-sparql-mapping.cwl
     in:
       working_directory: working_directory
       dataset: dataset
       sparql_queries_path: sparql_insert_metadata_path
       sparql_triplestore_url: sparql_triplestore_url
-      sparql_triplestore_repository: sparql_triplestore_repository
+
       previous_step_results: step3-rdf-upload/rdf_upload_logs
     out: [execute_sparql_query_logs]
  
   step5-execute-transform-queries:
-    run: ../cwl/cwl-steps/execute-sparql-mapping.cwl
+    run: ../../cwl/cwl-steps/execute-sparql-mapping.cwl
     in:
       working_directory: working_directory
       dataset: dataset
       sparql_queries_path: sparql_transform_queries_path
       sparql_triplestore_url: sparql_triplestore_url
-      sparql_triplestore_repository: sparql_triplestore_repository
+
       previous_step_results: step3-rdf-upload/rdf_upload_logs      
     out: [execute_sparql_query_logs]
 
   step6-compute-hcls-stats:
-    run: ../cwl/cwl-steps/execute-sparql-mapping.cwl
+    run: ../../cwl/cwl-steps/execute-sparql-mapping.cwl
     in:
       working_directory: working_directory
       dataset: dataset
       sparql_queries_path: sparql_compute_hcls_path
       sparql_triplestore_url: sparql_triplestore_url
-      sparql_triplestore_repository: sparql_triplestore_repository
+
+      sparql_input_graph_uri : sparql_input_graph_uri
       previous_step_results: step5-execute-transform-queries/execute_sparql_query_logs
     out: [execute_sparql_query_logs]
 

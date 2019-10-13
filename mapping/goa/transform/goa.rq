@@ -34,7 +34,7 @@ INSERT
 			?aspect_predicate ?Go_id;
 			goa_vocabulary:entry-date ?entry_date;
 			goa_vocabulary:article ?ref;
-			goa_vocabulary:assigned-by ?Assigned_by;	
+			goa_vocabulary:assigned-by ?Assigned_by .	
 			
 	}
 }

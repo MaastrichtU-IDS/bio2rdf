@@ -8,7 +8,7 @@ label: Data2Services CWL workflow, Ammar Ammar <ammar257ammar@gmail.com>
 
 baseCommand: [docker, run]
 
-arguments: [ "--rm", "--link","graphdb:graphdb", "-v" , "$(inputs.working_directory):/data", "-v", "$(runtime.outdir):/tmp", 
+arguments: [ "--rm", "--link","virtuoso:virtuoso", "-v" , "$(inputs.working_directory):/data", "-v", "$(runtime.outdir):/tmp", 
 "aammar/data2services-sparql-operations", "-op", "split", "--split-delete" ]
 
 inputs:
@@ -23,7 +23,7 @@ inputs:
       position: 1
       prefix: -ep
   sparql_triplestore_repository:
-    type: string
+    type: string?
     inputBinding:
       position: 2
       prefix: -rep

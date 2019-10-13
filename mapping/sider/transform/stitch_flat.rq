@@ -23,7 +23,7 @@ INSERT
 			bio2rdf_vocabulary:namespace "stitch";
 			bio2rdf_vocabulary:identifier ?stitch;
 			bio2rdf_vocabulary:uri ?uri;
-			stitch_vocabulary:x-pubchem.compound ?pubchemId;
+			stitch_vocabulary:x-pubchem.compound ?pubchemId .
 	}
 }
 WHERE {

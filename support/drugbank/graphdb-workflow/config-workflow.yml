@@ -10,6 +10,8 @@ sparql_tmp_graph_uri: "https://w3id.org/data2services/graph/autor2rml/drugbank"
 sparql_base_uri: "https://w3id.org/data2services/"
 #autor2rml_column_header: "test1,test2,test3,test5"
 
+sparql_input_graph_uri: https://w3id.org/data2services/graph/drugbank
+
 # RdfUpload params
 sparql_triplestore_url: http://graphdb:7200
 sparql_triplestore_repository: drugbank

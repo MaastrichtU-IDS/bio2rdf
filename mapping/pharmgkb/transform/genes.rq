@@ -41,7 +41,7 @@ INSERT
 			pharmgkb_vocabulary:chromosome-start-grch37 ?chr_start_37;
 			pharmgkb_vocabulary:chromosome-end-grch37 ?chr_end_37;
 			pharmgkb_vocabulary:chromosome-start-grch38 ?chr_start_38;
-			pharmgkb_vocabulary:chromosome-end-grch38 ?chr_end_38;
+			pharmgkb_vocabulary:chromosome-end-grch38 ?chr_end_38 .
 			
 	}
 }

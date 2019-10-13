@@ -9,8 +9,12 @@ sparql_base_uri: "https://w3id.org/data2services/"
 #autor2rml_column_header: "test1,test2,test3,test5"
 
 # RdfUpload params
-sparql_triplestore_url: http://graphdb:7200
-sparql_triplestore_repository: hgnc
+sparql_triplestore_url: http://virtuoso:8890/sparql
+
+triple_store_password: dba
+triple_store_username: dba
+
+sparql_input_graph_uri: https://w3id.org/data2services/graph/hgnc
 
 
 sparql_transform_queries_path: /data/mapping/hgnc/transform
@@ -24,7 +28,6 @@ split_delimiter_0: ","
 split_property_1: https://w3id.org/data2services/model/PreviousNames
 split_class_1: https://w3id.org/data2services/data/input/hgnc/hgnc_complete_set.tsv
 split_delimiter_1: ','
-split_quote_1: '"'
 
 split_property_2: https://w3id.org/data2services/model/Synonyms
 split_class_2: https://w3id.org/data2services/data/input/hgnc/hgnc_complete_set.tsv
@@ -33,7 +36,6 @@ split_delimiter_2: ','
 split_property_3: https://w3id.org/data2services/model/NameSynonyms
 split_class_3: https://w3id.org/data2services/data/input/hgnc/hgnc_complete_set.tsv
 split_delimiter_3: ','
-split_quote_3: '"'
 
 split_property_4: https://w3id.org/data2services/model/EnzymeIds
 split_class_4: https://w3id.org/data2services/data/input/hgnc/hgnc_complete_set.tsv
@@ -58,7 +60,6 @@ split_delimiter_8: ','
 split_property_9: https://w3id.org/data2services/model/GeneFamilyDescription
 split_class_9: https://w3id.org/data2services/data/input/hgnc/hgnc_complete_set.tsv
 split_delimiter_9: ','
-split_quote_9: '"'
 
 split_property_10: https://w3id.org/data2services/model/CcdsIds
 split_class_10: https://w3id.org/data2services/data/input/hgnc/hgnc_complete_set.tsv

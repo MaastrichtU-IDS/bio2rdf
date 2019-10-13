@@ -16,6 +16,9 @@ sparql_transform_queries_path: /data/mapping/pharmgkb/transform
 sparql_insert_metadata_path: /data/mapping/pharmgkb/metadata
 
 
+sparql_input_graph_uri: https://w3id.org/data2services/graph/pharmgkb
+
+
 # Split params
 split_property_0: https://w3id.org/data2services/model/Pmids
 split_class_0: https://w3id.org/data2services/data/input/pharmgkb/relationships/relationships.tsv

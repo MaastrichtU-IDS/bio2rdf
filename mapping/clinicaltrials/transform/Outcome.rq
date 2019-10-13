@@ -32,7 +32,7 @@ INSERT
 
 			clinicaltrials_vocabulary:group  ?group_uri;
 			clinicaltrials_vocabulary:measure  ?measure_uri;
-			clinicaltrials_vocabulary:analysis  ?analysis_uri;
+			clinicaltrials_vocabulary:analysis  ?analysis_uri .
 	}
 }
 WHERE {

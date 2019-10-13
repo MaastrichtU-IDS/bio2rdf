@@ -41,7 +41,6 @@ INSERT
 			hgnc_vocabulary:date-modified ?DateModified;
 			hgnc_vocabulary:date-symbol-changed ?DateSymbolChanged;
 			hgnc_vocabulary:date-name-changed ?DateNameChanged;
-			hgnc_vocabulary:accession ?AccessionNumbers;
 			hgnc_vocabulary:x-ec ?EnzymeIds;
 			hgnc_vocabulary:x-ncbigene ?EntrezGeneId;
 			hgnc_vocabulary:x-ensembl ?EnsemblGeneId;
@@ -50,7 +49,6 @@ INSERT
 			hgnc_vocabulary:x-refseq ?RefseqIds;
 			hgnc_vocabulary:gene-family-tag ?GeneFamilyTag;
 			hgnc_vocabulary:gene-family-description ?GeneFamilyDescription;
-			hgnc_vocabulary:record-type ?RecordType;
 			hgnc_vocabulary:x-ccds ?CcdsIds;
 			hgnc_vocabulary:x-vega ?VegaIds;
 			hgnc_vocabulary:x-ncbigene ?EntrezGeneIdSuppliedByNcbi;
@@ -63,118 +61,98 @@ INSERT
 			hgnc_vocabulary:x-mgi ?mgi;
 			hgnc_vocabulary:x-rgd ?rgd;
 			hgnc_vocabulary:x-rnacentral ?RnacentralIdsSuppliedByRnacentral;
-			hgnc_vocabulary:x-lnci ?LncipediaSymbolSuppliedByLncipedia;			
+			hgnc_vocabulary:x-lnci ?LncipediaSymbolSuppliedByLncipedia.			
 	}
 }
 WHERE {
     GRAPH <https://w3id.org/data2services/graph/autor2rml/hgnc> {
-		
+
 		?s rdf:type <https://w3id.org/data2services/data/input/hgnc/hgnc_complete_set.tsv>.
 
-		?s d2sgeneric:HgncId ?fullID .
+		?s d2sgeneric:Hgnc_id ?fullID .
 		BIND ( SUBSTR(?fullID,6) AS ?accessionID )
 		
 		BIND ( iri(concat("hgnc:", ?accessionID) ) AS ?geneID )
 		
 		OPTIONAL { 
-         	 ?s d2sgeneric:ApprovedSymbol ?name .
+         	 ?s d2sgeneric:Symbol ?name .
 		 BIND ( concat("Gene Symbol for ",?name, " [hgnc:", ?accessionID, "] ") AS ?label )
 			
 		} OPTIONAL {
-         	 ?s d2sgeneric:ApprovedSymbol ?ApprovedSymbol .	
+         	 ?s d2sgeneric:Symbol ?ApprovedSymbol .	
 		} OPTIONAL {
-         	 ?s d2sgeneric:ApprovedName ?ApprovedName .	
+         	 ?s d2sgeneric:Name ?ApprovedName .	
 		} OPTIONAL {
          	 ?s d2sgeneric:Status ?Status .	
 		} OPTIONAL {
-         	 ?s d2sgeneric:LocusType ?LocusType .	
+         	 ?s d2sgeneric:Locus_type ?LocusType .	
 		} OPTIONAL {
-         	 ?s d2sgeneric:LocusGroup ?LocusGroup .	
+         	 ?s d2sgeneric:Locus_group ?LocusGroup .	
 		} OPTIONAL {
-         	 ?s d2sgeneric:PreviousSymbols ?PreviousSymbols .	
+         	 ?s d2sgeneric:Prev_symbol ?PreviousSymbols .	
 		} OPTIONAL {
-         	 ?s d2sgeneric:PreviousNames ?PreviousNames .	
+         	 ?s d2sgeneric:Prev_name ?PreviousNames .	
 		} OPTIONAL {
-         	 ?s d2sgeneric:Synonyms ?Synonyms .	
+         	 ?s d2sgeneric:Alias_symbol ?Synonyms .	
 		} OPTIONAL {
-         	 ?s d2sgeneric:NameSynonyms ?NameSynonyms .	
+         	 ?s d2sgeneric:Alias_name ?NameSynonyms .	
 		} OPTIONAL {
-         	 ?s d2sgeneric:Chromosome ?Chromosome .	
+         	 ?s d2sgeneric:Location ?Chromosome .	
 		} OPTIONAL {
-         	 ?s d2sgeneric:DateApproved ?DateApproved .	
+         	 ?s d2sgeneric:Date_approved_reserved ?DateApproved .	
 		} OPTIONAL {
-         	 ?s d2sgeneric:DateModified ?DateModified .	
+         	 ?s d2sgeneric:Date_modified ?DateModified .	
 		} OPTIONAL {
-         	 ?s d2sgeneric:DateSymbolChanged ?DateSymbolChanged .	
+         	 ?s d2sgeneric:Date_symbol_changed ?DateSymbolChanged .	
 		} OPTIONAL {
-         	 ?s d2sgeneric:DateNameChanged ?DateNameChanged .	
+         	 ?s d2sgeneric:Date_name_changed ?DateNameChanged .	
 		} OPTIONAL {
-         	 ?s d2sgeneric:AccessionNumbers ?AccessionNumbers .	
-		} OPTIONAL {
-         	 ?s d2sgeneric:EnzymeIds ?EnzymeIdsR .	
+         	 ?s d2sgeneric:Enzyme_id ?EnzymeIdsR .	
 		 BIND ( iri(concat("http://bio2rdf.org/ec:", ?EnzymeIdsR)) AS ?EnzymeIds )
 		} OPTIONAL {
-         	 ?s d2sgeneric:EntrezGeneId ?EntrezGeneIdR .	
+         	 ?s d2sgeneric:Entrez_id ?EntrezGeneIdR .	
 		 BIND ( iri(concat("http://bio2rdf.org/ncbigene:", ?EntrezGeneIdR)) AS ?EntrezGeneId )
 		} OPTIONAL {
-         	 ?s d2sgeneric:EnsemblGeneId ?EnsemblGeneIdR .
+         	 ?s d2sgeneric:Ensembl_gene_id ?EnsemblGeneIdR .
 		 BIND ( iri(concat("http://bio2rdf.org/ensembl:", ?EnsemblGeneIdR)) AS ?EnsemblGeneId )	
 		} OPTIONAL {
-		 ?s d2sgeneric:MouseGenomeDatabaseId ?MouseGenomeDatabaseId.
+		 ?s d2sgeneric:Mgd_id ?MouseGenomeDatabaseId.
 		 BIND ( SUBSTR(?MouseGenomeDatabaseId,5) AS ?mgi_mainR )
 		 BIND ( iri(concat("http://bio2rdf.org/mgi:", ?mgi_mainR)) AS ?mgi_main )	
 		} OPTIONAL {
-         	 ?s d2sgeneric:PubmedIds ?PubmedIdsR .
+         	 ?s d2sgeneric:Pubmed_id ?PubmedIdsR .
 		 BIND ( iri(concat("http://bio2rdf.org/pubmed:", ?PubmedIdsR)) AS ?PubmedIds )		
 		} OPTIONAL {
-         	 ?s d2sgeneric:RefseqIds ?RefseqIdsR .
+         	 ?s d2sgeneric:Refseq_accession ?RefseqIdsR .
 		 BIND ( iri(concat("http://bio2rdf.org/refseq:", ?RefseqIdsR)) AS ?RefseqIds )			
 		} OPTIONAL {
-         	 ?s d2sgeneric:GeneFamilyTag ?GeneFamilyTag .	
+         	 ?s d2sgeneric:Gene_family_id ?GeneFamilyTag .	
 		} OPTIONAL {
-         	 ?s d2sgeneric:GeneFamilyDescription ?GeneFamilyDescription .	
+         	 ?s d2sgeneric:Gene_family ?GeneFamilyDescription .	
 		} OPTIONAL {
-         	 ?s d2sgeneric:RecordType ?RecordType .	
-		} OPTIONAL {
-         	 ?s d2sgeneric:CcdsIds ?CcdsIdsR .
+         	 ?s d2sgeneric:Ccds_id ?CcdsIdsR .
 		 BIND ( iri(concat("http://bio2rdf.org/ccds:", ?CcdsIdsR)) AS ?CcdsIds )				
 		} OPTIONAL {
-         	 ?s d2sgeneric:VegaIds ?VegaIdsR .
+         	 ?s d2sgeneric:Vega_id ?VegaIdsR .
 		 BIND ( iri(concat("http://bio2rdf.org/vega:", ?VegaIdsR)) AS ?VegaIds )					
 		} OPTIONAL {
-         	 ?s d2sgeneric:EntrezGeneIdSuppliedByNcbi ?EntrezGeneIdSuppliedByNcbiR .	
-		 BIND ( iri(concat("http://bio2rdf.org/ncbigene:", ?EntrezGeneIdSuppliedByNcbiR)) AS ?EntrezGeneIdSuppliedByNcbi )					
-		} OPTIONAL {
-         	 ?s d2sgeneric:OmimIdSuppliedByNcbi ?OmimIdSuppliedByNcbiR .
+         	 ?s d2sgeneric:Omim_id ?OmimIdSuppliedByNcbiR .
 		 BIND ( iri(concat("http://bio2rdf.org/omim:", ?OmimIdSuppliedByNcbiR)) AS ?OmimIdSuppliedByNcbi )						
 		} OPTIONAL {
-         	 ?s d2sgeneric:RefseqSuppliedByNcbi ?RefseqSuppliedByNcbiR .
-		 BIND ( iri(concat("http://bio2rdf.org/refseq:", ?RefseqSuppliedByNcbiR)) AS ?RefseqSuppliedByNcbi )							
-		} OPTIONAL {
-         	 ?s d2sgeneric:UniprotIdSuppliedByUniprot ?UniprotIdSuppliedByUniprotR .
+         	 ?s d2sgeneric:Uniprot_ids ?UniprotIdSuppliedByUniprotR .
 		 BIND ( iri(concat("http://bio2rdf.org/uniprot:", ?UniprotIdSuppliedByUniprotR)) AS ?UniprotIdSuppliedByUniprot )								
 		} OPTIONAL {
-         	 ?s d2sgeneric:EnsemblIdSuppliedByEnsembl ?EnsemblIdSuppliedByEnsemblR .
-		 BIND ( iri(concat("http://bio2rdf.org/ensembl:", ?EnsemblIdSuppliedByEnsemblR)) AS ?EnsemblIdSuppliedByEnsembl )								
-		} OPTIONAL {
-         	 ?s d2sgeneric:VegaIdSuppliedByVega ?VegaIdSuppliedByVegaR .
-		 BIND ( iri(concat("http://bio2rdf.org/vega:", ?VegaIdSuppliedByVegaR)) AS ?VegaIdSuppliedByVega )								
-		} OPTIONAL {
-         	 ?s d2sgeneric:UcscIdSuppliedByUcsc ?UcscIdSuppliedByUcscR .
+         	 ?s d2sgeneric:Ucsc_id ?UcscIdSuppliedByUcscR .
 		 BIND ( iri(concat("http://bio2rdf.org/ucsc:", ?UcscIdSuppliedByUcscR)) AS ?UcscIdSuppliedByUcsc )									
 		} OPTIONAL {
-         	 ?s d2sgeneric:MouseGenomeDatabaseIdSuppliedByMgi ?MouseGenomeDatabaseIdSuppliedByMgi .	
-		 BIND ( SUBSTR(?MouseGenomeDatabaseIdSuppliedByMgi,5) AS ?mgiR )
-		 BIND ( iri(concat("http://bio2rdf.org/mgi:", ?mgiR)) AS ?mgi )	
-		} OPTIONAL {
-         	 ?s d2sgeneric:RatGenomeDatabaseIdSuppliedByRgd ?RatGenomeDatabaseIdSuppliedByRgd .
+         	 ?s d2sgeneric:Rgd_id ?RatGenomeDatabaseIdSuppliedByRgd .
 		 BIND ( SUBSTR(?RatGenomeDatabaseIdSuppliedByRgd,5) AS ?rgdR )	
 		 BIND ( iri(concat("http://bio2rdf.org/rgd:", ?rgdR)) AS ?rgd )	
 		} OPTIONAL {
-         	 ?s d2sgeneric:RnacentralIdsSuppliedByRnacentral ?RnacentralIdsSuppliedByRnacentralR .
+         	 ?s d2sgeneric:Rna_central_ids ?RnacentralIdsSuppliedByRnacentralR .
 		 BIND ( iri(concat("http://bio2rdf.org/rnacentral:", ?RnacentralIdsSuppliedByRnacentralR)) AS ?RnacentralIdsSuppliedByRnacentral )		
 		} OPTIONAL {
-         	 ?s d2sgeneric:LncipediaSymbolSuppliedByLncipedia ?LncipediaSymbolSuppliedByLncipediaR .
+         	 ?s d2sgeneric:Lncipedia ?LncipediaSymbolSuppliedByLncipediaR .
 		 BIND ( iri(concat("http://bio2rdf.org/lnci:", ?LncipediaSymbolSuppliedByLncipediaR)) AS ?LncipediaSymbolSuppliedByLncipedia )		
 		}
 		

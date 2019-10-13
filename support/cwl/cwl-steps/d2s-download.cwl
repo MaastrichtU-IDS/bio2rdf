@@ -9,7 +9,7 @@ label: Data2Services CWL workflow, Ammar Ammar <ammar257ammar@gmail.com>
 baseCommand: [docker, run]
 
 arguments: [ "--rm", "-v" , "$(inputs.working_directory)/input:/data", "-v", "$(runtime.outdir):/tmp", 
-"vemonet/d2s-download", "--download-datasets", "$(inputs.dataset)"]
+"umids/d2s-download", "--download-datasets", "$(inputs.dataset)"]
 
 inputs:
   

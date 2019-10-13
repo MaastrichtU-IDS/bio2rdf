@@ -24,7 +24,7 @@ INSERT
 			bio2rdf_vocabulary:identifier ?id;
 			bio2rdf_vocabulary:uri ?uri;
 
-			clinicaltrials_vocabulary:organization ?agency_class_uri;
+			clinicaltrials_vocabulary:organization ?agency_class_uri .
 			
 			
 	}

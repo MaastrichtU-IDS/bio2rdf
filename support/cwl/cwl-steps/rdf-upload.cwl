@@ -6,30 +6,18 @@ class: CommandLineTool
 label: Data2Services CWL workflow, Ammar Ammar <ammar257ammar@gmail.com> 
 
 
-baseCommand: [docker, run]
+baseCommand: [docker, exec]
 
-arguments: [ "--rm", "--link","graphdb:graphdb", "-v" , "$(inputs.working_directory):/data", "-v", "$(runtime.outdir):/tmp", 
-"-v", "$(inputs.nquads_file.path):/tmp/$(inputs.nquads_file.basename)", 
-"vemonet/rdf-upload:bio2rdf5", "-if", "/tmp/$(inputs.nquads_file.basename)"]
+arguments: [ "-i", "virtuoso","bash", "-c", "cd /data && ./load.sh $(inputs.nquads_file.dirname) rdf_output.nq http://bio2rdf.org vload.log $(inputs.triple_store_password)"]
 
 inputs:
   
-  working_directory:
+  triple_store_username:
     type: string
-  dataset:
+  triple_store_password:
     type: string
   nquads_file:
     type: File
-  sparql_triplestore_url:
-    type: string
-    inputBinding:
-      position: 1
-      prefix: -url
-  sparql_triplestore_repository:
-    type: string
-    inputBinding:
-      position: 2
-      prefix: -rep
 
 stdout: rdf-upload.txt
 

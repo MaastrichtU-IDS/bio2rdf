@@ -41,8 +41,7 @@ INSERT  {
 
         <https://bio2rdf.org/bio2rdf_resource:data2services> a dct:Agent ;
             foaf:name "Data2Services Pipeline" ;
-            foaf:page <https://github.com/MaastrichtU-IDS/data2services-pipeline> ;
-        .
+            foaf:page <https://github.com/MaastrichtU-IDS/data2services-pipeline> .
 
 
         <http:/bio2rdf.org/sider_resource:version/5>
@@ -62,8 +61,7 @@ INSERT  {
             
             dct:creator <https://github.com/MaastrichtU-IDS/data2services-pipeline> ;
             dct:issued  ?now;
-            dct:publisher <https://github.com/MaastrichtU-IDS/data2services-pipeline> ;
-		.
+            dct:publisher <https://github.com/MaastrichtU-IDS/data2services-pipeline> .
   
 	 ### RDF Distribution description (Complete)
         <http:/bio2rdf.org/sider_resource:version/5/rdf/data>
@@ -78,7 +76,7 @@ INSERT  {
             void:vocabulary <http://bio2rdf.org/sider_vocabulary:> ; 
 
             dct:publisher <http://bio2rdf.org/> ; 
-            dct:created '''NOW()''' ; 
+            dct:created ?now ; 
             dct:creator <http://bio2rdf.org/bio2rdf_resource:data2services> ; 
 
             void:exampleResource <http://bio2rdf.org/sider:PA12345> ;
@@ -86,8 +84,7 @@ INSERT  {
 			dcat:mediaType "application/n-quads";
             dcat:accessURL <http://bio2rdf.org/sider/version/5/index.html> ;
             dcat:downloadURL <http://bio2rdf.org/sider/version/5/data/sider.nq.tgz> ; 
-            void:dataDump <http://bio2rdf.org/sider/version/5/data/sider.nq.tgz> ;
-		.
+            void:dataDump <http://bio2rdf.org/sider/version/5/data/sider.nq.tgz> .
 		        
         ### Distribution (non-RDF) description (Complete)
         <http://bio2rdf.org/sider/source>
@@ -105,9 +102,7 @@ INSERT  {
             dct:language <http://lexvo.org/id/iso639-3/eng>; 
 
             dct:format "text/tab-separated-values" ; 
-            dcat:downloadURL <http://sideeffects.embl.de/media/download/meddra_all_se.tsv.gz> ;  
-        .
-
+            dcat:downloadURL <http://sideeffects.embl.de/media/download/meddra_all_se.tsv.gz> .
        
     }
     

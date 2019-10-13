@@ -77,7 +77,7 @@ INSERT
 			clinicaltrials_vocabulary:condition-mesh ?mesh_uri;
 			clinicaltrials_vocabulary:clinical-result ?clinical_result_uri;
 			clinicaltrials_vocabulary:baseline ?baseline_uri;
-			clinicaltrials_vocabulary:outcome ?outcome_list_uri;
+			clinicaltrials_vocabulary:outcome ?outcome_list_uri .
 			
 	}
 }

@@ -28,7 +28,7 @@ INSERT
 			sider_vocabulary:effect ?meddraId;
 			sider_vocabulary:placebo ?placebo;
 			sider_vocabulary:frequency ?freq_uri;
-			sider_vocabulary:frequency-value ?freq_value;
+			sider_vocabulary:frequency-value ?freq_value .
 
 			
 	}

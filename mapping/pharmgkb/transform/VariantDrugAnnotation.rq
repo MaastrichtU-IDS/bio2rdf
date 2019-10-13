@@ -36,7 +36,7 @@ INSERT
 			pharmgkb_vocabulary:significance ?significance;
 			pharmgkb_vocabulary:sentence ?sentence;
 			pharmgkb_vocabulary:allele ?alleles;
-			pharmgkb_vocabulary:chromosome ?chr;
+			pharmgkb_vocabulary:chromosome ?chr .
 			# Do we need this
 			#pharmgkb_vocabulary:study-parameters ?params;
 				

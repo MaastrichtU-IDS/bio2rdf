@@ -38,7 +38,7 @@ INSERT
 			pharmgkb_vocabulary:smiles ?smiles;
 			pharmgkb_vocabulary:x-ref ?cross_references;
 			pharmgkb_vocabulary:x-ref ?external_vocab;
-			pharmgkb_vocabulary:x-rxnorm ?rxnorm;
+			pharmgkb_vocabulary:x-rxnorm ?rxnorm .
 	}
 }
 WHERE {

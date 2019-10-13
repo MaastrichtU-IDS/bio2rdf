@@ -29,7 +29,7 @@ INSERT
 			bio2rdf_vocabulary:identifier ?accessionID;
 			bio2rdf_vocabulary:uri ?uri;
 			pharmgkb_vocabulary:genotype ?genotype;
-			pharmgkb_vocabulary:clinical_phenotype ?clinical_phenotype;
+			pharmgkb_vocabulary:clinical_phenotype ?clinical_phenotype .
 	}
 }
 WHERE {

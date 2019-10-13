@@ -22,7 +22,7 @@ INSERT
 			dc:title ?meddra_name;
 			bio2rdf_vocabulary:namespace "umls";
 			bio2rdf_vocabulary:identifier ?meddra;
-			bio2rdf_vocabulary:uri ?uri;
+			bio2rdf_vocabulary:uri ?uri .
 			
 	}
 }

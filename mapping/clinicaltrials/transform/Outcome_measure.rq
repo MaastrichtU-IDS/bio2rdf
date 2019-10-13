@@ -27,7 +27,7 @@ INSERT
 			clinicaltrials_vocabulary:title ?measure_title;
 			clinicaltrials_vocabulary:units ?measure_units;
 			clinicaltrials_vocabulary:param ?measure_param;
-			clinicaltrials_vocabulary:dispersion ?measure_dispersion;
+			clinicaltrials_vocabulary:dispersion ?measure_dispersion .
 		
 	}
 }

@@ -1,0 +1,12 @@
+working_directory: /media/apc/DATA1/Maastricht/bio2rdf-github
+
+dataset: hgnc
+
+sparql_queries_path: /data/mapping/hgnc/metadata
+
+
+sparql_triplestore_url: http://virtuoso:8890/sparql
+
+split_property: https://w3id.org/data2services/model/PreviousSymbols
+split_class: https://w3id.org/data2services/data/input/hgnc/hgnc_complete_set.tsv
+split_delimiter: ","

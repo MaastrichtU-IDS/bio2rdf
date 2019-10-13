@@ -22,7 +22,7 @@ INSERT
 			dc:title ?title;
 			bio2rdf_vocabulary:namespace "clinicaltrials";
 			bio2rdf_vocabulary:identifier ?id;
-			bio2rdf_vocabulary:uri ?uri;
+			bio2rdf_vocabulary:uri ?uri. 
 		
 	}
 }

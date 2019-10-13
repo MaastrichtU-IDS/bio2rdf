@@ -1,0 +1,8 @@
+working_directory: /media/apc/DATA1/Maastricht/bio2rdf-github
+
+dataset: hgnc
+
+sparql_queries_path: /data/mapping/hgnc/transform
+
+
+sparql_triplestore_url: http://virtuoso:8890/sparql

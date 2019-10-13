@@ -38,6 +38,7 @@ sudo docker run -it --rm --link drill:drill -v ${ABS_PATH}:/data r2rml /data/out
 # Upload the generic RDF to GraphDB to the created repository in the previous comment
 sudo docker run -it --rm --link graphdb:graphdb -v ${ABS_PATH}:/data rdf-upload -m "HTTP" -if "/data/output/${DATASET}" -url "http://graphdb:7200" -rep "pharmgkb"
 
+sudo docker run -it --rm --link virtuoso.2.7.1:virtuoso.2.7.1 -v ${ABS_PATH}:/data vemonet/rdf-upload:bio2rdf5 -if "/data/bio2rdf-github/output/${DATASET}" -url "http://virtuoso.2.7.1:8890" -un dba -pw dba
 
 #split relationships.tsv
 

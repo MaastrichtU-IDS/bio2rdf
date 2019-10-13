@@ -27,7 +27,7 @@ INSERT
 			clinicaltrials_vocabulary:allocation  ?allocation;
 			clinicaltrials_vocabulary:intervention-model  ?intervention_model;
 			clinicaltrials_vocabulary:primary-purpose  ?primary_purpose;
-			clinicaltrials_vocabulary:masking  ?masking;
+			clinicaltrials_vocabulary:masking  ?masking .
 		
 	}
 }

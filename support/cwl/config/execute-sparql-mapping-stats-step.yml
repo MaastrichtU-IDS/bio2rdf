@@ -1,0 +1,10 @@
+working_directory: /media/apc/DATA1/Maastricht/bio2rdf-github
+
+dataset: hgnc
+
+sparql_input_graph_uri: https://w3id.org/data2services/graph/hgnc
+
+sparql_queries_path: https://github.com/MaastrichtU-IDS/data2services-transform-repository/tree/master/sparql/compute-hcls-stats
+
+
+sparql_triplestore_url: http://virtuoso:8890/sparql

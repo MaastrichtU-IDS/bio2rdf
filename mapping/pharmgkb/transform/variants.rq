@@ -31,7 +31,7 @@ INSERT
 			pharmgkb_vocabulary:variantlocation ?location;
 			pharmgkb_vocabulary:gene ?geneId;
 			pharmgkb_vocabulary:genesymbol ?geneSym;
-			pharmgkb_vocabulary:synonym ?synonyms;		
+			pharmgkb_vocabulary:synonym ?synonyms .	
 					
 	}
 }

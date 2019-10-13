@@ -27,7 +27,7 @@ INSERT
 			clinicaltrials_vocabulary:description  ?desc;
 			clinicaltrials_vocabulary:restrictive-agreement  ?restrictive_agreement;
 			clinicaltrials_vocabulary:limitations-and-caveats  ?limitations_and_caveats;
-			dc:description  ?description;
+			dc:description  ?description .
 		
 	}
 }

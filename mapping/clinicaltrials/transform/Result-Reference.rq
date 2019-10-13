@@ -19,7 +19,7 @@ INSERT
 			dc:identifier ?entId;
 			bio2rdf_vocabulary:namespace "pubmed";
 			bio2rdf_vocabulary:identifier ?id;
-			bio2rdf_vocabulary:uri ?uri;
+			bio2rdf_vocabulary:uri ?uri .
 		
 	}
 }

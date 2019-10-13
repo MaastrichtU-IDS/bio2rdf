@@ -1,6 +1,8 @@
 graphdb
 graphdb-import
-virtuoso
+virtuoso/*
+!virtuoso/load.sh
+!virtuoso/virtuoso.ini
 *.tsv
 *.csv
 *.xml

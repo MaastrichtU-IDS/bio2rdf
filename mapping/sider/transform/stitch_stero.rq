@@ -24,7 +24,7 @@ INSERT
 			bio2rdf_vocabulary:identifier ?stitch;
 			bio2rdf_vocabulary:uri ?uri;
 			stitch_vocabulary:x-pubchem.compound ?pubchemId;
-			stitch_vocabulary:stitch-flat ?stitch_flat_id;
+			stitch_vocabulary:stitch-flat ?stitch_flat_id .
 			
 	}
 }
