@@ -18,7 +18,7 @@ PREFIX d2s: <https://w3id.org/data2services/model/>
 
 INSERT
 {
-	GRAPH <https://w3id.org/data2services/graph/fb13a-test-positive>{
+	GRAPH <https://w3id.org/data2services/graph/nell-af-test-positive>{
 		
 		?Subject_uri  ?Predicate_uri ?Object_uri .
     ?Subject_uri a  fb_vocabulary:Resource .
@@ -26,9 +26,9 @@ INSERT
 	}
 }
 WHERE {
-    GRAPH <https://w3id.org/data2services/graph/autor2rml/fb13-a> {
+    GRAPH <https://w3id.org/data2services/graph/autor2rml/nell-af> {
       ?row d2s:Subject ?Subject ;
-        a <https://w3id.org/data2services/data/input/fb13-a/test.tsv> .
+        a <https://w3id.org/data2services/data/input/aynec-nell-af/test.tsv> .
 
       # Generate URI from ID
 

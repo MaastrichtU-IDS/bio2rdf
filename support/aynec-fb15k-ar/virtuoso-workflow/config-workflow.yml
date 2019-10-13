@@ -1,0 +1,21 @@
+working_directory: /media/apc/DATA1/Maastricht/bio2rdf-github
+
+dataset: aynec-fb15k-ar
+
+# R2RML params
+input_data_jdbc: "jdbc:drill:drillbit=drill:31010"
+sparql_tmp_graph_uri: "https://w3id.org/data2services/graph/autor2rml/fb15k-ar"
+sparql_base_uri: "https://w3id.org/data2services/"
+#autor2rml_column_header: "test1,test2,test3,test5"
+
+# RdfUpload params
+sparql_triplestore_url: http://virtuoso:8890/sparql
+
+triple_store_password: dba
+triple_store_username: dba
+
+
+sparql_transform_queries_path: /data/mapping/aynec-fb15k-ar/transform
+
+
+

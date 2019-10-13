@@ -1,0 +1,50 @@
+
+##################################################
+# First you have to install the "cwltool" library
+##################################################
+
+
+# Please define the absolute path of the folder that contains the structure (input, output, support, mapping)
+export ABS_PATH=/media/apc/DATA1/Maastricht/bio2rdf-github
+
+# Please define the dataset folder name
+export DATASET=aynec-fb15k-af
+
+
+# start apache drill
+sudo docker run -dit --rm -p 8047:8047 -p 31010:31010 --name drill -v ${ABS_PATH}:/data:ro apache-drill
+
+# start graphdb
+sudo docker run -d --rm --name graphdb -p 7200:7200 -v ${ABS_PATH}/graphdb:/opt/graphdb/home -v ${ABS_PATH}/graphdb-import:/root/graphdb-import graphdb
+
+
+sudo docker run --rm --name virtuoso \
+    -p 8890:8890 -p 1111:1111 \
+    -e DBA_PASSWORD=dba \
+    -e SPARQL_UPDATE=true \
+    -e DEFAULT_GRAPH=http://bio2rdf.com/bio2rdf_vocabulary: \
+    -v ${ABS_PATH}/virtuoso:/data \
+    -v /tmp:/tmp \
+    -d tenforce/virtuoso:1.3.2-virtuoso7.2.1
+
+# navigate to the folder support/pharmgkb then run the following command
+
+sudo cwl-runner --outdir ${ABS_PATH}/output/${DATASET} ${ABS_PATH}/support/${DATASET}/virtuoso-workflow/workflow.cwl ${ABS_PATH}/support/${DATASET}/virtuoso-workflow/config-workflow.yml
+
+
+
+sudo docker exec -it virtuoso isql-v -U dba -P dba  exec="ld_dir('/import','rdf_output.nq','http://bio2rdf.org');rdf_loader_run();"
+
+sudo cwl-runner --outdir ${ABS_PATH}/output/${DATASET} ${ABS_PATH}/support/cwl/cwl-steps/rdf-upload.cwl ${ABS_PATH}/support/cwl/config/rdf-upload-step.yml
+
+sudo cwl-runner --outdir ${ABS_PATH}/output/${DATASET} ${ABS_PATH}/support/cwl/cwl-steps/execute-sparql-mapping.cwl ${ABS_PATH}/support/cwl/config/execute-sparql-mapping-step.yml
+
+sudo cwl-runner --outdir ${ABS_PATH}/output/${DATASET} ${ABS_PATH}/support/cwl/cwl-steps/execute-sparql-mapping.cwl ${ABS_PATH}/support/cwl/config/execute-sparql-mapping-transform-step.yml
+
+sudo cwl-runner --outdir ${ABS_PATH}/output/${DATASET} ${ABS_PATH}/support/cwl/cwl-steps/execute-sparql-mapping.cwl ${ABS_PATH}/support/cwl/config/execute-sparql-mapping-stats-step.yml
+
+
+
+sudo cwl-runner --outdir ${ABS_PATH}/output/${DATASET} ${ABS_PATH}/support/cwl/cwl-steps/run-split.cwl ${ABS_PATH}/support/cwl/config/split-step.yml
+
+
