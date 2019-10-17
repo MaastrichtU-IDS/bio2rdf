@@ -1,4 +1,4 @@
-# CWL workflows for RDF BioLink conversion
+# CWL workflows for RDF Bio2RDF conversion
 
 The [Common Workflow Language](https://www.commonwl.org/) is used to describe workflows to transform heterogeneous structured data (CSV, TSV, RDB, XML, JSON) to the [Bio2RDF](http://bio2rdf.org/) RDF vocabularies. The user defines [SPARQL queries](https://github.com/MaastrichtU-IDS/bio2rdf/blob/master/mapping/pharmgkb/drugs.rq) to transform the generic RDF generated depending on the input data structure (AutoR2RML, xml2rdf) to the target Bio2RDF vocabulary.
 
@@ -24,41 +24,76 @@ The folders of the dataset in input, output, mapping, support folders should be 
 
 [Apache Drill](https://github.com/amalic/apache-drill) and [GraphDB](https://github.com/MaastrichtU-IDS/graphdb/) services must be running before executing CWL workflows.
 
-GraphDB needs to be built locally, for this:
+
+```shell
+# Start Apache Drill sharing volume with this repository.
+# Here shared locally at /data/bio2rdf
+docker run -dit --rm -v ${ABS_PATH}:/data:ro -p 8047:8047 -p 31010:31010 --name drill umids/apache-drill
+```
+
+#### If you want to use GraphDB then it needs to be built locally, for this:
 
 * Download GraphDB as a stand-alone server free version (zip): https://ontotext.com/products/graphdb/.
 * Put the downloaded `.zip` file in the GraphDB repository (cloned from [GitHub](https://github.com/MaastrichtU-IDS/graphdb/)).
 * Run `docker build -t graphdb --build-arg version=CHANGE_ME .` in the GraphDB repository.
 
 ```shell
-# Start Apache Drill sharing volume with this repository.
-# Here shared locally at /data/bio2rdf
-docker run -dit --rm -v ${ABS_PATH}:/data:ro -p 8047:8047 -p 31010:31010 --name drill vemonet/apache-drill
-
 # GraphDB needs to be downloaded manually and built. 
 # Here shared locally at /data/graphdb and /data/graphdb-import
 docker build -t graphdb --build-arg version=8.11.0 .
 docker run -d --rm --name graphdb -p 7200:7200 -v ${ABS_PATH}/graphdb:/opt/graphdb/home -v ${ABS_PATH}/graphdb-import:/root/graphdb-import graphdb
 ```
 
+#### If you want to use virtuoso then use the following command to start it
+
+
+```shell
+docker run --rm --name virtuoso \
+    -p 8890:8890 -p 1111:1111 \
+    -e DBA_PASSWORD=dba \
+    -e SPARQL_UPDATE=true \
+    -e DEFAULT_GRAPH=http://bio2rdf.com/bio2rdf_vocabulary: \
+    -v ${ABS_PATH}/virtuoso:/data \
+    -v /tmp:/tmp \
+    -d tenforce/virtuoso:1.3.2-virtuoso7.2.1
+```
+
 ---
 
-## Create a GraphDB repository
+## Choose between two trilpe store options
+
+## GraphDB
+
+### Create a GraphDB repository
 
 After running the docker of GraphDB, go to: http://localhost:7200/
 
 Create new repository in GraphDB that will store your data.
 
 
-## Modify the workflow config file
+### Modify the workflow config file
 
-Navigate to the folder of the dataset you want to convert following this path: support/_dataset_name/config-workflow.yml
+Navigate to the folder of the dataset you want to convert following this path: support/_dataset_name/graphdb-workflow/config-workflow.yml
 
 edit the file config-workflow.yml to set the following parameter depending on your environment:
+
+sparql_triplestore_url: url_of_running_graphdb
 
 sparql_triplestore_repository: the_repository_name_you_created_in_previous_step
 
 working_directory: the_path_of_bio2rdf_folder
+
+
+## Virtuoso
+
+Navigate to the folder of the dataset you want to convert following this path: support/_dataset_name/virtuoso-workflow/config-workflow.yml
+
+and change these parameters according to your environment if they are different:
+
+sparql_triplestore_url: http://virtuoso:8890/sparql
+
+triple_store_password: dba
+triple_store_username: dba
 
 
 ## Run with [CWL](https://www.commonwl.org/)
@@ -69,27 +104,24 @@ working_directory: the_path_of_bio2rdf_folder
 * You will need to put the SPARQL mapping queries in `/mapping/$dataset_name` and provide 3 parameters:
   * `--outdir`: the [output directory](https://github.com/MaastrichtU-IDS/bio2rdf/tree/master/output/pharmgkb) for files outputted by the workflow (except for the downloaded source files that goes automatically to `/input`). 
     * e.g. `${ABS_PATH}/output/${DATASET}`.
-  * The `.cwl` [workflow file](https://github.com/MaastrichtU-IDS/bio2rdf/blob/master/support/pharmgkb/workflow.cwl)
-    * e.g. `${ABS_PATH}/support/${DATASET}/workflow.cwl`
-  * The `.yml` [configuration file](https://github.com/MaastrichtU-IDS/bio2rdf/blob/master/support/pharmgkb/workflow-job.yml) with all parameters required to run the workflow
-    * e.g. `${ABS_PATH}/support/${DATASET}/config-workflow.yml`
+  * The `.cwl` [workflow file](https://github.com/MaastrichtU-IDS/bio2rdf/blob/master/support/pharmgkb/virtuoso-workflow/workflow.cwl)
+    * e.g. `${ABS_PATH}/support/${DATASET}/virtuoso-workflow/workflow.cwl`
+  * The `.yml` [configuration file](https://github.com/MaastrichtU-IDS/bio2rdf/blob/master/support/pharmgkb/virtuoso-workflow/config-workflow.yml) with all parameters required to run the workflow
+    * e.g. `${ABS_PATH}/support/${DATASET}/virtuoso-workflow/config-workflow.yml`
 
 * 3 types of workflows can be run depending on the input data:
-  * [Convert XML to RDF](https://github.com/MaastrichtU-IDS/bio2rdfk#convert-xml-with-xml2rdf) (Will be available shortly)
-  * [Convert CSV to RDF](https://github.com/MaastrichtU-IDS/bio2rdf#convert-csvtsv-with-autor2rml)
-  * [Convert CSV to RDF and split a property](Will be available shortly)
-
-### Convert XML with [xml2rdf](Will be available shortly)
-
+  * Convert XML to RDF
+  * Convert CSV to RDF
+  * Convert CSV to RDF and split a property
 
 ### Convert CSV/TSV with [AutoR2RML](https://github.com/amalic/autor2rml)
 
 
 ```shell
-cwl-runner --outdir ${ABS_PATH}/output/${DATASET} ${ABS_PATH}/support/${DATASET}/workflow.cwl ${ABS_PATH}/support/${DATASET}/workflow-job.yml
+cwl-runner --outdir ${ABS_PATH}/output/${DATASET} ${ABS_PATH}/support/${DATASET}/virtuoso-workflow/workflow.cwl ${ABS_PATH}/support/${DATASET}/virtuoso-workflow/config-workflow.yml
 ```
 
-See [config file](https://github.com/MaastrichtU-IDS/bio2rdf/blob/master/support/sider/workflow-job.yml):
+See [config file](https://github.com/MaastrichtU-IDS/bio2rdf/blob/master/support/sider/virtuoso-workflow/config-workflow.yml):
 
 ```yaml
 working_directory: /media/apc/DATA1/Maastricht/bio2rdf-github
@@ -119,12 +151,5 @@ sparql_insert_metadata_path: /data/mapping/sider/metadata
 Will write all terminal output to `nohup.out`.
 
 ```shell
-nohup cwl-runner --outdir  ${ABS_PATH}/output/${DATASET}  ${ABS_PATH}/support/${DATASET}/workflow.cwl  ${ABS_PATH}/support/${DATASET}/workflow-job.yml
+cwl-runner --outdir  ${ABS_PATH}/output/${DATASET}  ${ABS_PATH}/support/${DATASET}/virtuoso-workflow/workflow.cwl  ${ABS_PATH}/support/${DATASET}/virtuoso-workflow/config-workflow.yml
 ```
-
-
----
-
-# Argo workflows
-
-See [Argo README](https://github.com/MaastrichtU-IDS/data2services-transform-biolink/tree/master/support/argo) to run workflows with Argo.
