@@ -7,6 +7,14 @@ The [Common Workflow Language](https://www.commonwl.org/) is used to describe wo
 * Those workflows use Data2Services modules, see the [data2services-pipeline](https://github.com/MaastrichtU-IDS/data2services-pipeline) project.
 
 ---
+## Clone the bio2rdf project
+```shell
+git clone https://github.com/MaastrichtU-IDS/bio2rdf
+```
+## Go to the cloned project 
+```shell
+cd bio2rdf
+```
 
 ## Define absolute path and dataset folder as environment variables
 
@@ -31,8 +39,10 @@ The folders of the dataset in input, output, mapping, support folders should be 
 docker run -dit --rm -v ${ABS_PATH}:/data:ro -p 8047:8047 -p 31010:31010 --name drill umids/apache-drill
 ```
 
-#### If you want to use GraphDB then it needs to be built locally, for this:
+## Run your choice of triple store
 
+#### For GraphDB:
+* GraphDB needs to be built locally, for this
 * Download GraphDB as a stand-alone server free version (zip): https://ontotext.com/products/graphdb/.
 * Put the downloaded `.zip` file in the GraphDB repository (cloned from [GitHub](https://github.com/MaastrichtU-IDS/graphdb/)).
 * Run `docker build -t graphdb --build-arg version=CHANGE_ME .` in the GraphDB repository.
@@ -44,7 +54,7 @@ docker build -t graphdb --build-arg version=8.11.0 .
 docker run -d --rm --name graphdb -p 7200:7200 -v ${ABS_PATH}/graphdb:/opt/graphdb/home -v ${ABS_PATH}/graphdb-import:/root/graphdb-import graphdb
 ```
 
-#### If you want to use virtuoso then use the following command to start it
+#### For Virtuoso:
 
 
 ```shell
@@ -60,9 +70,8 @@ docker run --rm --name virtuoso \
 
 ---
 
-## Choose between two trilpe store options
-
-## GraphDB
+## Prepare workflow
+### For GraphDB:
 
 ### Create a GraphDB repository
 
@@ -84,11 +93,15 @@ sparql_triplestore_repository: the_repository_name_you_created_in_previous_step
 working_directory: the_path_of_bio2rdf_folder
 
 
-## Virtuoso
+### For Virtuoso:
 
-Navigate to the folder of the dataset you want to convert following this path: support/_dataset_name/virtuoso-workflow/config-workflow.yml
+Edit config in the folder of the dataset you want to convert following this path: support/_dataset_name/virtuoso-workflow/config-workflow.yml
 
-and change these parameters according to your environment if they are different:
+* change the working directory to the bio2rdf cloned project
+
+working_directory: the_path_of_bio2rdf_folder
+
+* change these parameters according to your environment if you are using different virtuoso endpoint:
 
 sparql_triplestore_url: http://virtuoso:8890/sparql
 
