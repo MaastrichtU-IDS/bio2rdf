@@ -1,0 +1,62 @@
+PREFIX d2s: <https://w3id.org/data2services/model/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX owl: <http://www.w3.org/2002/07/owl#>
+PREFIX dc: <http://purl.org/dc/elements/1.1/>
+PREFIX dcterms: <http://purl.org/dc/terms/>
+PREFIX w3idvocab: <https://w3id.org/data2services/vocab/>
+PREFIX ctd_vocabulary: <http://bio2rdf.org/ctd_vocabulary:>
+PREFIX bio2rdf_vocabulary: <http://bio2rdf.org/bio2rdf_vocabulary:> 
+
+INSERT {
+  GRAPH <https://w3id.org/data2services/graph/ctd> {  
+    # Attribute the retrieved data to your model properties
+
+	?uri	a ctd_vocabulary:Resource;
+		rdf:type ctd_vocabulary:Chemical-Pathway-Association;
+		dc:identifier ?identifier;
+		rdfs:label ?label;
+		dc:title ?title;
+		bio2rdf_vocabulary:namespace "ctd";
+		bio2rdf_vocabulary:identifier ?id;
+		bio2rdf_vocabulary:uri ?uri;
+
+		ctd_vocabulary:pathway ?pathway_uri ;
+		ctd_vocabulary:chemical ?chemical_uri ;
+		
+		ctd_vocabulary:p-value ?Correctedpvalue ;
+
+ }
+} WHERE {
+    GRAPH <https://w3id.org/data2services/graph/autor2rml/ctd> {
+
+	?s rdf:type <https://w3id.org/data2services/data/input/ctd/CTD_chem_pathways_enriched.tsv> .
+
+	?s d2s:Chemicalname ?Chemicalname .
+	?s d2s:Chemicalid ?Chemicalid . 
+
+	?s d2s:Pathwayname ?Pathwayname . 
+	?s d2s:Pathwayid ?Pathwayid .
+	?s d2s:Correctedpvalue ?Correctedpvalue .
+
+	BIND ( MD5(concat(?Chemicalid,?Pathwayid,?Correctedpvalue)) AS ?id )
+
+	BIND ( concat("ctd_resource:",?id) AS ?identifier )
+
+	BIND (IF(LCASE(STRBEFORE(?Pathwayid, ":")) = "react", "reactome", LCASE(STRBEFORE(?Pathwayid, ":"))) AS ?pathway_prefix)
+
+
+	# In the original PHP script the concat is: concat("map",LCASE(STRAFTER(?Pathwayid, ":"))
+	BIND (IF(LCASE(STRBEFORE(?Pathwayid, ":")) = "kegg", concat("",LCASE(STRAFTER(?Pathwayid, ":"))), LCASE(STRAFTER(?Pathwayid, ":"))) AS ?pathway_id)
+
+	BIND ( concat("Chemical-pathway association between ", ?Chemicalname, " and ", ?Pathwayname) AS ?title )
+
+	BIND ( concat("Chemical-pathway association between ", ?Chemicalname," (mesh:",?Chemicalid,")", " and ", ?Pathwayname, " (",?pathway_prefix,":",?pathway_id,")") AS ?label)
+
+
+	BIND(iri(concat("http://bio2rdf.org/",?pathway_prefix,":", ?pathway_id)) AS ?pathway_uri)
+	BIND(iri(concat("http://bio2rdf.org/mesh:", ?Chemicalid)) AS ?chemical_uri)
+
+	
+	BIND ( iri(concat("http://bio2rdf.org/ctd_resource:", ?id)) AS ?uri )
+  }
+}

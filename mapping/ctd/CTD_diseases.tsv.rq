@@ -1,0 +1,44 @@
+PREFIX d2s: <https://w3id.org/data2services/model/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX owl: <http://www.w3.org/2002/07/owl#>
+PREFIX dc: <http://purl.org/dc/elements/1.1/>
+PREFIX dcterms: <http://purl.org/dc/terms/>
+PREFIX w3idvocab: <https://w3id.org/data2services/vocab/>
+PREFIX ctd_vocabulary: <http://bio2rdf.org/ctd_vocabulary:>
+PREFIX bio2rdf_vocabulary: <http://bio2rdf.org/bio2rdf_vocabulary:> 
+
+INSERT {
+  GRAPH <https://w3id.org/data2services/graph/ctd> {  
+    # Attribute the retrieved data to your model properties
+
+	?uri	a ctd_vocabulary:Resource;
+		rdf:type ctd_vocabulary:Disease;
+		dc:identifier ?identifier;
+		rdfs:label ?label;
+		dc:title ?title;
+		bio2rdf_vocabulary:namespace "ctd";
+		bio2rdf_vocabulary:identifier ?id;
+		bio2rdf_vocabulary:uri ?uri;
+
+ }
+} WHERE {
+    GRAPH <https://w3id.org/data2services/graph/autor2rml/ctd> {
+
+	?s rdf:type <https://w3id.org/data2services/data/input/ctd/CTD_diseases.tsv> .
+
+	?s d2s:Diseasename ?Diseasename .
+	?s d2s:Diseaseid ?Diseaseid . 
+
+	BIND ( LCASE(?Diseaseid) AS ?id )
+
+	BIND ( ?id AS ?identifier )
+
+	BIND ( ?Diseasename AS ?title )
+
+	BIND ( ?Diseasename AS ?label )
+	
+	BIND ( iri(concat("http://bio2rdf.org/", ?id)) AS ?uri )
+  }
+}
+
+

@@ -1,0 +1,38 @@
+PREFIX d2s: <https://w3id.org/data2services/model/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX owl: <http://www.w3.org/2002/07/owl#>
+PREFIX dc: <http://purl.org/dc/elements/1.1/>
+PREFIX dcterms: <http://purl.org/dc/terms/>
+PREFIX w3idvocab: <https://w3id.org/data2services/vocab/>
+PREFIX ctd_vocabulary: <http://bio2rdf.org/ctd_vocabulary:>
+PREFIX bio2rdf_vocabulary: <http://bio2rdf.org/bio2rdf_vocabulary:> 
+
+INSERT {
+  GRAPH <https://w3id.org/data2services/graph/ctd> {  
+    # Attribute the retrieved data to your model properties
+
+	?uri	ctd_vocabulary:pathway ?pathway_uri.
+		
+ }
+} WHERE {
+    GRAPH <https://w3id.org/data2services/graph/autor2rml/ctd> {
+
+	?s rdf:type <https://w3id.org/data2services/data/input/ctd/CTD_genes_pathways.tsv> .
+
+	?s d2s:Geneid ?Geneid . 
+
+	?s d2s:Pathwayname ?Pathwayname . 
+	?s d2s:Pathwayid ?Pathwayid .
+
+	BIND ( LCASE(?Geneid) AS ?id )
+
+	BIND (IF(LCASE(STRBEFORE(?Pathwayid, ":")) = "react", "reactome", LCASE(STRBEFORE(?Pathwayid, ":"))) AS ?pathway_prefix)
+
+	# In the original PHP script the concat is: concat("map",LCASE(STRAFTER(?Pathwayid, ":"))
+	BIND (IF(LCASE(STRBEFORE(?Pathwayid, ":")) = "kegg", concat("",LCASE(STRAFTER(?Pathwayid, ":"))), LCASE(STRAFTER(?Pathwayid, ":"))) AS ?pathway_id)
+
+	BIND ( iri(concat("http://bio2rdf.org/", ?pathway_prefix , ":", ?pathway_id)) AS ?pathway_uri )
+	
+	BIND ( iri(concat("http://bio2rdf.org/ncbigene:", ?id)) AS ?uri )
+  }
+}

@@ -1,0 +1,86 @@
+working_directory: /media/apc/DATA1/Maastricht/bio2rdf-github
+
+dataset: hgnc
+
+# R2RML params
+input_data_jdbc: "jdbc:drill:drillbit=drill:31010"
+sparql_tmp_graph_uri: "https://w3id.org/data2services/graph/autor2rml/hgnc"
+sparql_base_uri: "https://w3id.org/data2services/"
+#autor2rml_column_header: "test1,test2,test3,test5"
+
+# RdfUpload params
+sparql_triplestore_url: http://graphdb:7200
+sparql_triplestore_repository: hgnc
+
+sparql_input_graph_uri: https://w3id.org/data2services/graph/hgnc
+
+
+sparql_transform_queries_path: /data/mapping/hgnc/transform
+sparql_insert_metadata_path: /data/mapping/hgnc/metadata
+
+# Split params
+split_property_0: https://w3id.org/data2services/model/PreviousSymbols
+split_class_0: https://w3id.org/data2services/data/input/hgnc/hgnc_complete_set.tsv
+split_delimiter_0: ","
+
+split_property_1: https://w3id.org/data2services/model/PreviousNames
+split_class_1: https://w3id.org/data2services/data/input/hgnc/hgnc_complete_set.tsv
+split_delimiter_1: ','
+
+split_property_2: https://w3id.org/data2services/model/Synonyms
+split_class_2: https://w3id.org/data2services/data/input/hgnc/hgnc_complete_set.tsv
+split_delimiter_2: ','
+
+split_property_3: https://w3id.org/data2services/model/NameSynonyms
+split_class_3: https://w3id.org/data2services/data/input/hgnc/hgnc_complete_set.tsv
+split_delimiter_3: ','
+
+split_property_4: https://w3id.org/data2services/model/EnzymeIds
+split_class_4: https://w3id.org/data2services/data/input/hgnc/hgnc_complete_set.tsv
+split_delimiter_4: ','
+
+split_property_5: https://w3id.org/data2services/model/AccessionNumbers
+split_class_5: https://w3id.org/data2services/data/input/hgnc/hgnc_complete_set.tsv
+split_delimiter_5: ','
+
+split_property_6: https://w3id.org/data2services/model/PubmedIds
+split_class_6: https://w3id.org/data2services/data/input/hgnc/hgnc_complete_set.tsv
+split_delimiter_6: ','
+
+split_property_7: https://w3id.org/data2services/model/RefseqIds
+split_class_7: https://w3id.org/data2services/data/input/hgnc/hgnc_complete_set.tsv
+split_delimiter_7: ','
+
+split_property_8: https://w3id.org/data2services/model/GeneFamilyTag
+split_class_8: https://w3id.org/data2services/data/input/hgnc/hgnc_complete_set.tsv
+split_delimiter_8: ','
+
+split_property_9: https://w3id.org/data2services/model/GeneFamilyDescription
+split_class_9: https://w3id.org/data2services/data/input/hgnc/hgnc_complete_set.tsv
+split_delimiter_9: ','
+
+split_property_10: https://w3id.org/data2services/model/CcdsIds
+split_class_10: https://w3id.org/data2services/data/input/hgnc/hgnc_complete_set.tsv
+split_delimiter_10: ','
+
+split_property_11: https://w3id.org/data2services/model/UniprotIdSuppliedByUniprot
+split_class_11: https://w3id.org/data2services/data/input/hgnc/hgnc_complete_set.tsv
+split_delimiter_11: ','
+
+split_property_12: https://w3id.org/data2services/model/MouseGenomeDatabaseId
+split_class_12: https://w3id.org/data2services/data/input/hgnc/hgnc_complete_set.tsv
+split_delimiter_12: ','
+
+split_property_13: https://w3id.org/data2services/model/RatGenomeDatabaseIdSuppliedByRgd
+split_class_13: https://w3id.org/data2services/data/input/hgnc/hgnc_complete_set.tsv
+split_delimiter_13: ','
+
+split_property_14: https://w3id.org/data2services/model/MouseGenomeDatabaseIdSuppliedByMgi
+split_class_14: https://w3id.org/data2services/data/input/hgnc/hgnc_complete_set.tsv
+split_delimiter_14: ','
+
+split_property_15: https://w3id.org/data2services/model/RefseqSuppliedByNcbi
+split_class_15: https://w3id.org/data2services/data/input/hgnc/hgnc_complete_set.tsv
+split_delimiter_15: ','
+
+

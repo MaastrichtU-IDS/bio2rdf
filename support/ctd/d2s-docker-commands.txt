@@ -1,0 +1,43 @@
+
+# Please define the absolute path of the folder that contains the structure (input, output, support, mapping)
+export ABS_PATH=/media/apc/DATA1/Maastricht/bio2rdf-github
+
+# Please define the dataset folder name
+export DATASET=ctd
+
+# add the input files you want to convert to the corresponding folder of the dataset (in this case it is "pharmgkb" folder)
+
+
+# start apache drill
+sudo docker run -dit --rm -p 8047:8047 -p 31010:31010 --name drill -v ${ABS_PATH}:/data:ro apache-drill
+
+# start graphdb
+sudo docker run -d --rm --name graphdb -p 7200:7200 -v ${ABS_PATH}/graphdb:/opt/graphdb/home -v ${ABS_PATH}/graphdb-import:/root/graphdb-import graphdb
+
+
+# create the mapping rules to generate the generic RDF
+sudo docker run -it --rm --link drill:drill -v ${ABS_PATH}:/data vemonet/autor2rml:bio2rdf5 -j "jdbc:drill:drillbit=drill:31010" -r -o "/data/output/${DATASET}/mapping.trig" -d "/data/input/${DATASET}" -b "https://w3id.org/data2services/" -g "https://w3id.org/data2services/graph/autor2rml"
+
+
+# Create the config file for generating the generic RDF
+
+sudo touch ${ABS_PATH}/output/${DATASET}/config.properties
+  sudo chmod a+w ${ABS_PATH}/output/${DATASET}/config.properties
+  echo "connectionURL = jdbc:drill:drillbit=drill:31010
+  mappingFile = /data/output/${DATASET}/mapping.trig
+  outputFile = /data/output/${DATASET}/rdf_output.nq
+  format = NQUADS" > ${ABS_PATH}/output/${DATASET}/config.properties
+
+
+# generate the generic RDF
+sudo docker run -it --rm --link drill:drill -v ${ABS_PATH}:/data vemonet/r2rml:bio2rdf5 /data/output/${DATASET}/config.properties
+
+# access GraphDB web interface and create a new repo with name "test" and id "test"
+
+
+# Upload the generic RDF to GraphDB to the created repository in the previous comment
+
+sudo docker run -it --rm --link graphdb:graphdb -v ${ABS_PATH}:/data vemonet/rdf-upload:bio2rdf5 -if "/data/output/${DATASET}/rdf_output.nq" -url "http://graphdb:7200" -rep "ctd"
+
+# map to target RDF hgnc tsv
+sudo docker run -it --link graphdb:graphdb -v ${ABS_PATH}:/data aammar/data2services-sparql-operations -f "/data/mapping/${DATASET}/hgnc.rq" -ep "http://graphdb:7200/repositories/test/statements" 
