@@ -7,7 +7,7 @@ PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
 PREFIX rml: <http://semweb.mmlab.be/ns/rml#> 
 PREFIX ql: <http://semweb.mmlab.be/ns/ql#> 
 PREFIX d2rq: <http://www.wiwiss.fu-berlin.de/suhl/bizer/D2RQ/0.1#> 
-PREFIX geo_vocabulary: <http://bio2rdf.org/drugbank_vocabulary:> 
+PREFIX geo_vocabulary: <http://bio2rdf.org/geometa_vocabulary:> 
 PREFIX bio2rdf_vocabulary: <http://bio2rdf.org/bio2rdf_vocabulary:> 
 PREFIX d2sgeneric: <https://w3id.org/data2services/model/>
 
@@ -49,6 +49,8 @@ INSERT
 			geo_vocabulary:hybridization-protocol ?hyb_protocol_uri;
 			geo_vocabulary:last-update-date ?update_date;
 			geo_vocabulary:submission-date ?submission_date;
+			?characteristics_ch1_predicate ?characteristics_ch1_value;
+			?characteristics_ch2_predicate ?characteristics_ch2_value.
 
 	}
 }
@@ -169,6 +171,14 @@ WHERE {
 		}  OPTIONAL {
          ?s d2sgeneric:submission_date ?submission_date .
 			
-		} 
+		} OPTIONAL {
+	?s d2sgeneric:characteristics_ch1 ?characteristics_ch1 .
+	BIND(iri(concat("http://bio2rdf.org/geometa_vocabulary:",LCASE(REPLACE(STRBEFORE(?characteristics_ch1, ":"), " ", "-")))) AS ?characteristics_ch1_predicate)
+	BIND(STRAFTER(?characteristics_ch1, ":") AS ?characteristics_ch1_value)
+		}  OPTIONAL {
+	?s d2sgeneric:characteristics_ch2 ?characteristics_ch2 .
+	BIND(iri(concat("http://bio2rdf.org/geometa_vocabulary:",LCASE(REPLACE(STRBEFORE(?characteristics_ch2, ":"), " ", "-")))) AS ?characteristics_ch2_predicate)
+	BIND(STRAFTER(?characteristics_ch2, ":") AS ?characteristics_ch2_value)
+		}
 	}
 }		
