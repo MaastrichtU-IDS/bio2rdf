@@ -114,7 +114,7 @@ WHERE {
 			} # drug interaction features
 
 			BIND ( concat(?drugId, "_", ?drugInteractionDBid) AS ?ddiID )
-			BIND ( iri(concat("http://bio2rdf.org/drugbank_resource:", ?ddiId)) AS ?ddiUri )
+			BIND ( iri(concat("http://bio2rdf.org/drugbank_resource:", ?ddiID)) AS ?ddiUri )
 		    } # drug interaction
 	}
   } # graph

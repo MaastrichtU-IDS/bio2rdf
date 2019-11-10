@@ -137,7 +137,7 @@ WHERE {
 				    x2rm:hasValue ?externalIdentifierResource
 			    	];
 			} OPTIONAL{
-				?externalIdentifiers x2rm:hasChild [
+				?externalIdentifier x2rm:hasChild [
 				    a x2rm:drugbank.drug.external-identifiers.external-identifier.identifier; 
 				    x2rm:hasValue ?externalIdentifierIdentifier
 			    	];
@@ -166,7 +166,7 @@ WHERE {
 				    x2rm:hasValue ?externalLinkUrl
 			    	];
 			} # Ext Link features
-			FILTER(REGEX(?externalLinkUrl, "http")).
+			FILTER(REGEX(str(?externalLinkUrl), "http")).
 		    } # Ext Link
 
 	} 

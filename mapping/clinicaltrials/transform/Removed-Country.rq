@@ -34,7 +34,7 @@ WHERE {
 		?s  x2rm:child:removed_countries ?removed_countries.
 
 		?removed_countries  x2rm:child:country [
-			  x2rm:hasValue ?rcountry.
+			  x2rm:hasValue ?rcountry
 		];
 		
 		BIND (MD5(?rcountry) AS ?id)

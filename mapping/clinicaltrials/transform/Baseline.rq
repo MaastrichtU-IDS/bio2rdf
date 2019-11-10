@@ -35,7 +35,7 @@ WHERE {
 		
 
 		?id_info  x2rm:child:nct_id  [
-			  x2rm:hasValue ?study_id.
+			  x2rm:hasValue ?study_id
 		];	
 		
 		BIND (CONCAT(?study_id, "/baseline") AS ?id)

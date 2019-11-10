@@ -38,22 +38,23 @@ WHERE {
 
 		?s x2rm:child:secondary_outcome ?secondary_outcome.
 
-		?secondary_outcome  x2rm:child:measure [
-			  x2rm:hasValue ?measure
-		].
-
-		?secondary_outcome  x2rm:child:time_frame [
-			  x2rm:hasValue ?time_frame
-		].
-
-		?secondary_outcome  x2rm:child:saftey_issue [
-			  x2rm:hasValue ?saftey_issue
-		].
-
-		?secondary_outcome  x2rm:child:description [
-			  x2rm:hasValue ?description
-		].
-		
+		OPTIONAL{
+			?secondary_outcome  x2rm:child:measure [
+				  x2rm:hasValue ?measure
+			].
+		}OPTIONAL{
+			?secondary_outcome  x2rm:child:time_frame [
+				  x2rm:hasValue ?time_frame
+			].
+		}OPTIONAL{
+			?secondary_outcome  x2rm:child:saftey_issue [
+				  x2rm:hasValue ?saftey_issue
+			].
+		}OPTIONAL{
+			?secondary_outcome  x2rm:child:description [
+				  x2rm:hasValue ?description
+			].
+		}
 		BIND (STRAFTER(str(?secondary_outcome) , "http://ids.unimaas.nl/xml2rdf/data/") AS ?id)
 
 		BIND (concat("clinicaltrials_resource:",?id) AS ?entId)

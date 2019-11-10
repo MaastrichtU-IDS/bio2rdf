@@ -43,43 +43,43 @@ WHERE {
 
 		?s x2rm:child:overall_official ?overall_official.
 
-
-		?overall_official  x2rm:child:first_name [
-			  x2rm:hasValue ?first_name
-		].
-
-		?overall_official  x2rm:child:middle_name [
-			  x2rm:hasValue ?middle_name
-		].
-
-		?overall_official  x2rm:child:last_name [
-			  x2rm:hasValue ?last_name
-		].
-
-		?overall_official  x2rm:child:degrees [
-			  x2rm:hasValue ?degrees
-		].
-
-		?overall_official  x2rm:child:phone [
-			  x2rm:hasValue ?phone
-		].
-
-		?overall_official  x2rm:child:phone_ext [
-			  x2rm:hasValue ?phone_ext
-		].
-
-		?overall_official  x2rm:child:email [
-			  x2rm:hasValue ?email
-		].
-
-		?overall_official  x2rm:child:role [
-			  x2rm:hasValue ?role
-		].
-
-		?overall_official  x2rm:child:affiliation [
-			  x2rm:hasValue ?affiliation
-		].
-		
+		OPTIONAL{
+			?overall_official  x2rm:child:first_name [
+				  x2rm:hasValue ?first_name
+			].
+		}OPTIONAL{
+			?overall_official  x2rm:child:middle_name [
+				  x2rm:hasValue ?middle_name
+			].
+		}OPTIONAL{
+			?overall_official  x2rm:child:last_name [
+				  x2rm:hasValue ?last_name
+			].
+		}OPTIONAL{
+			?overall_official  x2rm:child:degrees [
+				  x2rm:hasValue ?degrees
+			].
+		}OPTIONAL{
+			?overall_official  x2rm:child:phone [
+				  x2rm:hasValue ?phone
+			].
+		}OPTIONAL{
+			?overall_official  x2rm:child:phone_ext [
+				  x2rm:hasValue ?phone_ext
+			].
+		}OPTIONAL{
+			?overall_official  x2rm:child:email [
+				  x2rm:hasValue ?email
+			].
+		}OPTIONAL{
+			?overall_official  x2rm:child:role [
+				  x2rm:hasValue ?role
+			].
+		}OPTIONAL{
+			?overall_official  x2rm:child:affiliation [
+				  x2rm:hasValue ?affiliation
+			].
+		}
 		BIND (STRAFTER(str(?overall_official) , "http://ids.unimaas.nl/xml2rdf/data/") AS ?id)
 
 		BIND (concat("clinicaltrials_resource:",?id) AS ?entId)

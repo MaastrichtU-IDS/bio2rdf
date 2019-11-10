@@ -31,7 +31,7 @@ WHERE {
 		?s  x2rm:child:reference ?reference.
 
 		?reference  x2rm:child:PMID [
-			  x2rm:hasValue ?PMID.
+			  x2rm:hasValue ?PMID
 		];
 			
 		BIND (?PMID AS ?id)

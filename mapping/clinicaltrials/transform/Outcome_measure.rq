@@ -42,22 +42,23 @@ WHERE {
 
 		?measure_list  x2rm:child:measure ?measure.
 
-		?measure  x2rm:child:title [
-		  x2rm:hasValue ?measure_title
-		].
-
-		?measure  x2rm:child:units [
-		  x2rm:hasValue ?measure_units
-		].
-
-		?measure  x2rm:child:param [
-		  x2rm:hasValue ?measure_param
-		].
-
-		?measure  x2rm:child:dispersion [
-		  x2rm:hasValue ?measure_dispersion
-		].
-	
+		OPTIONAL{
+			?measure  x2rm:child:title [
+			  x2rm:hasValue ?measure_title
+			].
+		}OPTIONAL{
+			?measure  x2rm:child:units [
+			  x2rm:hasValue ?measure_units
+			].
+		}OPTIONAL{
+			?measure  x2rm:child:param [
+			  x2rm:hasValue ?measure_param
+			].
+		}OPTIONAL{
+			?measure  x2rm:child:dispersion [
+			  x2rm:hasValue ?measure_dispersion
+			].
+		}
 		BIND (STRAFTER(str(?measure) , "http://ids.unimaas.nl/xml2rdf/data/") AS ?id)
 
 		BIND (concat("clinicaltrials_resource:",?id) AS ?entId)

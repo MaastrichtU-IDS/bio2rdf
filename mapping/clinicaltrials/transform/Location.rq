@@ -35,7 +35,7 @@ WHERE {
 		?location  x2rm:child:facility ?facility.
 
 		?facility  x2rm:child:name [
-			  x2rm:hasValue ?facility_name.
+			  x2rm:hasValue ?facility_name
 		];
 			
 		BIND (MD5(?facility_name) AS ?id)

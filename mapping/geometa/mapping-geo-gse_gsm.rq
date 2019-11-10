@@ -1,0 +1,36 @@
+PREFIX rr: <http://www.w3.org/ns/r2rml#> 
+PREFIX dc: <http://purl.org/dc/elements/1.1/> 
+PREFIX dbo: <http://dbpedia.org/ontology/> 
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> 
+PREFIX owl: <http://www.w3.org/2002/07/owl#> 
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#> 
+PREFIX rml: <http://semweb.mmlab.be/ns/rml#> 
+PREFIX ql: <http://semweb.mmlab.be/ns/ql#> 
+PREFIX d2rq: <http://www.wiwiss.fu-berlin.de/suhl/bizer/D2RQ/0.1#> 
+PREFIX geo_vocabulary: <http://bio2rdf.org/drugbank_vocabulary:> 
+PREFIX bio2rdf_vocabulary: <http://bio2rdf.org/bio2rdf_vocabulary:> 
+PREFIX d2sgeneric: <https://w3id.org/data2services/model/>
+
+INSERT
+{
+	GRAPH <https://w3id.org/data2services/graph/geo>{
+		
+		?seriesUri	geo_vocabulary:sample ?sampleUri;
+		?sampleUri geo_vocabulary:included-in ?seriesUri
+
+	}
+}
+WHERE {
+    GRAPH <https://w3id.org/data2services/graph/autor2rml> {
+		
+		?s rdf:type <https://w3id.org/data2services/gse_gsm>.
+
+		?s d2sgeneric:gse ?id .
+
+		?s d2sgeneric:gsm ?sampleId .
+		
+		BIND ( iri(concat("http://bio2rdf.org/geo:", ?id)) AS ?seriesUri )
+		BIND ( iri(concat("http://bio2rdf.org/geo:", ?sampleId)) AS ?sampleUri )	
+	
+	}
+}		

@@ -44,8 +44,8 @@ WHERE {
 		
 
 		?id_info  x2rm:child:nct_id  [
-			  x2rm:hasValue ?study_id.
-		];
+			  x2rm:hasValue ?study_id
+		].
 
 		?s x2rm:child:outcome_list ?outcome_list.
 
@@ -55,24 +55,24 @@ WHERE {
 			?outcome  x2rm:child:title [
 				  x2rm:hasValue ?title
 			].
+		}OPTIONAL{
+
+			?outcome  x2rm:child:time_frame [
+				  x2rm:hasValue ?time_frame
+			].
+		}OPTIONAL{
+			?outcome  x2rm:child:saftey_issue [
+				  x2rm:hasValue ?saftey_issue
+			].
+		}OPTIONAL{
+			?outcome  x2rm:child:posting_date [
+				  x2rm:hasValue ?posting_date
+			].
+		}OPTIONAL{
+			?outcome  x2rm:child:population [
+				  x2rm:hasValue ?population
+			].
 		}
-
-		?outcome  x2rm:child:time_frame [
-			  x2rm:hasValue ?time_frame
-		].
-
-		?outcome  x2rm:child:saftey_issue [
-			  x2rm:hasValue ?saftey_issue
-		].
-
-		?outcome  x2rm:child:posting_date [
-			  x2rm:hasValue ?posting_date
-		].
-
-		?outcome  x2rm:child:population [
-			  x2rm:hasValue ?population
-		].
-
 		OPTIONAL{
 		
 			?outcome  x2rm:child:group_list ?group_list.

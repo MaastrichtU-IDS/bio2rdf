@@ -23,7 +23,7 @@ INSERT
 		drugbank_vocabulary:affected-organism ?affectedOrganismUri;
 		drugbank_vocabulary:dosage-form ?dosageFormUri;
 		drugbank_vocabulary:x-atc ?atcCodeUri;
-		drugbank_vocabulary:x-ahfs ?ahfsCodeValue;
+		drugbank_vocabulary:x-ahfs ?ahfsCodeValue.
 		
     }
 }
@@ -114,8 +114,8 @@ WHERE {
 
 		    OPTIONAL{
 		    	?ahfsCodes x2rm:hasChild ?ahfsCode.
-			?ahfsCode a x2rm:drugbank.drug.ahfs-codes.ahf-code.
-			?ahfsCode x2rm:hasValue ?ahfsCodeValue
+			?ahfsCode a x2rm:drugbank.drug.ahfs-codes.ahfs-code.
+			?ahfsCode x2rm:hasValue ?ahfsCodeValue.
 		    } # AFHS code
 	}
   } # graph

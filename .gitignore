@@ -5,6 +5,7 @@ virtuoso/*
 !virtuoso/virtuoso.ini
 *.tsv
 *.csv
+!split-rules.csv
 *.xml
 *.pdf
 *.doc

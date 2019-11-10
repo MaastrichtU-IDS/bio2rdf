@@ -34,7 +34,7 @@ WHERE {
 		?s  x2rm:child:condition_browse ?condition_browse.
 
 		?condition_browse  x2rm:child:mesh_term [
-			  x2rm:hasValue ?mesh_term.
+			  x2rm:hasValue ?mesh_term
 		];	
 		
 		BIND (MD5(?mesh_term) AS ?id)

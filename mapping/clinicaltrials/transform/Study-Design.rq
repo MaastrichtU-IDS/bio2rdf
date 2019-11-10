@@ -45,22 +45,23 @@ WHERE {
 
 		?s  x2rm:child:study_design_info ?study.
 		
-		?study  x2rm:child:allocation [
-			  x2rm:hasValue ?allocation
-		].
-
-		?study  x2rm:child:intervention_model [
-			  x2rm:hasValue ?intervention_model
-		].
-
-		?study  x2rm:child:primary_purpose [
-			  x2rm:hasValue ?primary_purpose
-		].
-
-		?study  x2rm:child:masking [
-			  x2rm:hasValue ?masking
-		].
-		
+		OPTIONAL{
+			?study  x2rm:child:allocation [
+				  x2rm:hasValue ?allocation
+			].
+		}OPTIONAL{
+			?study  x2rm:child:intervention_model [
+				  x2rm:hasValue ?intervention_model
+			].
+		}OPTIONAL{
+			?study  x2rm:child:primary_purpose [
+				  x2rm:hasValue ?primary_purpose
+			].
+		}OPTIONAL{
+			?study  x2rm:child:masking [
+				  x2rm:hasValue ?masking
+			].
+		}
 		BIND (STRAFTER(str(?study) , "http://ids.unimaas.nl/xml2rdf/data/") AS ?id)
 
 		BIND (concat("clinicaltrials_resource:",?id) AS ?entId)

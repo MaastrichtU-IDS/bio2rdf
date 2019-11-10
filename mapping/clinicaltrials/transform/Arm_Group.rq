@@ -44,7 +44,7 @@ WHERE {
 		];
 
 		
-		BIND (CONCAT(?id,"/arm-group/",MD5(?arm_group_label)) AS ?id)
+		BIND (CONCAT(?study_id,"/arm-group/",MD5(?arm_group_label)) AS ?id)
 
 		BIND (concat("clinicaltrials:",?id) AS ?entId)
 

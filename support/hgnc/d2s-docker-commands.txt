@@ -39,8 +39,20 @@ sudo docker run -it --rm --link drill:drill -v ${ABS_PATH}:/data r2rml /data/out
 sudo docker run -it --rm --link graphdb:graphdb -v ${ABS_PATH}:/data rdf-upload -m "HTTP" -if "/data/output/${DATASET}" -url "http://graphdb:7200" -rep "test"
 
 
+docker run -it --rm --link graphdb:graphdb -v ${ABS_PATH}:/data vemonet/rdf-upload:bio2rdf5 -if "/data/output/${DATASET}/rdf_output.nq" -url "http://graphdb:7200/repositories/bio2rdf-ammar/statements" -un ammar -pw ammarammar
+
+
+
+
+
 # map to target RDF hgnc tsv
 sudo docker run -it --link graphdb:graphdb -v ${ABS_PATH}:/data vemonet/data2services-sparql-operations -f "/data/mapping/${DATASET}/hgnc.rq" -ep "http://graphdb:7200/repositories/test/statements" 
+
+
+docker run -it --link graphdb:graphdb -v ${ABS_PATH}:/data aammar/data2services-sparql-operations -op split  --split-file-path "/data/support/${DATASET}/split-rules.csv" -ep "http://graphdb:7200/repositories/bio2rdf-ammar/statements" -un ammar -pw ammarammar --split-delete
+
+
+docker run -it --link graphdb:graphdb -v ${ABS_PATH}:/data aammar/data2services-sparql-operations  -f "/data/mapping/${DATASET}" -ep "http://graphdb:7200/repositories/bio2rdf-ammar/statements" -un ammar -pw ammarammar
 
 
 

@@ -1,0 +1,91 @@
+Triplestore is not a RDF4J server, using SPARQLRepository instead of HTTPRepository
+Split buffer size: 1000000
+SELECT ?s ?p ?toSplit ?g WHERE {    GRAPH ?g {    	?s a <https://w3id.org/data2services/data/input/hgnc/hgnc_complete_set.tsv> ;      ?p ?toSplit .    	FILTER(?p = <https://w3id.org/data2services/model/PreviousSymbols>).FILTER(regex(?toSplit, ','))    } }
+
+
+DELETE { GRAPH ?g {?s ?p ?o.} }WHERE {GRAPH ?g {?s a <https://w3id.org/data2services/data/input/hgnc/hgnc_complete_set.tsv> ;?p ?o .FILTER(?p = <https://w3id.org/data2services/model/PreviousSymbols>).FILTER(regex(?o, ','))} } 
+SELECT ?s ?p ?toSplit ?g WHERE {    GRAPH ?g {    	?s a <https://w3id.org/data2services/data/input/hgnc/hgnc_complete_set.tsv> ;      ?p ?toSplit .    	FILTER(?p = <https://w3id.org/data2services/model/PreviousNames>).FILTER(regex(?toSplit, ','))    } }
+
+
+DELETE { GRAPH ?g {?s ?p ?o.} }WHERE {GRAPH ?g {?s a <https://w3id.org/data2services/data/input/hgnc/hgnc_complete_set.tsv> ;?p ?o .FILTER(?p = <https://w3id.org/data2services/model/PreviousNames>).FILTER(regex(?o, ','))} } 
+SELECT ?s ?p ?toSplit ?g WHERE {    GRAPH ?g {    	?s a <https://w3id.org/data2services/data/input/hgnc/hgnc_complete_set.tsv> ;      ?p ?toSplit .    	FILTER(?p = <https://w3id.org/data2services/model/Alias_symbol>).FILTER(regex(?toSplit, '|'))    } }
+
+
+DELETE { GRAPH ?g {?s ?p ?o.} }WHERE {GRAPH ?g {?s a <https://w3id.org/data2services/data/input/hgnc/hgnc_complete_set.tsv> ;?p ?o .FILTER(?p = <https://w3id.org/data2services/model/Alias_symbol>).FILTER(regex(?o, '|'))} } 
+Usage: data2services-sparql-operations [-h] [--expand-delete] [--split-delete]
+                                       [--expand-class=<expandClass>]
+                                       [--expand-property=<expandProperty>]
+                                       [--infer-expansion-prefix=<inferExpansion
+                                       Prefix>]
+                                       [--split-buffer-size=<splitBufferSize>]
+                                       [--split-class=<splitClass>]
+                                       [--split-delimiter=<splitDelimiter>]
+                                       [--split-file-path=<splitFile>]
+                                       [--split-property=<splitProperty>]
+                                       [--split-quote=<splitQuote>]
+                                       [--var-inputGraph=<varInputGraph>]
+                                       [--var-outputGraph=<varOutputGraph>]
+                                       [--var-serviceUrl=<varServiceUrl>]
+                                       -ep=<endpointUrl> [-f=<inputFile>]
+                                       [-op=<queryOperation>] [-pw=<password>]
+                                       [-rep=<repositoryId>]
+                                       [-sp=<sparqlQuery>]
+                                       [-uex=<uriExpansion>] [-un=<username>]
+      --expand-class=<expandClass>
+                        Class to split. e.g.: 'http://w3id.
+                          org/biolink/vocab/GeneGrouping'
+      --expand-delete   Should we delete the original expanded statements? Default:
+                          false
+      --expand-property=<expandProperty>
+                        Property to split. e.g.: 'http://www.w3.
+                          org/2000/01/rdf-schema#label'
+      --infer-expansion-prefix=<inferExpansionPrefix>
+                        Used when --uri-expansion = "infer". The created prefixes
+                          will be expanded with this value as the new perdicate
+      --split-buffer-size=<splitBufferSize>
+                        Number of statements in the RDF4J model before loading it to
+                          the SPARQL endpoint. Default: 1000000
+      --split-class=<splitClass>
+                        Class to split. e.g.: 'http://w3id.
+                          org/biolink/vocab/GeneGrouping'
+      --split-delete    Should we delete the splitted statements? Default: false
+      --split-delimiter=<splitDelimiter>
+                        Delimiter for the Split operation. Default: ','
+      --split-file-path=<splitFile>
+                        Path of file that contains split rules
+      --split-property=<splitProperty>
+                        Property to split. e.g.: 'http://www.w3.
+                          org/2000/01/rdf-schema#label'
+      --split-quote=<splitQuote>
+                        Delimiter for the Trim operation. Default: '"'
+      --var-inputGraph=<varInputGraph>
+                        Input graph URI variable to replace in the SPARQL query. E.
+                          g.: https://w3id.org/data2services/input
+      --var-outputGraph=<varOutputGraph>
+                        Output graph URI variable to replace in the SPARQL query. E.
+                          g.: https://w3id.org/data2services/output
+      --var-serviceUrl=<varServiceUrl>
+                        A SPARQL service URL variable to replace in the SPARQL
+                          query. E.g.: http://localhost:7200/repositories/test
+      -ep, --sparql-endpoint=<endpointUrl>
+                        URL of the SPARQL Endpoint to query or RDF4J Server. e.g.
+                          http://graphdb.dumontierlab.com/repositories/test or http:
+                          //graphdb.dumontierlab.com
+  -f, --filepath=<inputFile>
+                        Path of file(s) to execute. Single file from URL or
+                          filepath. Multiple files from directory (query files must
+                          have .rq extension). YAML file.
+  -h, --help            Display a help message
+      -op, --operation=<queryOperation>
+                        SPARQL query operation (update, construct, select, split,
+                          expand). Default is update
+      -pw, --password=<password>
+                        Password used for SPARQL endpoint authentication
+      -rep, --repositoryId=<repositoryId>
+                        Repository ID for RDF4J Server. E.g. test
+      -sp, --sparql-query=<sparqlQuery>
+                        SPARQL query string to execute.
+      -uex, --uri-expansion=<uriExpansion>
+                        Expan values with URI, use "infer" to do it automatically
+      -un, --username=<username>
+                        Username used for SPARQL endpoint authentication

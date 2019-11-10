@@ -62,11 +62,12 @@ WHERE {
 		 ?s d2sgeneric:DosingGuideline ?dosing .
 
 		} OPTIONAL {
-		 ?s d2sgeneric:CrossReferences ?cross_references .
+		 ?s d2sgeneric:CrossReferences ?cross_referencesR .
+		 BIND ( iri(concat("http://bio2rdf.org/", LCASE(STRBEFORE(?cross_referencesR,":")),":",STRAFTER(?cross_referencesR,":"))) AS ?cross_references )
 
 		} OPTIONAL {
-		 ?s d2sgeneric:ExternalVocabulary ?external_vocab .
-		
+		 ?s d2sgeneric:ExternalVocabulary ?external_vocabR .
+		 BIND ( iri(concat("http://bio2rdf.org/", LCASE(STRBEFORE(?external_vocabR,":")),":",STRAFTER(?external_vocabR,":"))) AS ?external_vocab )
 		} OPTIONAL {
 		 ?s d2sgeneric:Inchi ?inchi .
 		 

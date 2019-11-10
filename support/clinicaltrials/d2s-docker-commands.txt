@@ -1,9 +1,10 @@
 
 # Please define the absolute path of the folder that contains the structure (input, output, support, mapping)
 export ABS_PATH=/media/apc/DATA1/Maastricht/bio2rdf-github
-
+export ABS_PATH=/data/ammar/bio2rdf
 # Please define the dataset folder name
 export DATASET=clinicaltrials
+export DATASET=pharmgkb
 
 # add the input files you want to convert to the corresponding folder of the dataset (in this case it is "pharmgkb" folder)
 
@@ -24,7 +25,16 @@ sudo docker run -it --rm -v ${ABS_PATH}:/data vemonet/xml2rdf -i /data/input/${D
 
 
 # Upload the generic RDF to GraphDB to the created repository in the previous comment
-sudo docker run -it --rm --link graphdb:graphdb -v ${ABS_PATH}:/data vemonet/rdf-upload -if "/data/output/${DATASET}" -url "http://graphdb:7200" -rep "clinicaltrials"
+docker run -it --rm --link graphdb:graphdb -v ${ABS_PATH}:/data vemonet/rdf-upload:bio2rdf5 -if "/data/output/${DATASET}/rdf_output.nq" -url "http://graphdb:7200/repositories/bio2rdf-ammar2/statements" -un ammar -pw ammarammar
+
+
+docker run -it --rm --link graphdb:graphdb -v ${ABS_PATH}:/data aammar/data2services-sparql-operations -op split  --split-file-path "/data/support/${DATASET}/split-rules.csv" -ep "http://graphdb:7200/repositories/bio2rdf-ammar2/statements" -un ammar -pw ammarammar --split-delete
+
+
+docker run -it --link graphdb:graphdb -v ${ABS_PATH}:/data aammar/data2services-sparql-operations  -f "/data/mapping/${DATASET}" -ep "http://graphdb:7200/repositories/bio2rdf-ammar2/statements" -un ammar -pw ammarammar
+
+docker run -v ${ABS_PATH}:/data -it openjdk:8u181-jdk bin/bash
+
 
 
 

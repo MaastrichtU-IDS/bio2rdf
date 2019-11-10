@@ -40,22 +40,26 @@ WHERE {
 		
 
 		?id_info  x2rm:child:nct_id  [
-			  x2rm:hasValue ?study_id.
-		];
-
-		?s x2rm:child:clinical_results ?clinical_results.
-
-		?clinical_results  x2rm:child:desc [
-			  x2rm:hasValue ?desc
+			  x2rm:hasValue ?study_id
 		].
 
-		?clinical_results  x2rm:child:restrictive_agreement [
-			  x2rm:hasValue ?restrictive_agreement
-		].
+		OPTIONAL{
+			?s x2rm:child:clinical_results ?clinical_results.
 
-		?clinical_results  x2rm:child:limitations_and_caveats [
-			  x2rm:hasValue ?limitations_and_caveats
-		].
+			?clinical_results  x2rm:child:desc [
+				  x2rm:hasValue ?desc
+			].
+		}OPTIONAL{
+
+			?clinical_results  x2rm:child:restrictive_agreement [
+				  x2rm:hasValue ?restrictive_agreement
+			].
+		}OPTIONAL{
+
+			?clinical_results  x2rm:child:limitations_and_caveats [
+				  x2rm:hasValue ?limitations_and_caveats
+			].
+		}
 
 		BIND (STRAFTER(str(?clinical_results) , "http://ids.unimaas.nl/xml2rdf/data/") AS ?id)
 

@@ -1,4 +1,8 @@
 
+# Originl Project
+# https://github.com/amrapalijz/GEO
+
+
 # Please define the absolute path of the folder that contains the structure (input, output, support, mapping)
 export ABS_PATH=/media/apc/DATA1/Maastricht/bio2rdf-github
 

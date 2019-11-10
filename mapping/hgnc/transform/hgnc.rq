@@ -58,7 +58,6 @@ INSERT
 			hgnc_vocabulary:x-ensembl ?EnsemblIdSuppliedByEnsembl;
 			hgnc_vocabulary:x-vega ?VegaIdSuppliedByVega;
 			hgnc_vocabulary:x-ucsc ?UcscIdSuppliedByUcsc;
-			hgnc_vocabulary:x-mgi ?mgi;
 			hgnc_vocabulary:x-rgd ?rgd;
 			hgnc_vocabulary:x-rnacentral ?RnacentralIdsSuppliedByRnacentral;
 			hgnc_vocabulary:x-lnci ?LncipediaSymbolSuppliedByLncipedia.			
@@ -74,11 +73,10 @@ WHERE {
 		
 		BIND ( iri(concat("hgnc:", ?accessionID) ) AS ?geneID )
 		
-		OPTIONAL { 
-         	 ?s d2sgeneric:Symbol ?name .
-		 BIND ( concat("Gene Symbol for ",?name, " [hgnc:", ?accessionID, "] ") AS ?label )
+         	?s d2sgeneric:Symbol ?name .
+		BIND ( concat("Gene Symbol for ",?name, " [hgnc:", ?accessionID, "] ") AS ?label )
 			
-		} OPTIONAL {
+		OPTIONAL {
          	 ?s d2sgeneric:Symbol ?ApprovedSymbol .	
 		} OPTIONAL {
          	 ?s d2sgeneric:Name ?ApprovedName .	

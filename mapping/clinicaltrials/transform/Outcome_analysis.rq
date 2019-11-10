@@ -31,14 +31,15 @@ WHERE {
 
 		?s x2rm:child:outcome_list ?outcome_list.
 
-		?outcome_list x2rm:child:outcome ?outcome.
+		OPTIONAL{
+			?outcome_list x2rm:child:outcome ?outcome.
 
-		?outcome x2rm:hasValue ?outcome_id.
-		
-		?outcome  x2rm:child:analysis_list ?analysis_list.
+			?outcome x2rm:hasValue ?outcome_id.
+			
+			?outcome  x2rm:child:analysis_list ?analysis_list.
 
-		?analysis_list  x2rm:child:analysis ?analysis.
-
+			?analysis_list  x2rm:child:analysis ?analysis.
+		}
 	
 		BIND (STRAFTER(str(?analysis) , "http://ids.unimaas.nl/xml2rdf/data/") AS ?id)
 		
