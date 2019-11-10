@@ -1,0 +1,53 @@
+ssh ammar@node000002.cluster.ids.unimaas.nl
+
+cp -avr /home/ammar/bio2rdf /data/ammar
+
+wget -N -a download.log ftp://ftp.ncbi.nlm.nih.gov/snp/organisms/human_9606/VCF/common_all_20180418.vcf.gz --progress=bar:force
+
+wget -N ftp://ftp.ncbi.nlm.nih.gov/snp/organisms/human_9606/XML/ds_chY.xml.gz --progress=bar:force
+
+
+export ABS_PATH=/data/ammar/bio2rdf
+export DATASET=pharmgkb
+export DATASET=hgnc
+export DATASET=drugbank
+export DATASET=clinicaltrials
+export DATASET=sider
+export DATASET=goa
+export DATASET=ctd
+export DATASET=dbsnp
+
+
+docker run -dit --rm -p 8050:8047 -p 31000:31010 --name drill -v ${ABS_PATH}:/data:ro apache-drill
+
+docker run -it --rm --link drill:drill -v ${ABS_PATH}:/data vemonet/autor2rml:bio2rdf5 -j "jdbc:drill:drillbit=drill:31010" -r -o "/data/output/${DATASET}/mapping.trig" -d "/data/input/${DATASET}" -b "https://w3id.org/data2services/" -g "https://w3id.org/data2services/graph/autor2rml/$DATASET"
+
+touch ${ABS_PATH}/output/${DATASET}/config.properties
+  chmod a+w ${ABS_PATH}/output/${DATASET}/config.properties
+  echo "connectionURL = jdbc:drill:drillbit=drill:31010
+  mappingFile = /data/output/${DATASET}/mapping.trig
+  outputFile = /data/output/${DATASET}/rdf_output.nq
+  format = NQUADS" > ${ABS_PATH}/output/${DATASET}/config.properties
+
+
+docker run -it --rm --link drill:drill -v ${ABS_PATH}:/data vemonet/r2rml:bio2rdf5 /data/output/${DATASET}/config.properties
+
+
+docker run -it --rm -v ${ABS_PATH}:/data vemonet/xml2rdf:bio2rdf5 -i /data/input/${DATASET}/*.xml -o /data/output/${DATASET}/rdf_output.nq -g "https://w3id.org/data2services/graph/xml2rdf/$DATASET"
+
+docker run -it --rm -v ${ABS_PATH}:/data vemonet/xml2rdf -i /data/input/${DATASET}/*/*.xml -o /data/output/${DATASET}/rdf_output_ct.nq -g "https://w3id.org/data2services/graph/xml2rdf/clinicaltrials"
+
+
+//UPLOAD
+docker run -it --rm --link graphdb:graphdb -v ${ABS_PATH}:/data vemonet/rdf-upload:bio2rdf5 -if "/data/output/${DATASET}/rdf_output.nq" -url "http://graphdb:7200" -rep "bio2rdf-ammar2" -un ammar -pw ammarammar
+
+docker run -it --rm --link graphdb:graphdb -v ${ABS_PATH}:/data vemonet/rdf-upload:bio2rdf5 -if "/data/output/${DATASET}/rdf_output_ct.nq" -url "http://graphdb:7200" -rep "bio2rdf-ammar" -un ammar -pw ammarammar
+
+
+//MAPPING
+docker run -it --rm --link graphdb:graphdb -v ${ABS_PATH}:/data aammar/data2services-sparql-operations -f "/data/mapping/${DATASET}/transform" -ep "http://graphdb:7200/repositories/bio2rdf-ammar2/statements" -un ammar -pw ammarammar
+
+//SPLIT
+
+docker run -it --rm --link graphdb:graphdb -v ${ABS_PATH}:/data aammar/data2services-sparql-operations -op split --split-file-path "/data/support/${DATASET}/split-rules.csv" -ep "http://graphdb:7200/repositories/bio2rdf-ammar2/statements" -un ammar -pw ammarammar
+

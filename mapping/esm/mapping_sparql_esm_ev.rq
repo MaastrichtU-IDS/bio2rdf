@@ -1,0 +1,85 @@
+PREFIX rr: <http://www.w3.org/ns/r2rml#> 
+PREFIX dc: <http://purl.org/dc/elements/1.1/> 
+PREFIX dbo: <http://dbpedia.org/ontology/> 
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> 
+PREFIX owl: <http://www.w3.org/2002/07/owl#> 
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#> 
+PREFIX rml: <http://semweb.mmlab.be/ns/rml#> 
+PREFIX ql: <http://semweb.mmlab.be/ns/ql#> 
+PREFIX d2rq: <http://www.wiwiss.fu-berlin.de/suhl/bizer/D2RQ/0.1#> 
+PREFIX esm_vocabulary: <http://unimaas.nl/esm_vocabulary:> 
+PREFIX d2sgeneric: <https://w3id.org/data2services/model/>
+
+INSERT
+{
+	GRAPH <https://w3id.org/data2services/graph/esm>{
+		
+		?uri	a 	esm_vocabulary:Evening-Survey;
+				dc:identifier ?id;
+				esm_vocabulary:identifier ?id;	
+				esm_vocabulary:uri ?uri;
+				
+				esm_vocabulary:Evn_glwell ?Evn_glwell_Ans;
+				esm_vocabulary:Evn_gltired ?Evn_gltired_Ans;
+				esm_vocabulary:Evn_gltense ?Evn_gltense_Ans;
+				esm_vocabulary:Evn_glworry ?Evn_glworry_Ans;
+				esm_vocabulary:Evn_glconcentr ?Evn_glconcentr_Ans;
+				esm_vocabulary:Evn_glforget ?Evn_glforget_Ans;
+				esm_vocabulary:Evn_useful ?Evn_useful_Ans;
+				esm_vocabulary:Resptime_s ?Resptime_s;
+				esm_vocabulary:Resptime_e ?Resptime_e.
+				
+		?Evn_glwell_Ans a esm_vocabulary:Answer.
+		
+		?Evn_gltired_Ans a esm_vocabulary:Answer.
+		
+		?Evn_gltense_Ans a esm_vocabulary:Answer.
+		
+		?Evn_glworry_Ans a esm_vocabulary:Answer.
+		
+		?Evn_glconcentr_Ans a esm_vocabulary:Answer.
+		
+		?Evn_glforget_Ans a esm_vocabulary:Answer.
+		
+		?Evn_useful_Ans a esm_vocabulary:Answer.
+				
+	}
+}
+WHERE {
+    GRAPH <https://w3id.org/data2services/graph/autor2rml> {
+		
+		?s rdf:type <https://w3id.org/data2services/E:/Data2Services/portable/data/input/esm/questionare_AP_DEPR_N1_EV.tsv>.
+		
+		BIND(STRAFTER(str(?s), "https://w3id.org/data2services/E:/Data2Services/portable/data/input/esm/questionare_AP_DEPR_N1_EV.tsv/") AS ?id)
+		
+		BIND ( iri(concat("http://unimaas.nl/esm:", ?id)) AS ?uri )
+		
+		OPTIONAL { 
+         ?s d2sgeneric:Evn_glwell ?Evn_glwell .
+		 BIND ( iri(concat("http://unimaas.nl/esm_vocabulary:", ?Evn_glwell)) AS ?Evn_glwell_Ans )
+		} OPTIONAL { 
+         ?s d2sgeneric:Evn_gltired ?Evn_gltired .
+		 BIND ( iri(concat("http://unimaas.nl/esm_vocabulary:", ?Evn_gltired)) AS ?Evn_gltired_Ans )		
+		}  OPTIONAL { 
+         ?s d2sgeneric:Evn_gltense ?Evn_gltense .
+		 BIND ( iri(concat("http://unimaas.nl/esm_vocabulary:", ?Evn_gltense)) AS ?Evn_gltense_Ans )		
+		}  OPTIONAL { 
+         ?s d2sgeneric:Evn_glworry ?Evn_glworry .
+		 BIND ( iri(concat("http://unimaas.nl/esm_vocabulary:", ?Evn_glworry)) AS ?Evn_glworry_Ans )		
+		}  OPTIONAL { 
+         ?s d2sgeneric:Evn_glconcentr ?Evn_glconcentr .
+		 BIND ( iri(concat("http://unimaas.nl/esm_vocabulary:", ?Evn_glconcentr)) AS ?Evn_glconcentr_Ans )		
+		}  OPTIONAL { 
+         ?s d2sgeneric:Evn_glforget ?Evn_glforget .
+		 BIND ( iri(concat("http://unimaas.nl/esm_vocabulary:", ?Evn_glforget)) AS ?Evn_glforget_Ans )		
+		}  OPTIONAL { 
+         ?s d2sgeneric:Evn_useful ?Evn_useful .
+		 BIND ( iri(concat("http://unimaas.nl/esm_vocabulary:", ?Evn_useful)) AS ?Evn_useful_Ans )		
+		} OPTIONAL { 
+         ?s d2sgeneric:Resptime_s ?Resptime_s .
+		} OPTIONAL { 
+         ?s d2sgeneric:Resptime_e ?Resptime_e .
+		}
+	}
+}		
+

@@ -1,0 +1,281 @@
+PREFIX rr: <http://www.w3.org/ns/r2rml#> 
+PREFIX dc: <http://purl.org/dc/elements/1.1/> 
+PREFIX dbo: <http://dbpedia.org/ontology/> 
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> 
+PREFIX owl: <http://www.w3.org/2002/07/owl#> 
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#> 
+PREFIX rml: <http://semweb.mmlab.be/ns/rml#> 
+PREFIX ql: <http://semweb.mmlab.be/ns/ql#> 
+PREFIX d2rq: <http://www.wiwiss.fu-berlin.de/suhl/bizer/D2RQ/0.1#> 
+PREFIX esm_vocabulary: <http://unimaas.nl/esm_vocabulary:> 
+PREFIX d2sgeneric: <https://w3id.org/data2services/model/>
+
+INSERT
+{
+	GRAPH <https://w3id.org/data2services/graph/esm>{
+		
+		?uri	a 	esm_vocabulary:Beep2-Survey;
+				dc:identifier ?id;
+				esm_vocabulary:identifier ?id;	
+				esm_vocabulary:uri ?uri;
+				
+				esm_vocabulary:Mood_cheerf ?Mood_cheerf_Ans;
+				esm_vocabulary:Mood_fright ?Mood_fright_Ans;
+				esm_vocabulary:Mood_insecur ?Mood_insecur_Ans;
+				esm_vocabulary:Mood_relax ?Mood_relax_Ans;
+				esm_vocabulary:Mood_down ?Mood_down_Ans;
+				esm_vocabulary:Mood_irritat ?Mood_irritat_Ans;
+				esm_vocabulary:Mood_satisfi ?Mood_satisfi_Ans;
+				esm_vocabulary:Mood_lonely ?Mood_lonely_Ans;
+				esm_vocabulary:Mood_guilty ?Mood_guilty_Ans;
+				esm_vocabulary:Mood_empty ?Mood_empty_Ans;
+				esm_vocabulary:Mood_global ?Mood_global_Ans;
+				esm_vocabulary:Mood_worry ?Mood_worry_Ans;
+				esm_vocabulary:Phy_energy ?Phy_energy_Ans;
+				esm_vocabulary:Phy_hungry ?Phy_hungry_Ans;
+				esm_vocabulary:Phy_tired ?Phy_tired_Ans;
+				esm_vocabulary:Phy_unwell ?Phy_unwell_Ans;
+				esm_vocabulary:Phy_unwellmc ?Phy_unwellmc_Ans;
+				esm_vocabulary:Phy_unwellmc2 ?Phy_unwellmc2_Ans;
+				esm_vocabulary:Phy_unwellmc3 ?Phy_unwellmc3_Ans;
+				esm_vocabulary:Phy_craving ?Phy_craving_Ans;
+				esm_vocabulary:Phy_craving02 ?Phy_craving02_Ans;
+				esm_vocabulary:Phy_craving03 ?Phy_craving03_Ans;
+				esm_vocabulary:Phy_craving04 ?Phy_craving04_Ans;
+				esm_vocabulary:Phy_craving05 ?Phy_craving05_Ans;
+				esm_vocabulary:Act_what ?Act_what_Ans;
+				esm_vocabulary:Act_what02 ?Act_what02_Ans;
+				esm_vocabulary:Act_what03 ?Act_what03_Ans;
+				esm_vocabulary:Act_else ?Act_else_Ans;
+				esm_vocabulary:Act_medidation ?Act_medidation_Ans;
+				esm_vocabulary:Thou_focus ?Thou_focus_Ans;
+				esm_vocabulary:Loc_where ?Loc_where_Ans;
+				esm_vocabulary:Loc_outside ?Loc_outside_Ans;
+				esm_vocabulary:Soc_who ?Soc_who_Ans;
+				esm_vocabulary:Soc_who02 ?Soc_who02_Ans;
+				esm_vocabulary:Soc_who03 ?Soc_who03_Ans;
+				esm_vocabulary:Soc_enjoy ?Soc_enjoy_Ans;
+				esm_vocabulary:Eve_event ?Eve_event_Ans;
+				esm_vocabulary:Eve_important ?Eve_important_Ans;
+				esm_vocabulary:Beeptime ?Beeptime_Ans;
+				esm_vocabulary:Resptime_s ?Resptime_s;
+				esm_vocabulary:Resptime_e ?Resptime_e.
+				
+		?Mood_cheerf_Ans a esm_vocabulary:Answer.
+		
+		?Mood_fright_Ans a esm_vocabulary:Answer.
+		
+		?Mood_insecur_Ans a esm_vocabulary:Answer.
+		
+		?Mood_relax_Ans a esm_vocabulary:Answer.
+		
+		?Mood_down_Ans a esm_vocabulary:Answer.
+		
+		?Mood_irritat_Ans a esm_vocabulary:Answer.
+		
+		?Mood_satisfi_Ans a esm_vocabulary:Answer.
+		
+		?Mood_lonely_Ans a esm_vocabulary:Answer.
+		
+		?Mood_guilty_Ans a esm_vocabulary:Answer.
+		
+		?Mood_empty_Ans a esm_vocabulary:Answer.
+		
+		?Mood_global_Ans a esm_vocabulary:Answer.
+		
+		?Mood_worry_Ans a esm_vocabulary:Answer.
+		
+		?Phy_energy_Ans a esm_vocabulary:Answer.
+		
+		?Phy_hungry_Ans a esm_vocabulary:Answer.
+		
+		?Phy_tired_Ans a esm_vocabulary:Answer.
+		
+		?Phy_unwell_Ans a esm_vocabulary:Answer.
+		
+		?Phy_unwellmc_Ans a esm_vocabulary:Answer.
+		
+		?Phy_unwellmc2_Ans a esm_vocabulary:Answer.
+		
+		?Phy_unwellmc3_Ans a esm_vocabulary:Answer.
+		
+		?Phy_craving_Ans a esm_vocabulary:Answer.
+		
+		?Phy_craving02_Ans a esm_vocabulary:Answer.
+		
+		?Phy_craving03_Ans a esm_vocabulary:Answer.
+		
+		?Phy_craving04_Ans a esm_vocabulary:Answer.
+		
+		?Phy_craving05_Ans a esm_vocabulary:Answer.
+		
+		?Act_what_Ans a esm_vocabulary:Answer.
+		
+		?Act_what02_Ans a esm_vocabulary:Answer.
+		
+		?Act_what03_Ans a esm_vocabulary:Answer.
+		
+		?Act_else_Ans a esm_vocabulary:Answer.
+		
+		?Act_medidation_Ans a esm_vocabulary:Answer.
+		
+		?Thou_focus_Ans a esm_vocabulary:Answer.
+		
+		?Loc_where_Ans a esm_vocabulary:Answer.
+		
+		?Loc_outside_Ans a esm_vocabulary:Answer.
+		
+		?Soc_who_Ans a esm_vocabulary:Answer.
+		
+		?Soc_who02_Ans a esm_vocabulary:Answer.
+		
+		?Soc_who03_Ans a esm_vocabulary:Answer.
+		
+		?Soc_enjoy_Ans a esm_vocabulary:Answer.
+		
+		?Eve_event_Ans a esm_vocabulary:Answer.
+		
+		?Eve_important_Ans a esm_vocabulary:Answer.
+		
+		?Beeptime_Ans a esm_vocabulary:Answer.
+				
+	}
+}
+WHERE {
+    GRAPH <https://w3id.org/data2services/graph/autor2rml> {
+		
+		?s rdf:type <https://w3id.org/data2services/E:/Data2Services/portable/data/input/esm/questionare_AP_DEP_N1_BE2.tsv>.
+		
+		BIND(STRAFTER(str(?s), "https://w3id.org/data2services/E:/Data2Services/portable/data/input/esm/questionare_AP_DEP_N1_BE2.tsv/") AS ?id)
+		
+		BIND ( iri(concat("http://unimaas.nl/esm:", ?id)) AS ?uri )
+		
+		OPTIONAL { 
+         ?s d2sgeneric:Mood_cheerf ?Mood_cheerf .
+		 BIND ( iri(concat("http://unimaas.nl/esm_vocabulary:", ?Mood_cheerf)) AS ?Mood_cheerf_Ans )
+			
+		} OPTIONAL { 
+         ?s d2sgeneric:Mood_fright ?Mood_fright .
+		 BIND ( iri(concat("http://unimaas.nl/esm_vocabulary:", ?Mood_fright)) AS ?Mood_fright_Ans )		
+		}  OPTIONAL { 
+         ?s d2sgeneric:Mood_insecur ?Mood_insecur .
+		 BIND ( iri(concat("http://unimaas.nl/esm_vocabulary:", ?Mood_insecur)) AS ?Mood_insecur_Ans )		
+		}  OPTIONAL { 
+         ?s d2sgeneric:Mood_relax ?Mood_relax .
+		 BIND ( iri(concat("http://unimaas.nl/esm_vocabulary:", ?Mood_relax)) AS ?Mood_relax_Ans )		
+		}  OPTIONAL { 
+         ?s d2sgeneric:Mood_down ?Mood_down .
+		 BIND ( iri(concat("http://unimaas.nl/esm_vocabulary:", ?Mood_down)) AS ?Mood_down_Ans )		
+		}  OPTIONAL { 
+         ?s d2sgeneric:Mood_irritat ?Mood_irritat .
+		 BIND ( iri(concat("http://unimaas.nl/esm_vocabulary:", ?Mood_irritat)) AS ?Mood_irritat_Ans )		
+		}  OPTIONAL { 
+         ?s d2sgeneric:Mood_satisfi ?Mood_satisfi .
+		 BIND ( iri(concat("http://unimaas.nl/esm_vocabulary:", ?Mood_satisfi)) AS ?Mood_satisfi_Ans )		
+		}  OPTIONAL { 
+         ?s d2sgeneric:Mood_lonely ?Mood_lonely .
+		 BIND ( iri(concat("http://unimaas.nl/esm_vocabulary:", ?Mood_lonely)) AS ?Mood_lonely_Ans )		
+		}  OPTIONAL { 
+         ?s d2sgeneric:Mood_guilty ?Mood_guilty .
+		 BIND ( iri(concat("http://unimaas.nl/esm_vocabulary:", ?Mood_guilty)) AS ?Mood_guilty_Ans )		
+		}  OPTIONAL { 
+         ?s d2sgeneric:Mood_empty ?Mood_empty .
+		 BIND ( iri(concat("http://unimaas.nl/esm_vocabulary:", ?Mood_empty)) AS ?Mood_empty_Ans )		
+		}  OPTIONAL { 
+         ?s d2sgeneric:Mood_global ?Mood_global .
+		 BIND ( iri(concat("http://unimaas.nl/esm_vocabulary:", ?Mood_global)) AS ?Mood_global_Ans )		
+		}  OPTIONAL { 
+         ?s d2sgeneric:Mood_worry ?Mood_worry .
+		 BIND ( iri(concat("http://unimaas.nl/esm_vocabulary:", ?Mood_worry)) AS ?Mood_worry_Ans )		
+		}  OPTIONAL { 
+         ?s d2sgeneric:Phy_energy ?Phy_energy .
+		 BIND ( iri(concat("http://unimaas.nl/esm_vocabulary:", ?Phy_energy)) AS ?Phy_energy_Ans )		
+		}  OPTIONAL { 
+         ?s d2sgeneric:Phy_hungry ?Phy_hungry .
+		 BIND ( iri(concat("http://unimaas.nl/esm_vocabulary:", ?Phy_hungry)) AS ?Phy_hungry_Ans )		
+		}  OPTIONAL { 
+         ?s d2sgeneric:Phy_tired ?Phy_tired .
+		 BIND ( iri(concat("http://unimaas.nl/esm_vocabulary:", ?Phy_tired)) AS ?Phy_tired_Ans )		
+		}  OPTIONAL { 
+         ?s d2sgeneric:Phy_unwell ?Phy_unwell .
+		 BIND ( iri(concat("http://unimaas.nl/esm_vocabulary:", ?Phy_unwell)) AS ?Phy_unwell_Ans )		
+		}  OPTIONAL { 
+         ?s d2sgeneric:Phy_unwellmc ?Phy_unwellmc .
+		 BIND ( iri(concat("http://unimaas.nl/esm_vocabulary:", ?Phy_unwellmc)) AS ?Phy_unwellmc_Ans )		
+		}  OPTIONAL { 
+         ?s d2sgeneric:Phy_unwellmc2 ?Phy_unwellmc2 .
+		 BIND ( iri(concat("http://unimaas.nl/esm_vocabulary:", ?Phy_unwellmc2)) AS ?Phy_unwellmc2_Ans )		
+		}  OPTIONAL { 
+         ?s d2sgeneric:Phy_unwellmc3 ?Phy_unwellmc3 .
+		 BIND ( iri(concat("http://unimaas.nl/esm_vocabulary:", ?Phy_unwellmc3)) AS ?Phy_unwellmc3_Ans )		
+		}  OPTIONAL { 
+         ?s d2sgeneric:Phy_craving ?Phy_craving .
+		 BIND ( iri(concat("http://unimaas.nl/esm_vocabulary:", ?Phy_craving)) AS ?Phy_craving_Ans )		
+		}  OPTIONAL { 
+         ?s d2sgeneric:Phy_craving02 ?Phy_craving02 .
+		 BIND ( iri(concat("http://unimaas.nl/esm_vocabulary:", ?Phy_craving02)) AS ?Phy_craving02_Ans )		
+		}  OPTIONAL { 
+         ?s d2sgeneric:Phy_craving03 ?Phy_craving03 .
+		 BIND ( iri(concat("http://unimaas.nl/esm_vocabulary:", ?Phy_craving03)) AS ?Phy_craving03_Ans )		
+		}  OPTIONAL { 
+         ?s d2sgeneric:Phy_craving04 ?Phy_craving04 .
+		 BIND ( iri(concat("http://unimaas.nl/esm_vocabulary:", ?Phy_craving04)) AS ?Phy_craving04_Ans )		
+		}  OPTIONAL { 
+         ?s d2sgeneric:Phy_craving05 ?Phy_craving05 .
+		 BIND ( iri(concat("http://unimaas.nl/esm_vocabulary:", ?Phy_craving05)) AS ?Phy_craving05_Ans )		
+		}  OPTIONAL { 
+         ?s d2sgeneric:Act_what ?Act_what .
+		 BIND ( iri(concat("http://unimaas.nl/esm_vocabulary:", ?Act_what)) AS ?Act_what_Ans )		
+		} OPTIONAL { 
+         ?s d2sgeneric:Act_what02 ?Act_what02 .
+		 BIND ( iri(concat("http://unimaas.nl/esm_vocabulary:", ?Act_what02)) AS ?Act_what02_Ans )		
+		} OPTIONAL { 
+         ?s d2sgeneric:Act_what03 ?Act_what03 .
+		 BIND ( iri(concat("http://unimaas.nl/esm_vocabulary:", ?Act_what03)) AS ?Act_what03_Ans )		
+		} OPTIONAL { 
+         ?s d2sgeneric:Act_else ?Act_else .
+		 BIND ( iri(concat("http://unimaas.nl/esm_vocabulary:", ?Act_else)) AS ?Act_else_Ans )		
+		} OPTIONAL { 
+         ?s d2sgeneric:Act_medidation ?Act_medidation .
+		 BIND ( iri(concat("http://unimaas.nl/esm_vocabulary:", ?Act_medidation)) AS ?Act_medidation_Ans )		
+		} OPTIONAL { 
+         ?s d2sgeneric:Thou_focus ?Thou_focus .
+		 BIND ( iri(concat("http://unimaas.nl/esm_vocabulary:", ?Thou_focus)) AS ?Thou_focus_Ans )		
+		} OPTIONAL { 
+         ?s d2sgeneric:Loc_where ?Loc_where .
+		 BIND ( iri(concat("http://unimaas.nl/esm_vocabulary:", ?Loc_where)) AS ?Loc_where_Ans )		
+		} OPTIONAL { 
+         ?s d2sgeneric:Loc_outside ?Loc_outside .
+		 BIND ( iri(concat("http://unimaas.nl/esm_vocabulary:", ?Loc_outside)) AS ?Loc_outside_Ans )		
+		} OPTIONAL { 
+         ?s d2sgeneric:Soc_who ?Soc_who .
+		 BIND ( iri(concat("http://unimaas.nl/esm_vocabulary:", ?Soc_who)) AS ?Soc_who_Ans )		
+		} OPTIONAL { 
+         ?s d2sgeneric:Soc_who02 ?Soc_who02 .
+		 BIND ( iri(concat("http://unimaas.nl/esm_vocabulary:", ?Soc_who02)) AS ?Mood_fright_Ans )		
+		} OPTIONAL { 
+         ?s d2sgeneric:Soc_who03 ?Soc_who03 .
+		 BIND ( iri(concat("http://unimaas.nl/esm_vocabulary:", ?Soc_who03)) AS ?Soc_who03_Ans )		
+		} OPTIONAL { 
+         ?s d2sgeneric:Soc_enjoy ?Soc_enjoy .
+		 BIND ( iri(concat("http://unimaas.nl/esm_vocabulary:", ?Soc_enjoy)) AS ?Soc_enjoy_Ans )		
+		} OPTIONAL { 
+         ?s d2sgeneric:Eve_event ?Eve_event .
+		 BIND ( iri(concat("http://unimaas.nl/esm_vocabulary:", MD5(?Eve_event))) AS ?Eve_event_Ans )		
+		} OPTIONAL { 
+         ?s d2sgeneric:Eve_pleasant ?Eve_pleasant .
+		 BIND ( iri(concat("http://unimaas.nl/esm_vocabulary:", ?Eve_pleasant)) AS ?Eve_pleasant_Ans )		
+		} OPTIONAL { 
+         ?s d2sgeneric:Eve_important ?Eve_important .
+		 BIND ( iri(concat("http://unimaas.nl/esm_vocabulary:", ?Eve_important)) AS ?Eve_important_Ans )		
+		} OPTIONAL { 
+         ?s d2sgeneric:Beeptime ?Beeptime .
+		 BIND ( iri(concat("http://unimaas.nl/esm_vocabulary:", MD5(?Beeptime))) AS ?Beeptime_Ans )		
+		} OPTIONAL { 
+         ?s d2sgeneric:Resptime_s ?Resptime_s .
+		} OPTIONAL { 
+         ?s d2sgeneric:Resptime_e ?Resptime_e .
+		}
+	}
+}		
+
