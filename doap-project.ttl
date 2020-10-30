@@ -11,7 +11,7 @@
   doap:license <https://github.com/bio2rdf/bio2rdf-scripts/blob/master/MIT-LICENSE.txt> ;
   doap:homepage <https://bio2rdf.org> ;
   doap:bug-database <https://github.com/MaastrichtU-IDS/bio2rdf/issues> ;
-  doap:wiki <https://github.com/bio2rdf/bio2rdf-scripts/wiki>
+  doap:wiki <https://github.com/bio2rdf/bio2rdf-scripts/wiki> ;
   doap:download-page <https://download.bio2rdf.org/#/> ;
   doap:service-endpoint <https://bio2rdf.org/sparql> ;
   doap:mailing-list <https://groups.google.com/forum/?fromgroups#!forum/bio2rdf> ;
