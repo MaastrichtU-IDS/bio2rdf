@@ -1,11 +1,13 @@
 @prefix doap: <http://usefulinc.com/ns/doap#> .
 @prefix asf: <http://projects.apache.org/ns/asfext#> .
 @prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix bibo: <http://purl.org/ontology/bibo/> .
 
 <https://w3id.org/umids/project/bio2rdf>
   a doap:Project ;
   doap:name "Bio2RDF" ;
   doap:description "Bio2RDF defines a set of simple conventions to create RDF(S) compatible Linked Data from a diverse set of heterogeneously formatted sources obtained from multiple data providers. The online version of Bio2RDF is meant to be demonstrative of semantic web technologies, and is not currently kept up to date. It contains ~11 billion triples across 35 datasets. If you want the latest version, you can check out the code and build it yourself!" ;
+  bibo:status "Active" ;
 
   doap:programming-language "PHP" ;
   doap:license <https://github.com/bio2rdf/bio2rdf-scripts/blob/master/MIT-LICENSE.txt> ;
